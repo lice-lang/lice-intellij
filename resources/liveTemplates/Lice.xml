@@ -1,0 +1,27 @@
+<templateSet group="Lice">
+	<template name="d" value="(def $NAME$ $PARAMS$&#10;  (|&gt; $END$))" description="define a function"
+	          toReformat="false" toShortenFQNames="true">
+		<variable name="NAME" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="Lice" value="true"/>
+		</context>
+	</template>
+	<template name="de" value="(defexpr $NAME$ $PARAMS$&#10;  (|&gt; $END$))"
+	          description="define a call-by-name function" toReformat="false" toShortenFQNames="true">
+		<variable name="NAME" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="Lice" value="true"/>
+		</context>
+	</template>
+	<template name="for" value="(for-each $LOOPER$&#10;  (.. $FROM$ $TO$)&#10;  (|&gt; $END$))" description="for-each"
+	          toReformat="false" toShortenFQNames="true">
+		<variable name="LOOPER" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="FROM" expression="" defaultValue="" alwaysStopAt="true"/>
+		<variable name="TO" expression="" defaultValue="" alwaysStopAt="true"/>
+		<context>
+			<option name="Lice" value="true"/>
+		</context>
+	</template>
+</templateSet>

@@ -23,6 +23,10 @@ Lice language support.
 		<lang.braceMatcher
 				language="Lice"
 				implementationClass="org.lice.lang.LiceBraceMatcher"/>
+		<defaultLiveTemplatesProvider
+				implementation="org.lice.lang.LiceLiveTemplateProvider"/>
+		<liveTemplateContext
+				implementation="org.lice.lang.LiceContext"/>
 	</extensions>
 
 	<actions>

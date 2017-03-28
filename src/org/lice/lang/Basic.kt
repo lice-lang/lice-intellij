@@ -5,6 +5,9 @@
  */
 package org.lice.lang
 
+import com.intellij.codeInsight.template.FileTypeBasedContextType
+import com.intellij.codeInsight.template.TemplateContextType
+import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.BracePair
 import com.intellij.lang.Language
 import com.intellij.lang.PairedBraceMatcher
@@ -47,5 +50,19 @@ class LiceBraceMatcher : PairedBraceMatcher {
 
 	override fun getPairs() = PAIRS
 	override fun getCodeConstructStart(p0: PsiFile?, p1: Int) = p1
-	override fun isPairedBracesAllowedBeforeType(p0: IElementType, p1: IElementType?) = false
+	override fun isPairedBracesAllowedBeforeType(p0: IElementType, p1: IElementType?) = true
 }
+
+
+class LiceLiveTemplateContext : FileTypeBasedContextType("Lice", "Lice", LiceFileType)
+
+class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
+	override fun getDefaultLiveTemplateFiles() = arrayOf("liveTemplates/Lice")
+	override fun getHiddenLiveTemplateFiles() = null
+}
+
+class LiceContext : TemplateContextType("Lice", "Lice") {
+	override fun isInContext(p0: PsiFile, p1: Int) =
+			p0.name.endsWith(".lice")
+}
+
