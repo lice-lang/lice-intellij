@@ -1,0 +1,15 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+ <title>lice</title>
+ <g>
+  <g id="svg_1">
+   <g id="svg_2">
+    <polygon points="6.165289118885994,-1.4901161193847656e-8 2.1652892380952835,3.999999761581421 6.165289118885994,3.999999761581421 6.165289118885994,-1.4901161193847656e-8 " fill="#9aa7b0" opacity="0.7" id="svg_3"/>
+    <polygon points="7.165289118885994,-1.4901161193847656e-8 7.165289118885994,3.999999761581421 7.165289118885994,5 6.165289118885994,5 2.1652892380952835,5 2.1652892380952835,8 13.165289118885994,8 13.165289118885994,-1.4901161193847656e-8 7.165289118885994,-1.4901161193847656e-8 " fill="#9aa7b0" opacity="0.7" id="svg_5"/>
+   </g>
+   <line fill="none" stroke-width="1.5" stroke-opacity="0" x1="3.578517" y1="8.950411" x2="3.413228" y2="12.917349" id="svg_10" stroke-linejoin="null" stroke-linecap="null" stroke="#000000"/>
+  </g>
+  <rect fill="#e067be" stroke="#000000" stroke-width="1.5" fill-opacity="0.77" x="30.024767" y="5.148763" width="9.586765" height="4.958672" id="svg_8" stroke-opacity="0"/>
+  <rect fill="#bf005f" stroke-width="0.1" stroke-opacity="0" x="1.098228" y="8.973604" width="15.361311" height="7.65902" id="svg_11" stroke="#000000" fill-opacity="0.66"/>
+  <text fill="#191919" stroke-width="0" stroke-opacity="0" fill-opacity="0.69" x="-25.0793" y="6.192227" id="svg_13" font-size="24" font-family="Junction, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.3228062237228065,0,0,0.27750971411465114,10.075994136294058,13.499526525764061) " stroke="#000000" font-weight="bold">LC</text>
+ </g>
+</svg>

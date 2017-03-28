@@ -1,0 +1,27 @@
+<idea-plugin>
+	<id>org.ice1000</id>
+	<name>Lice</name>
+	<version>1.0</version>
+	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.tech">Lice group</vendor>
+
+	<description><![CDATA[
+Lice language support.
+]]></description>
+
+	<change-notes><![CDATA[
+No change notes.
+]]>
+	</change-notes>
+
+	<idea-version since-build="145.0"/>
+
+	<depends>com.intellij.modules.lang</depends>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<fileTypeFactory implementation="lice.plugin.intellij.LiceFileTypeFactory" />
+	</extensions>
+
+	<actions>
+	</actions>
+
+</idea-plugin>
