@@ -12,6 +12,10 @@ import org.lice.lang.LiceFileType
 import org.lice.lang.LiceLanguage
 
 class LiceTokenType(debugName: String) : IElementType(debugName, LiceLanguage) {
+	companion object TokenTypes {
+		val LEFT_BRACE = LiceTokenType("(")
+		val RIGHT_BRACE = LiceTokenType(")")
+	}
 	override fun toString() = "LiceTokenType.${super.toString()}"
 }
 

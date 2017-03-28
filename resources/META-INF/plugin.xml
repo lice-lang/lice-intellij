@@ -17,6 +17,12 @@ Lice language support.
 		<lang.commenter
 				language="Lice"
 				implementationClass="org.lice.lang.LiceCommenter"/>
+		<spellchecker.support
+				language="Lice"
+				implementationClass="org.lice.lang.LiceSpellCheckingStrategy"/>
+		<lang.braceMatcher
+				language="Lice"
+				implementationClass="org.lice.lang.LiceBraceMatcher"/>
 	</extensions>
 
 	<actions>
