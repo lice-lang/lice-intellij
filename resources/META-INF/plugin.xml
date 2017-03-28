@@ -18,10 +18,20 @@ No change notes.
 	<depends>com.intellij.modules.lang</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="lice.plugin.intellij.LiceFileTypeFactory" />
+		<fileTypeFactory implementation="lice.plugin.intellij.LiceFileTypeFactory"/>
 	</extensions>
 
 	<actions>
+		<action
+				id="Lice.NewLiceFile"
+				class="lice.plugin.intellij.NewLiceFile"
+				text="Lice File"
+				description="Create a lice script file">
+			<add-to-group
+					group-id="NewGroup"
+					anchor="before"
+					relative-to-action="NewFile"/>
+		</action>
 	</actions>
 
 </idea-plugin>
