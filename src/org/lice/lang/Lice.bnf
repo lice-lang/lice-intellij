@@ -1,0 +1,17 @@
+{
+
+parserClass="org.lice.lang.LiceParser"
+extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+psiClassPrefix="Lice"
+psiImplClassSuffix="Impl"
+psiPackage="org.lice.lang.psi"
+psiPackage="org.lice.lang.psi.impl"
+
+elementTypeHolderClass="org.lice.lang.psi.LiceTypes"
+elementTypeClass="org.lice.lang.psi.LiceElementType"
+tokenTypeClass="org.lice.lang.psi.LiceTokenType"
+
+psiImplUtilClass="org.lice.lang.psi.impl"
+
+}

@@ -1,7 +1,8 @@
-package lice.plugin.intellij
+package org.lice.lang
 
 import com.intellij.ide.actions.CreateFileFromTemplateAction
 import com.intellij.ide.actions.CreateFileFromTemplateDialog
+import com.intellij.lang.Commenter
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
@@ -27,3 +28,14 @@ class NewLiceFile : CreateFileFromTemplateAction(CAPTION, "", LICE_ICON), DumbAw
 		val CAPTION = "New Lice File"
 	}
 }
+
+
+class LiceCommenter : Commenter {
+	override fun getCommentedBlockCommentPrefix() = null
+	override fun getCommentedBlockCommentSuffix() = null
+	override fun getBlockCommentPrefix() = null
+	override fun getBlockCommentSuffix() = null
+
+	override fun getLineCommentPrefix() = ";"
+}
+

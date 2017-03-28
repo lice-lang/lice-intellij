@@ -1,30 +1,28 @@
 <idea-plugin>
-	<id>org.ice1000</id>
+	<id>org.lice.lang</id>
 	<name>Lice</name>
 	<version>1.0</version>
-	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.tech">Lice group</vendor>
+	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.tech">Lice</vendor>
 
 	<description><![CDATA[
 Lice language support.
 ]]></description>
 
-	<change-notes><![CDATA[
-No change notes.
-]]>
-	</change-notes>
-
-	<idea-version since-build="145.0"/>
+	<idea-version since-build="162.0"/>
 
 	<depends>com.intellij.modules.lang</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<fileTypeFactory implementation="lice.plugin.intellij.LiceFileTypeFactory"/>
+		<fileTypeFactory implementation="org.lice.lang.LiceFileTypeFactory"/>
+		<lang.commenter
+				language="Lice"
+				implementationClass="org.lice.lang.LiceCommenter"/>
 	</extensions>
 
 	<actions>
 		<action
 				id="Lice.NewLiceFile"
-				class="lice.plugin.intellij.NewLiceFile"
+				class="org.lice.lang.NewLiceFile"
 				text="Lice File"
 				description="Create a lice script file">
 			<add-to-group
@@ -33,5 +31,4 @@ No change notes.
 					relative-to-action="NewFile"/>
 		</action>
 	</actions>
-
 </idea-plugin>
