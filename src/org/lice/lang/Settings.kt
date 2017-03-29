@@ -11,15 +11,20 @@ import com.intellij.application.options.SmartIndentOptionsEditor
 import com.intellij.application.options.TabbedLanguageCodeStylePanel
 import com.intellij.psi.codeStyle.*
 
-class LiceCodeStyleSettings (container: CodeStyleSettings?)
+class LiceCodeStyleSettings(container: CodeStyleSettings?)
 	: CustomCodeStyleSettings("LiceCodeStyleSettings", container)
 
 class LiceCodeStyleSettingsProvider : CodeStyleSettingsProvider() {
 	override fun getLanguage() =
 			LiceLanguage
-	override fun createCustomSettings(settings: CodeStyleSettings?) = LiceCodeStyleSettings(settings)
-	override fun createSettingsPage(settings: CodeStyleSettings, originalSettings: CodeStyleSettings) =
-			LiceCodeStyleConfigurable(settings, originalSettings)
+
+	override fun createCustomSettings(settings: CodeStyleSettings?) =
+			LiceCodeStyleSettings(settings)
+
+	override fun createSettingsPage(
+			settings: CodeStyleSettings,
+			originalSettings: CodeStyleSettings
+	) = LiceCodeStyleConfigurable(settings, originalSettings)
 }
 
 class LiceCodeStyleConfigurable(
@@ -35,7 +40,11 @@ class LiceCodeStyleConfigurable(
 	private class Panel(
 			currentSettings: CodeStyleSettings,
 			settings: CodeStyleSettings
-	) : TabbedLanguageCodeStylePanel(LiceLanguage, currentSettings, settings)
+	) : TabbedLanguageCodeStylePanel(
+			LiceLanguage,
+			currentSettings,
+			settings
+	)
 }
 
 
@@ -66,6 +75,11 @@ class LiceLangCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() {
 
 ;; call-by-name functions
 (defexpr my-if condition a (if condition a))
+
+;; string literals
+"ass we can"
+
+
 """
 	}
 }

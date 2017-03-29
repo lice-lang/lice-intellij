@@ -11,24 +11,20 @@ import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider
-import javax.swing.JLabel
 
 class LiceModuleWizardSetup : ModuleBuilder() {
+	override fun getBuilderId() = "lice.module.builder"
+	override fun getGroupName() = "Lice"
+	override fun getPresentableName() = "Lice"
 	override fun setupRootModel(model: ModifiableRootModel) {
 	}
 
 	override fun getModuleType() = LiceModuleType()
 	override fun createWizardSteps(
 			wizardContext: WizardContext,
-			modulesProvider: ModulesProvider): Array<ModuleWizardStep> = arrayOf(
-			object : ModuleWizardStep() {
-				override fun getComponent() = JLabel("Nothing to be done here.").apply {
-				}
-
-				override fun updateDataModel() {
-				}
-			}
-	)
+			modulesProvider: ModulesProvider
+	): Array<ModuleWizardStep> =
+			moduleType.createWizardSteps(wizardContext, this, modulesProvider)
 }
 
 class LiceModuleType : ModuleType<LiceModuleWizardSetup>(ID) {
@@ -38,8 +34,8 @@ class LiceModuleType : ModuleType<LiceModuleWizardSetup>(ID) {
 
 	override fun createModuleBuilder() = LiceModuleWizardSetup()
 
-	override fun getName() = "Lice Module Type"
-	override fun getDescription() = "Lice Module Type dec"
+	override fun getName() = "Lice"
+	override fun getDescription() = "Empty Lice module"
 	override fun getBigIcon() = LiceInfo.LICE_BIG_ICON
 	override fun getNodeIcon(p0: Boolean) = bigIcon
 }
