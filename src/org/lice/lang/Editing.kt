@@ -8,6 +8,8 @@ package org.lice.lang
 import com.intellij.CommonBundle
 import com.intellij.ide.actions.CreateFileAction
 import com.intellij.lang.Commenter
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.io.FileUtilRt
@@ -62,6 +64,12 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 
 	private companion object Caption {
 		private val CAPTION = "New Lice File"
+	}
+}
+
+class RunLiceFile : AnAction("Run Lice script", "Run Lice script", LiceInfo.LICE_BIG_ICON) {
+	override fun actionPerformed(p0: AnActionEvent?) {
+		// TODO
 	}
 }
 

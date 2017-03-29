@@ -51,12 +51,11 @@ Lice language support.
 					anchor="after"
 					relative-to-action="NewFile"/>
 		</action>
-		<!--<group-->
-				<!--id="Lice.Group" text="Lice">-->
-			<!--<action id="Lice.RunFile" class=""/>-->
-			<!--<add-to-group-->
-					<!--group-id="ProjectViewPopupMenuRunGroup"-->
-					<!--anchor="first"/>-->
-		<!--</group>-->
+		<group id="Lice.Group" text="Lice">
+			<action id="Lice.RunFile" class="org.lice.lang.RunLiceFile"/>
+			<add-to-group
+					group-id="ProjectViewPopupMenuRunGroup"
+					anchor="first"/>
+		</group>
 	</actions>
 </idea-plugin>
