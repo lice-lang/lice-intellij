@@ -4,6 +4,7 @@ import com.intellij.lang.Language;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
+import org.lice.lang.psi.LiceTypes;
 
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
@@ -21,9 +22,10 @@ import static com.intellij.psi.TokenType.BAD_CHARACTER;
 %eof}
 
 
-CRLF=\R
-WHITE_SPACE=[\ \n\t\f]
-END_OF_LINE_COMMENT=(";")[^\r\n]*
+CRLF = \r
+WHITE_SPACE = [\ \n\t\f]
+END_OF_LINE_COMMENT = (";")[^\r\n]*
+STRING = \"[^\"]*\"
 
 %state WAITING_VALUE
 

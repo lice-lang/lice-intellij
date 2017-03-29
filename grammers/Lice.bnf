@@ -1,6 +1,7 @@
 {
 
 	parserClass="org.lice.lang.LiceParser"
+  parserUtilClass="org.lice.lang.LiceParserUtil"
 	extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
 	psiClassPrefix="Lice"
@@ -23,5 +24,7 @@
 
 liceFile ::= (stmt|comment)*
 
-stmt ::= '(' stmt_body ')' | symbol | number | bool
+stmt ::= '(' stmt_body ')' | symbol | number | bool | literal
 stmt_body ::= (symbol | stmt)*
+
+comment ::= ";" {}
