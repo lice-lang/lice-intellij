@@ -31,34 +31,33 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 			EXTENSION
 
 	override fun create(
-			p0: String?,
-			p1: PsiDirectory?
+			name: String?,
+			directory: PsiDirectory?
 	): Array<PsiElement?> {
-		val origin = FileUtilRt.getExtension(
-				p0 ?: "new-file${System.currentTimeMillis()}.lice")
-		val fixedExtension = when (origin) {
+		val origin = name ?: "new-file${System.currentTimeMillis()}.lice"
+		val fixedExtension = when (FileUtilRt.getExtension(origin)) {
 			"lice" -> origin
-			else -> "$p0.lice"
+			else -> "$origin.lice"
 		}
-		return arrayOf(p1?.add(PsiFileFactory
-				.getInstance(p1.project)
+		return arrayOf(directory?.add(PsiFileFactory
+				.getInstance(directory.project)
 				.createFileFromText(fixedExtension, LiceFileType, "")))
 	}
 
 	override fun invokeDialog(
 			project: Project?,
-			p1: PsiDirectory?
+			psiDirectory: PsiDirectory?
 	): Array<PsiElement> {
-		val v = MyInputValidator(project, p1)
+		val validator = MyInputValidator(project, psiDirectory)
 		Messages.showInputDialog(
 				project,
 				"Enter a new lice script name",
 				"New Lice script",
 				Messages.getQuestionIcon(),
-				"file-name.lice",
-				v
+				"file-name${System.currentTimeMillis()}.lice",
+				validator
 		)
-		return v.createdElements
+		return validator.createdElements
 	}
 
 	private companion object Caption {
