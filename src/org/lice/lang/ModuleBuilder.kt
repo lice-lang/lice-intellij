@@ -33,3 +33,16 @@ class LiceModuleWizardSetup : ModuleBuilder() {
 	)
 }
 
+class LiceModuleType : ModuleType<LiceModuleWizardSetup>(ID) {
+	companion object LiceId {
+		val ID = "LICE_MODULE_TYPE"
+	}
+
+	override fun createModuleBuilder() = LiceModuleWizardSetup()
+
+	override fun getName() = "Lice Module Type"
+	override fun getDescription() = "Lice Module Type dec"
+	override fun getBigIcon() = LiceInfo.LICE_BIG_ICON
+	override fun getNodeIcon(p0: Boolean) = bigIcon
+}
+

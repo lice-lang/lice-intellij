@@ -13,9 +13,10 @@ import com.intellij.lang.PairedBraceMatcher
 import com.intellij.openapi.fileTypes.FileTypeConsumer
 import com.intellij.openapi.fileTypes.FileTypeFactory
 import com.intellij.openapi.fileTypes.LanguageFileType
-import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
+import org.lice.lang.LiceInfo.EXTENSION
+import org.lice.lang.LiceInfo.LICE_ICON
 import org.lice.lang.psi.LiceTokenType
 
 object LiceLanguage : Language("Lice", "text/lice") {
@@ -23,9 +24,6 @@ object LiceLanguage : Language("Lice", "text/lice") {
 	override fun isCaseSensitive() = true
 }
 
-val LICE_ICON = IconLoader.getIcon("/org/lice/lang/lice.png")
-
-val EXTENSION = "lice"
 
 object LiceFileType : LanguageFileType(LiceLanguage) {
 	override fun getDefaultExtension() = EXTENSION
