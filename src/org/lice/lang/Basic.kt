@@ -50,7 +50,9 @@ class LiceBraceMatcher : PairedBraceMatcher {
 
 	override fun getPairs() = PAIRS
 	override fun getCodeConstructStart(p0: PsiFile?, p1: Int) = p1
-	override fun isPairedBracesAllowedBeforeType(p0: IElementType, p1: IElementType?) =
+	override fun isPairedBracesAllowedBeforeType(
+			type: IElementType,
+			iElementType: IElementType?) =
 			true
 }
 

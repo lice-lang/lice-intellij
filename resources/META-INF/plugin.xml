@@ -28,12 +28,16 @@ Lice language support.
 		<liveTemplateContext
 				implementation="org.lice.lang.LiceContext"/>
 		<!--<lang.parserDefinition-->
-				<!--language="Lice"-->
-				<!--implementationClass="org.lice.lang.psi.LiceParserDefinition"/>-->
+		<!--language="Lice"-->
+		<!--implementationClass="org.lice.lang.psi.LiceParserDefinition"/>-->
 		<codeStyleSettingsProvider
 				implementation="org.lice.lang.LiceCodeStyleSettingsProvider"/>
 		<langCodeStyleSettingsProvider
 				implementation="org.lice.lang.LiceLangCodeStyleSettingsProvider"/>
+		<moduleBuilder
+				builderClass="org.lice.lang.LiceModuleWizardSetup"
+				id="DEMO_STEP"
+				order="first"/>
 	</extensions>
 
 	<actions>
