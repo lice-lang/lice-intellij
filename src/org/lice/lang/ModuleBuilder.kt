@@ -17,9 +17,7 @@ class LiceModuleWizardSetup : ModuleBuilder() {
 	override fun setupRootModel(model: ModifiableRootModel) {
 	}
 
-	override fun getModuleType(): ModuleType<*> =
-			ModuleType.EMPTY
-
+	override fun getModuleType() = LiceModuleType()
 	override fun createWizardSteps(
 			wizardContext: WizardContext,
 			modulesProvider: ModulesProvider): Array<ModuleWizardStep> = arrayOf(

@@ -16,7 +16,11 @@ import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import org.lice.lang.*
+import org.lice.lang.LiceFileType
+import org.lice.lang.LiceInfo.LICE_ICON
+import org.lice.lang.LiceLanguage
+import org.lice.lang.LiceLexer
+import org.lice.lang.LiceParser
 
 class LiceTokenType(debugName: String) : IElementType(debugName, LiceLanguage) {
 	companion object TokenTypes {

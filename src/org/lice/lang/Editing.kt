@@ -11,6 +11,8 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
 import com.intellij.spellchecker.tokenizer.Tokenizer
+import org.lice.lang.LiceInfo.EXTENSION
+import org.lice.lang.LiceInfo.LICE_ICON
 
 
 class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
