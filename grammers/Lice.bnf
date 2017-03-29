@@ -24,7 +24,9 @@
 
 liceFile ::= (stmt|comment)*
 
-stmt ::= '(' stmt_body ')' | symbol | number | bool | literal
+stmt ::= ('(' stmt_body ')') | symbol | number | bool | literal
 stmt_body ::= (symbol | stmt)*
 
-comment ::= ";" {}
+bool ::= "true"|"false"
+
+//comment ::= ";" {}

@@ -33,6 +33,6 @@ STRING = \"[^\"]*\"
 <YYINITIAL> {END_OF_LINE_COMMENT}                   { yybegin(YYINITIAL); return LiceTypes.COMMENT; }
 <WAITING_VALUE> {CRLF}({CRLF}|{WHITE_SPACE})+       { yybegin(YYINITIAL); return WHITE_SPACE; }
 <WAITING_VALUE> {WHITE_SPACE}+                      { yybegin(WAITING_VALUE); return WHITE_SPACE; }
-"null"                                              { return C_NULL; }
-true|false                                          { return C_BOOL; }
+//"null"                                              { return C_NULL; }
+//true|false                                          { return C_BOOL; }
 .                                                   { return BAD_CHARACTER; }
