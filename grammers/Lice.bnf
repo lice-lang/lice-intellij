@@ -17,26 +17,26 @@
 
 	tokens = [
 		BOOL                 = "regexp:true|false"
-		SEPERATOR            = "regexp:[\s|,，]+"
+		SEPERATOR            = "regexp:[\s|,，　]+"
 		NULL                 = "null"
 		LPAREN               = "regexp:[(（]"
 		RPAREN               = "regexp:[）)]"
-		COMMENT              = "regexp:;[^\n]*[\n]?"
+		COMMENT              = "regexp:[;；][^\n]*[\n]?"
 		INTEGER              = "regexp:([1-9][\d]*[Nn]?)|(0[0-7]*)|(0[xX](\d|[a-f]|[A-F])+)|(0[bB][01]+)"
 		///                             10进制      高精度    8进制     16进制                      2进制
 		FLOAT                = "regexp:(-?\d+)(\.\d+)?[fF]?"
+		SYMBOL               = "regexp:[^\n\r；; 　,()（）]+"
+		LITERAL              = "regexp:\"[^\"]*\""
 	]
-
 }
 
 liceFile ::= (expr|COMMENT)*
 
-expr ::= symbol
-        | number
-        | bool
-        | literal
-        | "(" {expr}* ")"
+expr ::= SYMBOL
+        | INTEGER
+        | FLOAT
+        | BOOL
+        | LITERAL
+        | NULL
+        | LPAREN SYMBOL {expr}* RPAREN
 
-//bool ::= "true"|"false"
-
-comment ::= ";" {"[*]"} "\n"
