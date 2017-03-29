@@ -27,9 +27,9 @@ Lice language support.
 				implementation="org.lice.lang.LiceLiveTemplateProvider"/>
 		<liveTemplateContext
 				implementation="org.lice.lang.LiceContext"/>
-		<lang.parserDefinition
-				language="Lice"
-				implementationClass="org.lice.lang.psi.LiceParserDefinition"/>
+		<!--<lang.parserDefinition-->
+				<!--language="Lice"-->
+				<!--implementationClass="org.lice.lang.psi.LiceParserDefinition"/>-->
 		<codeStyleSettingsProvider
 				implementation="org.lice.lang.LiceCodeStyleSettingsProvider"/>
 		<langCodeStyleSettingsProvider
