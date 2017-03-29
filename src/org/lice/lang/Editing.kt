@@ -14,9 +14,11 @@ import com.intellij.spellchecker.tokenizer.Tokenizer
 
 
 class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
-	override fun getActionName(p0: PsiDirectory?, p1: String?) = CAPTION
+	override fun getActionName(p0: PsiDirectory?, p1: String?) =
+			CAPTION
 
-	override fun getDefaultExtension() = EXTENSION
+	override fun getDefaultExtension() =
+			EXTENSION
 
 	private companion object Caption {
 		private val CAPTION = "New Lice File"
@@ -24,8 +26,12 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 }
 
 class LiceCommenter : Commenter {
-	override fun getCommentedBlockCommentPrefix() = blockCommentPrefix
-	override fun getCommentedBlockCommentSuffix() = blockCommentSuffix
+	override fun getCommentedBlockCommentPrefix() =
+			blockCommentPrefix
+
+	override fun getCommentedBlockCommentSuffix() =
+			blockCommentSuffix
+
 	override fun getBlockCommentPrefix() = null
 	override fun getBlockCommentSuffix() = null
 

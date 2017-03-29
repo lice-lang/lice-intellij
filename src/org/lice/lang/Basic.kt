@@ -36,7 +36,8 @@ object LiceFileType : LanguageFileType(LiceLanguage) {
 }
 
 class LiceFileTypeFactory : FileTypeFactory() {
-	override fun createFileTypes(p0: FileTypeConsumer) = p0.consume(LiceFileType, EXTENSION)
+	override fun createFileTypes(consumer: FileTypeConsumer) =
+			consumer.consume(LiceFileType, EXTENSION)
 }
 
 class LiceBraceMatcher : PairedBraceMatcher {
@@ -50,19 +51,22 @@ class LiceBraceMatcher : PairedBraceMatcher {
 
 	override fun getPairs() = PAIRS
 	override fun getCodeConstructStart(p0: PsiFile?, p1: Int) = p1
-	override fun isPairedBracesAllowedBeforeType(p0: IElementType, p1: IElementType?) = true
+	override fun isPairedBracesAllowedBeforeType(p0: IElementType, p1: IElementType?) =
+			true
 }
 
 
 class LiceLiveTemplateContext : FileTypeBasedContextType("Lice", "Lice", LiceFileType)
 
 class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
-	override fun getDefaultLiveTemplateFiles() = arrayOf("liveTemplates/Lice")
-	override fun getHiddenLiveTemplateFiles() = null
+	override fun getDefaultLiveTemplateFiles() =
+			arrayOf("liveTemplates/Lice")
+
+	override fun getHiddenLiveTemplateFiles() =
+			null
 }
 
 class LiceContext : TemplateContextType("Lice", "Lice") {
 	override fun isInContext(p0: PsiFile, p1: Int) =
 			p0.name.endsWith(".lice")
 }
-

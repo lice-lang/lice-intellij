@@ -1,17 +1,27 @@
 {
 
-parserClass="org.lice.lang.LiceParser"
-extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+	parserClass="org.lice.lang.LiceParser"
+	extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
-psiClassPrefix="Lice"
-psiImplClassSuffix="Impl"
-psiPackage="org.lice.lang.psi"
-psiPackage="org.lice.lang.psi.impl"
+	psiClassPrefix="Lice"
+	psiImplClassSuffix="Impl"
+	psiPackage="org.lice.lang.psi"
+	psiPackage="org.lice.lang.psi.impl"
 
-elementTypeHolderClass="org.lice.lang.psi.LiceTypes"
-elementTypeClass="org.lice.lang.psi.LiceElementType"
-tokenTypeClass="org.lice.lang.psi.LiceTokenType"
+	elementTypeHolderClass="org.lice.lang.psi.LiceTypes"
+	elementTypeClass="org.lice.lang.psi.LiceElementType"
+	tokenTypeClass="org.lice.lang.psi.LiceTokenType"
 
-psiImplUtilClass="org.lice.lang.psi.impl"
+//	psiImplUtilClass="org.lice.lang.psi.impl.LicePsiImplUtil"
+
+	tokens = [
+		bool = "regexp:true|false"
+		null = 'null'
+	]
 
 }
+
+liceFile ::= (stmt|comment)*
+
+stmt ::= '(' stmt_body ')' | symbol | number | bool
+stmt_body ::= (symbol | stmt)*
