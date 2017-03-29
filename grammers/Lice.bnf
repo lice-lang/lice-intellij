@@ -1,7 +1,7 @@
 {
 
 	parserClass="org.lice.lang.LiceParser"
-  parserUtilClass="org.lice.lang.LiceParserUtil"
+//	parserUtilClass="org.lice.lang.LiceParserUtil"
 	extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
 	psiClassPrefix="Lice"
@@ -22,11 +22,14 @@
 
 }
 
-liceFile ::= (stmt|comment)*
+liceFile ::= (expr|comment)*
 
-stmt ::= ('(' stmt_body ')') | symbol | number | bool | literal
-stmt_body ::= (symbol | stmt)*
+expr ::= symbol
+        | number
+        | bool
+        | literal
+        | "(" {expr}* ")"
 
-bool ::= "true"|"false"
+//bool ::= "true"|"false"
 
-//comment ::= ";" {}
+comment ::= ";" {"[*]"} "\n"

@@ -5,7 +5,6 @@
  */
 package org.lice.lang
 
-import com.intellij.codeInsight.template.FileTypeBasedContextType
 import com.intellij.codeInsight.template.TemplateContextType
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.BracePair
@@ -55,8 +54,7 @@ class LiceBraceMatcher : PairedBraceMatcher {
 			true
 }
 
-
-class LiceLiveTemplateContext : FileTypeBasedContextType("Lice", "Lice", LiceFileType)
+//class LiceLiveTemplateContext : FileTypeBasedContextType("Lice", "Lice", LiceFileType)
 
 class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 	override fun getDefaultLiveTemplateFiles() =

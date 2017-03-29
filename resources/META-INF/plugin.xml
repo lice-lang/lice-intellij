@@ -30,6 +30,10 @@ Lice language support.
 		<lang.parserDefinition
 				language="Lice"
 				implementationClass="org.lice.lang.psi.LiceParserDefinition"/>
+		<codeStyleSettingsProvider
+				implementation="org.lice.lang.LiceCodeStyleSettingsProvider"/>
+		<langCodeStyleSettingsProvider
+				implementation="org.lice.lang.LiceLangCodeStyleSettingsProvider"/>
 	</extensions>
 
 	<actions>
