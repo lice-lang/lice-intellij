@@ -24,7 +24,6 @@ object LiceLanguage : Language("Lice", "text/lice") {
 	override fun isCaseSensitive() = true
 }
 
-
 object LiceFileType : LanguageFileType(LiceLanguage) {
 	override fun getDefaultExtension() = EXTENSION
 	override fun getName() = "Lice file"

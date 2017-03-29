@@ -5,6 +5,7 @@ import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
 import org.lice.lang.psi.LiceTypes;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
 
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static com.intellij.psi.TokenType.BAD_CHARACTER;

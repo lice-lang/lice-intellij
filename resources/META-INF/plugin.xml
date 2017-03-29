@@ -27,9 +27,9 @@ Lice language support.
 				implementation="org.lice.lang.LiceLiveTemplateProvider"/>
 		<liveTemplateContext
 				implementation="org.lice.lang.LiceContext"/>
-		<!--<lang.parserDefinition-->
-		<!--language="Lice"-->
-		<!--implementationClass="org.lice.lang.psi.LiceParserDefinition"/>-->
+		<lang.parserDefinition
+				language="Lice"
+				implementationClass="org.lice.lang.psi.LiceParserDefinition"/>
 		<codeStyleSettingsProvider
 				implementation="org.lice.lang.LiceCodeStyleSettingsProvider"/>
 		<langCodeStyleSettingsProvider
@@ -48,8 +48,15 @@ Lice language support.
 				description="Create a lice script file">
 			<add-to-group
 					group-id="NewGroup"
-					anchor="before"
+					anchor="after"
 					relative-to-action="NewFile"/>
 		</action>
+		<!--<group-->
+				<!--id="Lice.Group" text="Lice">-->
+			<!--<action id="Lice.RunFile" class=""/>-->
+			<!--<add-to-group-->
+					<!--group-id="ProjectViewPopupMenuRunGroup"-->
+					<!--anchor="first"/>-->
+		<!--</group>-->
 	</actions>
 </idea-plugin>

@@ -1,7 +1,7 @@
 {
 
 	parserClass="org.lice.lang.LiceParser"
-	parserUtilClass="org.lice.lang.LiceParserUtil"
+	parserUtilClass="com.intellij.lang.parser.GeneratedParserUtilBase"
 	extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
 	psiClassPrefix="Lice"
@@ -30,13 +30,13 @@
 	]
 }
 
-liceFile ::= (expr|COMMENT)*
+LICE_FILE ::= (EXPRESSION|COMMENT)*
 
-expr ::= SYMBOL
+EXPRESSION ::= SYMBOL
         | INTEGER
         | FLOAT
         | BOOL
         | LITERAL
         | NULL
-        | LPAREN SYMBOL {expr}* RPAREN
+        | LPAREN SYMBOL {EXPRESSION}* RPAREN
 
