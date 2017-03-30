@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils
 import org.lice.compiler.util.println
 import org.lice.lang.LiceInfo.EXTENSION
 import org.lice.lang.LiceInfo.LICE_ICON
+import org.lice.tools.displaySemanticTree
 import org.lice.tools.displaySyntaxTree
 import java.io.File
 import java.time.LocalDate
@@ -141,6 +142,24 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 						.saveDocument(doc)
 			}
 			displaySyntaxTree(File(file.path))
+		}
+	}
+}
+
+class ShowLiceFileSySemanticntaxTree : LiceFileActions(
+		"View Semantic Tree",
+		"View Semantic Tree",
+		LiceInfo.LICE_AST_NODE2_ICON) {
+	override fun actionPerformed(e: AnActionEvent) {
+		compatibleFiles(e).forEach { file ->
+			FileDocumentManager
+					.getInstance()
+					.getDocument(file)?.let { doc ->
+				FileDocumentManager
+						.getInstance()
+						.saveDocument(doc)
+			}
+			displaySemanticTree(File(file.path))
 		}
 	}
 }
