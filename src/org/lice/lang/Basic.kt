@@ -16,19 +16,20 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import org.lice.lang.LiceInfo.EXTENSION
+import org.lice.lang.LiceInfo.LANGUAGE_NAME
 import org.lice.lang.LiceInfo.LICE_ICON
 import org.lice.lang.psi.LiceTokenType
 
-object LiceLanguage : Language("Lice", "text/lice") {
-	override fun getDisplayName() = "Lice"
+object LiceLanguage : Language(LANGUAGE_NAME, "text/$EXTENSION") {
+	override fun getDisplayName() = LANGUAGE_NAME
 	override fun isCaseSensitive() = true
 }
 
 object LiceFileType : LanguageFileType(LiceLanguage) {
 	override fun getDefaultExtension() = EXTENSION
-	override fun getName() = "Lice file"
+	override fun getName() = "$LANGUAGE_NAME file"
 	override fun getIcon() = LICE_ICON
-	override fun getDescription() = "Lice"
+	override fun getDescription() = LANGUAGE_NAME
 }
 
 class LiceFileTypeFactory : FileTypeFactory() {
@@ -63,7 +64,7 @@ class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 			null
 }
 
-class LiceContext : TemplateContextType("Lice", "Lice") {
+class LiceContext : TemplateContextType(LANGUAGE_NAME, LANGUAGE_NAME) {
 	override fun isInContext(p0: PsiFile, p1: Int) =
-			p0.name.endsWith(".lice")
+			p0.name.endsWith(".$EXTENSION")
 }

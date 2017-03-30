@@ -10,6 +10,7 @@ import com.intellij.application.options.CodeStyleAbstractPanel
 import com.intellij.application.options.SmartIndentOptionsEditor
 import com.intellij.application.options.TabbedLanguageCodeStylePanel
 import com.intellij.psi.codeStyle.*
+import org.lice.lang.LiceInfo.LANGUAGE_NAME
 
 class LiceCodeStyleSettings(container: CodeStyleSettings?)
 	: CustomCodeStyleSettings("LiceCodeStyleSettings", container)
@@ -30,7 +31,7 @@ class LiceCodeStyleSettingsProvider : CodeStyleSettingsProvider() {
 class LiceCodeStyleConfigurable(
 		settings: CodeStyleSettings,
 		cloneSettings: CodeStyleSettings
-) : CodeStyleAbstractConfigurable(settings, cloneSettings, "Lice") {
+) : CodeStyleAbstractConfigurable(settings, cloneSettings, LANGUAGE_NAME) {
 
 	override fun createPanel(settings: CodeStyleSettings): CodeStyleAbstractPanel
 			= Panel(currentSettings, settings)
@@ -78,7 +79,6 @@ class LiceLangCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider() {
 
 ;; string literals
 "ass we can"
-
 
 """
 	}

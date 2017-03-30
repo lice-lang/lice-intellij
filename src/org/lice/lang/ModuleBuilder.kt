@@ -11,11 +11,12 @@ import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider
+import org.lice.lang.LiceInfo.LANGUAGE_NAME
 
 class LiceModuleWizardSetup : ModuleBuilder() {
 	override fun getBuilderId() = "lice.module.builder"
-	override fun getGroupName() = "Lice"
-	override fun getPresentableName() = "Lice"
+	override fun getGroupName() = LANGUAGE_NAME
+	override fun getPresentableName() = LANGUAGE_NAME
 	override fun setupRootModel(model: ModifiableRootModel) {
 	}
 
@@ -34,7 +35,7 @@ class LiceModuleType : ModuleType<LiceModuleWizardSetup>(ID) {
 
 	override fun createModuleBuilder() = LiceModuleWizardSetup()
 
-	override fun getName() = "Lice"
+	override fun getName() = LANGUAGE_NAME
 	override fun getDescription() = "Empty Lice module"
 	override fun getBigIcon() = LiceInfo.LICE_BIG_ICON
 	override fun getNodeIcon(p0: Boolean) = bigIcon

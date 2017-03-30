@@ -22,7 +22,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
 import com.intellij.spellchecker.tokenizer.Tokenizer
-import org.lice.Lice
+import org.apache.commons.lang.StringUtils
+import org.lice.compiler.util.println
 import org.lice.lang.LiceInfo.EXTENSION
 import org.lice.lang.LiceInfo.LICE_ICON
 import java.io.File
@@ -86,7 +87,17 @@ class RunLiceFile : AnAction(
 						.getInstance()
 						.saveDocument(doc)
 			}
-			Lice.run(File(file.path))
+			Runtime.getRuntime().exec(
+					StringUtils.join(arrayOf(
+							LiceInfo.JAVA_EXECUTABLE_PATH,
+							"-jar",
+							LiceInfo.LICE_PATH,
+							file.path
+					)).println(),
+					null,
+					File(file.parent.path)
+			)
+//			Lice.run(File(file.path))
 		}
 	}
 

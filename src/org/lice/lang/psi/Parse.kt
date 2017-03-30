@@ -17,6 +17,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import org.lice.lang.LiceFileType
+import org.lice.lang.LiceInfo.LANGUAGE_NAME
 import org.lice.lang.LiceInfo.LICE_ICON
 import org.lice.lang.LiceLanguage
 import org.lice.lang.LiceLexer
@@ -38,7 +39,7 @@ class LiceFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, LiceL
 	override fun getFileType() =
 			LiceFileType
 	override fun toString() =
-			"Lice File"
+			"$LANGUAGE_NAME File"
 	override fun getIcon(flags: Int) =
 			LICE_ICON
 }
