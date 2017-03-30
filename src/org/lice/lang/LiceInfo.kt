@@ -11,6 +11,10 @@ import java.io.File
 object LiceInfo {
 	val LICE_ICON = IconLoader.getIcon("/icons/lice.png")
 	val LICE_BIG_ICON = IconLoader.getIcon("/icons/big_icon.png")
+	val LICE_AST_LEAF_ICON = IconLoader.getIcon("/icons/ast_leaf.png")
+	val LICE_AST_NODE_ICON = IconLoader.getIcon("/icons/ast_node.png")
+	val LICE_AST_NODE2_ICON = IconLoader.getIcon("/icons/ast_node_2.png")
+	val LICE_AST_NODE0_ICON = IconLoader.getIcon("/icons/ast_node_0.png")
 
 	val EXTENSION = "lice"
 	val LANGUAGE_NAME = "Lice"

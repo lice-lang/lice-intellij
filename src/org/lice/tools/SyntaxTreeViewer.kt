@@ -17,6 +17,7 @@ import org.lice.repl.VERSION_CODE
 import java.awt.BorderLayout
 import java.io.File
 import java.time.LocalDate
+import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 
@@ -87,14 +88,13 @@ private fun createTreeRootFromFile(file: File): UINode {
  */
 fun displaySyntaxTree(file: File) {
 	UIManager.setLookAndFeel(DarculaLaf())
-	UIManager.put("Tree.collapsedIcon", LiceInfo.LICE_BIG_ICON)
-	UIManager.put("Tree.expandedIcon", LiceInfo.LICE_BIG_ICON)
-	UIManager.put("Tree.openIcon", LiceInfo.LICE_BIG_ICON)
-	UIManager.put("Tree.closedIcon", LiceInfo.LICE_BIG_ICON)
-	UIManager.put("Tree.leafIcon", LiceInfo.LICE_BIG_ICON)
+	UIManager.put("Tree.collapsedIcon", LiceInfo.LICE_AST_NODE0_ICON)
+	UIManager.put("Tree.expandedIcon", LiceInfo.LICE_AST_NODE2_ICON)
+	UIManager.put("Tree.leafIcon", LiceInfo.LICE_AST_LEAF_ICON)
 	val frame = JFrame("Lice Syntax Tree $VERSION_CODE")
 	frame.layout = BorderLayout()
 	frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+	frame.iconImage = ImageIO.read(File("/icons/big_icon.png"))
 	frame.setLocation(80, 80)
 	frame.setSize(480, 480)
 	fun File.neighbour() = "$parent/$name-edited-${System.currentTimeMillis()}.lice"
