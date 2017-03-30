@@ -146,7 +146,7 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 	}
 }
 
-class ShowLiceFileSySemanticntaxTree : LiceFileActions(
+class ShowLiceFileSemanticTree : LiceFileActions(
 		"View Semantic Tree",
 		"View Semantic Tree",
 		LiceInfo.LICE_AST_NODE2_ICON) {
