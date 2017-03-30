@@ -1,24 +1,67 @@
 <templateSet group="Lice">
-  <template name="d" value="(def $NAME$ $PARAMS$&#10;  (|&gt; ($END$)))" description="define a function" toReformat="false" toShortenFQNames="true">
+  <template name="d" value="(def $NAME$ $PARAMS$&#10;  (|&gt; ($END$)))" description="define a function" toReformat="true" toShortenFQNames="true">
     <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
     <variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
-      <option name="OTHER" value="true" />
+      <option name="Lice" value="true" />
+      <option name="OTHER" value="false" />
     </context>
   </template>
-  <template name="de" value="(defexpr $NAME$ $PARAMS$&#10;  (|&gt; ($END$)))" description="define a call-by-name function" toReformat="false" toShortenFQNames="true">
+  <template name="de" value="(defexpr $NAME$ $PARAMS$&#10;  (|&gt; ($END$)))" description="define a call-by-name function" toReformat="true" toShortenFQNames="true">
     <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
     <variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
-      <option name="OTHER" value="true" />
+      <option name="Lice" value="true" />
+      <option name="OTHER" value="false" />
     </context>
   </template>
-  <template name="for" value="(for-each $LOOPER$&#10;  (.. $FROM$ $TO$)&#10;  (|&gt; ($END$)))" description="for-each" toReformat="false" toShortenFQNames="true">
-    <variable name="LOOPER" expression="" defaultValue="" alwaysStopAt="true" />
+  <template name="for" value="(for-each $LOOPER$&#10;  (.. $FROM$ $TO$)&#10;  (|&gt; ($END$)))" description="for-each a integer range" toReformat="true" toShortenFQNames="true">
+    <variable name="LOOPER" expression="" defaultValue="i" alwaysStopAt="true" />
     <variable name="FROM" expression="" defaultValue="" alwaysStopAt="true" />
     <variable name="TO" expression="" defaultValue="" alwaysStopAt="true" />
     <context>
-      <option name="OTHER" value="true" />
+      <option name="Lice" value="true" />
+      <option name="OTHER" value="false" />
+    </context>
+  </template>
+  <template name="dr" value="(defexpr $NAME$ $PARAMS$&#10;  (|&gt; ($BODY$)&#10;      ($NAME$ $END$)))" description="define a recursive-call function" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="PARAMS" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="BODY" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Lice" value="true" />
+    </context>
+  </template>
+  <template name="forl" value="(for-each $LOOPER$&#10;  (list $ELEMENTS$)&#10;  (|&gt; ($END$)))" description="for-each a list" toReformat="true" toShortenFQNames="true">
+    <variable name="LOOPER" expression="" defaultValue="i" alwaysStopAt="true" />
+    <variable name="ELEMENTS" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Lice" value="true" />
+    </context>
+  </template>
+  <template name="p" value="(println $END$)" description="println" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="Lice" value="true" />
+    </context>
+  </template>
+  <template name="pr" value="(print $END$)" description="print" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Lice" value="true" />
+    </context>
+  </template>
+  <template name="pe" value="(println-err $END$)" description="println-err" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Lice" value="true" />
+    </context>
+  </template>
+  <template name="pre" value="(print-err $END$)" description="print-err" toReformat="true" toShortenFQNames="true">
+    <context>
+      <option name="Lice" value="true" />
+    </context>
+  </template>
+  <template name="run" value="(|&gt; ($END$))" description="create a do block" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="Lice" value="true" />
     </context>
   </template>
 </templateSet>
