@@ -82,7 +82,6 @@ fun main(args: Array<String>) {
 		output.font = Font(FONT_NAME, 0, 14)
 	}
 	val frame = JFrame("Lice language interpreter $VERSION_CODE")
-//	frame.iconImage = ImageIO.read(File("/icons/big_icon.png"))
 	frame.layout = BorderLayout()
 	frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
 	frame.add(JBScrollPane(output), BorderLayout.CENTER)

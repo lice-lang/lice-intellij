@@ -109,8 +109,6 @@ class RunLiceFile : LiceFileActions(
 			Runtime.getRuntime().exec(
 					StringUtils.join(arrayOf(
 							LiceInfo.JAVA_PATH_WRAPPED,
-							//							"-jar",
-//							LiceInfo.LICE_PATH_WRAPPED,
 							"-classpath",
 							"\"" + StringUtils.join(arrayOf(
 									LiceInfo.KOTLIN_RUNTIME_PATH,
@@ -123,7 +121,36 @@ class RunLiceFile : LiceFileActions(
 					null,
 					File(file.parent.path)
 			)
-//			Lice.run(File(file.path))
+		}
+	}
+
+}
+class ShowLiceFileSyntaxTree : LiceFileActions(
+		"View Syntax Tree",
+		"View Syntax Tree",
+		AllIcons.Toolwindows.ToolWindowRun) {
+	override fun actionPerformed(e: AnActionEvent) {
+		compatibleFiles(e).forEach { file ->
+			FileDocumentManager
+					.getInstance()
+					.getDocument(file)?.let { doc ->
+				FileDocumentManager
+						.getInstance()
+						.saveDocument(doc)
+			}
+			Runtime.getRuntime().exec(
+					StringUtils.join(arrayOf(
+							LiceInfo.JAVA_PATH_WRAPPED,
+							"-classpath",
+							"\"" + StringUtils.join(arrayOf(
+									LiceInfo.KOTLIN_RUNTIME_PATH,
+									LiceInfo.KOTLIN_REFLECT_PATH,
+									LiceInfo.LICE_PATH
+							), ";") + "\"",
+							"org.lice.repl.Main",
+							"\"" + file.path + "\""
+					), " ").println()
+			)
 		}
 	}
 
