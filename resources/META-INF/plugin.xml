@@ -53,6 +53,7 @@ Lice language support.
 		</action>
 		<group id="Lice.Group" text="Lice">
 			<action id="Lice.RunFile" class="org.lice.lang.RunLiceFile"/>
+			<action id="Lice.ShowSyntaxTree" class="org.lice.lang.ShowLiceFileSyntaxTree" />
 			<add-to-group
 					group-id="ProjectViewPopupMenuRunGroup"
 					anchor="first"/>

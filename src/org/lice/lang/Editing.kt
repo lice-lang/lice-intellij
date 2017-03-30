@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils
 import org.lice.compiler.util.println
 import org.lice.lang.LiceInfo.EXTENSION
 import org.lice.lang.LiceInfo.LICE_ICON
+import org.lice.tools.displaySyntaxTree
 import java.io.File
 import java.time.LocalDate
 import javax.swing.Icon
@@ -125,6 +126,7 @@ class RunLiceFile : LiceFileActions(
 	}
 
 }
+
 class ShowLiceFileSyntaxTree : LiceFileActions(
 		"View Syntax Tree",
 		"View Syntax Tree",
@@ -138,22 +140,9 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 						.getInstance()
 						.saveDocument(doc)
 			}
-			Runtime.getRuntime().exec(
-					StringUtils.join(arrayOf(
-							LiceInfo.JAVA_PATH_WRAPPED,
-							"-classpath",
-							"\"" + StringUtils.join(arrayOf(
-									LiceInfo.KOTLIN_RUNTIME_PATH,
-									LiceInfo.KOTLIN_REFLECT_PATH,
-									LiceInfo.LICE_PATH
-							), ";") + "\"",
-							"org.lice.repl.Main",
-							"\"" + file.path + "\""
-					), " ").println()
-			)
+			displaySyntaxTree(File(file.path))
 		}
 	}
-
 }
 
 class LiceCommenter : Commenter {
