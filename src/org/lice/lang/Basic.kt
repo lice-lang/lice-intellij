@@ -65,6 +65,6 @@ class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 }
 
 class LiceContext : TemplateContextType(LANGUAGE_NAME, LANGUAGE_NAME) {
-	override fun isInContext(p0: PsiFile, p1: Int) =
-			p0.name.endsWith(".$EXTENSION")
+	override fun isInContext(file: PsiFile, p1: Int) =
+			file.name.endsWith(".$EXTENSION")
 }

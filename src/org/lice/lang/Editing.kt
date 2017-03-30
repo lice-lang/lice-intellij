@@ -89,11 +89,18 @@ class RunLiceFile : AnAction(
 			}
 			Runtime.getRuntime().exec(
 					StringUtils.join(arrayOf(
-							LiceInfo.JAVA_EXECUTABLE_PATH,
-							"-jar",
-							LiceInfo.LICE_PATH,
-							file.path
-					)).println(),
+							LiceInfo.JAVA_PATH_WRAPPED,
+//							"-jar",
+//							LiceInfo.LICE_PATH_WRAPPED,
+							"-classpath",
+							"\"" + StringUtils.join(arrayOf(
+									LiceInfo.KOTLIN_RUNTIME_PATH,
+									LiceInfo.KOTLIN_REFLECT_PATH,
+									LiceInfo.LICE_PATH
+							), ";") + "\"",
+							"org.lice.repl.Main",
+							"\"" + file.path + "\""
+					), " ").println(),
 					null,
 					File(file.parent.path)
 			)
