@@ -27,6 +27,8 @@ import org.lice.compiler.util.println
 import org.lice.lang.LiceInfo.EXTENSION
 import org.lice.lang.LiceInfo.LICE_ICON
 import java.io.File
+import java.time.LocalDate
+import javax.swing.Icon
 
 
 class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
@@ -50,7 +52,12 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 		}
 		return arrayOf(directory?.add(PsiFileFactory
 				.getInstance(directory.project)
-				.createFileFromText(fixedExtension, LiceFileType, "")))
+				.createFileFromText(fixedExtension, LiceFileType, """;
+; Created by ${System.getenv("USERNAME")} on ${LocalDate.now()}
+;
+
+(|>)
+""")))
 	}
 
 	override fun invokeDialog(
@@ -74,7 +81,19 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 	}
 }
 
-class RunLiceFile : AnAction(
+abstract class LiceFileActions(
+		text: String,
+		description: String,
+		icon: Icon
+) : AnAction(text, description, icon) {
+
+	protected fun compatibleFiles(e: AnActionEvent): Array<out VirtualFile> =
+			(CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext) ?: emptyArray()).filter { file ->
+				file is VirtualFile && EXTENSION == file.extension
+			}.toTypedArray()
+}
+
+class RunLiceFile : LiceFileActions(
 		"Run Lice script",
 		"Run Lice script",
 		AllIcons.Toolwindows.ToolWindowRun) {
@@ -90,7 +109,7 @@ class RunLiceFile : AnAction(
 			Runtime.getRuntime().exec(
 					StringUtils.join(arrayOf(
 							LiceInfo.JAVA_PATH_WRAPPED,
-//							"-jar",
+							//							"-jar",
 //							LiceInfo.LICE_PATH_WRAPPED,
 							"-classpath",
 							"\"" + StringUtils.join(arrayOf(
@@ -108,10 +127,6 @@ class RunLiceFile : AnAction(
 		}
 	}
 
-	private fun compatibleFiles(e: AnActionEvent): Array<out VirtualFile> =
-			(CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext) ?: emptyArray()).filter { file ->
-				file is VirtualFile && EXTENSION == file.extension
-			}.toTypedArray()
 }
 
 class LiceCommenter : Commenter {
