@@ -130,7 +130,7 @@ class RunLiceFile : LiceFileActions(
 class ShowLiceFileSyntaxTree : LiceFileActions(
 		"View Syntax Tree",
 		"View Syntax Tree",
-		AllIcons.Toolwindows.ToolWindowRun) {
+		LiceInfo.LICE_AST_NODE_ICON) {
 	override fun actionPerformed(e: AnActionEvent) {
 		compatibleFiles(e).forEach { file ->
 			FileDocumentManager

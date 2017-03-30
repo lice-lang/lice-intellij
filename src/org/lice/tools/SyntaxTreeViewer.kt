@@ -31,9 +31,7 @@ private fun mapAst2Display(
 ): UINode = when (node) {
 	is StringLeafNode -> UINode(node)
 	is StringMiddleNode -> viewRoot.apply {
-		node.list
-				.subList(1, node.list.size)
-				.forEach { add(mapAst2Display(it, UINode(it))) }
+		node.list.subList(1, node.list.size).forEach { add(mapAst2Display(it, UINode(it))) }
 	}
 	else -> UINode("null")
 }
@@ -47,26 +45,19 @@ private fun mapDisplay2Ast(
 		numOfIndents: Int = 0) {
 	if (numOfIndents == 0) gen.append("\n")
 	when {
-		node.isLeaf -> gen
-				.append(" ")
-				.append(node.userObject.toString())
-				.append("")
+		node.isLeaf -> gen.append(" ").append(node.userObject.toString()).append("")
 		else -> {
-			gen
-					.append("\n")
+			gen.append("\n")
 					.append(StringUtils.repeat("  ", numOfIndents))
 					.append("(")
 					.append(node.userObject.toString())
-			node.children()
-					.toList()
-//					.map { it as UINode }
-					.forEach {
-						mapDisplay2Ast(
-								it as UINode,
-								gen,
-								numOfIndents + 1
-						)
-					}
+			node.children().toList().forEach {
+				mapDisplay2Ast(
+						it as UINode,
+						gen,
+						numOfIndents + 1
+				)
+			}
 			gen.append(")")
 		}
 	}
@@ -77,53 +68,25 @@ private fun createTreeRootFromFile(file: File): UINode {
 	return mapAst2Display(ast, UINode(ast))
 }
 
-//class IconNode(
-//		val icon: Icon,
-//		val txt: String
-//)
-
 /**
  * @author ice1000
  */
 fun displaySyntaxTree(file: File) {
 	UIManager.setLookAndFeel(DarculaLaf())
 	UIManager.put("Tree.collapsedIcon", LiceInfo.LICE_AST_NODE0_ICON)
-	UIManager.put("Tree.expandedIcon", LiceInfo.LICE_AST_NODE2_ICON)
+	UIManager.put("Tree.expandedIcon", LiceInfo.LICE_AST_NODE_ICON)
 	UIManager.put("Tree.openIcon", LiceInfo.LICE_AST_NODE0_ICON)
 	UIManager.put("Tree.closedIcon", LiceInfo.LICE_AST_NODE2_ICON)
 	UIManager.put("Tree.leafIcon", LiceInfo.LICE_AST_LEAF_ICON)
 	val frame = JFrame("Lice Syntax Tree $VERSION_CODE")
 	frame.layout = BorderLayout()
-	frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+	frame.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
 	frame.setLocation(80, 80)
 	frame.setSize(480, 480)
 	fun File.neighbour() = "$parent/$name-edited-${System.currentTimeMillis()}.lice"
 	val root = createTreeRootFromFile(file)
 	frame.add(
-			JBScrollPane(JTree(root).apply {
-				//				val renderer = object : DefaultTreeCellRenderer(), TreeCellRenderer {
-//					override fun getTreeCellRendererComponent(
-//							tree: JTree?,
-//							value: Any?,
-//							sel: Boolean,
-//							expanded: Boolean,
-//							leaf: Boolean,
-//							row: Int,
-//							hasFocus: Boolean
-//					): Component {
-//						super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus)
-//						if (value is IconNode) {
-//							icon = value.icon
-//							text = value.txt
-//						}
-//						return this
-//					}
-//				}
-//				renderer.closedIcon = LiceInfo.LICE_BIG_ICON
-//				renderer.openIcon = LiceInfo.LICE_BIG_ICON
-//				cellRenderer = renderer
-				isEditable = true
-			}),
+			JBScrollPane(JTree(root).apply { isEditable = true }),
 			BorderLayout.CENTER
 	)
 	val button = JButton("Export Lice Code")
