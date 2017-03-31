@@ -39,6 +39,7 @@ Lice language support.
 				builderClass="org.lice.lang.LiceModuleWizardSetup"
 				id="DEMO_STEP"
 				order="first"/>
+		<configurationType implementation="org.lice.lang.LiceConfigurationType" />
 	</extensions>
 
 	<actions>
