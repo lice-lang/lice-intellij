@@ -2,6 +2,7 @@
 	<id>org.lice.lang</id>
 	<name>Lice</name>
 	<version>1.0</version>
+	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.tech">Lice</vendor>
 
 	<description><![CDATA[
@@ -57,7 +58,7 @@ Lice language support.
 			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTree" />
 			<add-to-group
 					group-id="ProjectViewPopupMenuRunGroup"
-					anchor="first"/>
+					anchor="last"/>
 		</group>
 		<action
 				text="Start Lice Repl"

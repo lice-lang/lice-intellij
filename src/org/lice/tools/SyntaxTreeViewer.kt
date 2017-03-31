@@ -6,6 +6,7 @@
 package org.lice.tools
 
 import com.intellij.ide.ui.laf.darcula.DarculaLaf
+import com.intellij.openapi.ui.Messages
 import com.intellij.ui.components.JBScrollPane
 import org.apache.commons.lang.StringUtils
 import org.lice.compiler.model.StringLeafNode
@@ -104,8 +105,8 @@ fun displaySyntaxTree(file: File) {
 		File(name)
 				.apply { if (!exists()) createNewFile() }
 				.writeText(sb.toString())
-		JOptionPane.showMessageDialog(frame, """Successfully Export to:
-$name""")
+		Messages.showMessageDialog("""Successfully Export to:
+$name""", "Export Lice Code", LiceInfo.LICE_ICON)
 	}
 	frame.add(button, BorderLayout.SOUTH)
 	frame.isVisible = true

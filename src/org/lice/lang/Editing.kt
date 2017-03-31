@@ -90,15 +90,35 @@ abstract class LiceFileActions(
 ) : AnAction(text, description, icon) {
 
 	protected fun compatibleFiles(e: AnActionEvent): Array<out VirtualFile> =
-			(CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext) ?: emptyArray()).filter { file ->
-				file is VirtualFile && EXTENSION == file.extension
-			}.toTypedArray()
+			CommonDataKeys
+					.VIRTUAL_FILE_ARRAY
+					.getData(e.dataContext)
+					?.filter { file -> file.fileType is LiceFileType }
+					?.toTypedArray()
+					?: emptyArray()
+
+//	protected fun printFiles(e: AnActionEvent) {
+//		CommonDataKeys
+//				.VIRTUAL_FILE_ARRAY
+//				.getData(e.dataContext)
+//				?.forEach { println(it.path) }
+//	}
+
+	override fun update(e: AnActionEvent?) {
+		e?.presentation?.run {
+			isEnabledAndVisible = compatibleFiles(e).run {
+				isNotEmpty() and all { EXTENSION == it.extension }
+			}
+		}
+	}
+
 }
 
 class RunLiceFile : LiceFileActions(
 		"Run Lice script",
-		"Run Lice script",
+		"Run Lice script with lice interpreter",
 		AllIcons.Toolwindows.ToolWindowRun) {
+
 	override fun actionPerformed(e: AnActionEvent) {
 		compatibleFiles(e).forEach { file ->
 			FileDocumentManager
@@ -130,7 +150,7 @@ class RunLiceFile : LiceFileActions(
 
 class ShowLiceFileSyntaxTree : LiceFileActions(
 		"View Syntax Tree",
-		"View Syntax Tree",
+		"View Lice file syntax tree in a window",
 		LiceInfo.LICE_AST_NODE_ICON) {
 	override fun actionPerformed(e: AnActionEvent) {
 		compatibleFiles(e).forEach { file ->
@@ -148,7 +168,7 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 
 class ShowLiceFileSemanticTree : LiceFileActions(
 		"View Semantic Tree",
-		"View Semantic Tree",
+		"View Lice file semantic tree in a window",
 		LiceInfo.LICE_AST_NODE2_ICON) {
 	override fun actionPerformed(e: AnActionEvent) {
 		compatibleFiles(e).forEach { file ->
