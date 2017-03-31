@@ -52,46 +52,25 @@ class LiceRunConfigPanel(
 				project,
 				FileChooserDescriptor(true, false, false, false, false, false)
 		)
-		val base: () -> GridBagConstraints = {
+		val base: (Boolean, Int, Int, Double) -> GridBagConstraints = { fillConfig, x, y, wx ->
 			GridBagConstraints().apply {
 				insets = Insets(3, 3, 3, 3)
 				anchor = GridBagConstraints.LINE_START
+				if (fillConfig) fill = GridBagConstraints.HORIZONTAL
+				gridx = x
+				gridy = y
+				weightx = wx
 			}
 		}
 
 		val moduleLabel = JBLabel("Lice Script Path")
-		add(moduleLabel, base().apply {
-			gridx = 0
-			gridy = 0
-			weightx = 0.1
-			fill = GridBagConstraints.HORIZONTAL
-		})
+		add(moduleLabel, base(true, 0, 0, 0.1))
+		add(scriptComponent, base(true, 1, 0, 1.0))
+		add(JBLabel("Working directory"), base(false, 0, 1, 0.1))
+		add(workingDirectoryComponent, base(true, 1, 1, 0.1))
 
-		add(scriptComponent, base().apply {
-			gridx = 1
-			fill = GridBagConstraints.HORIZONTAL
-			weightx = 1.0
-		})
-
-		add(JBLabel("Working directory"), base().apply {
-			gridx = 0
-			gridy = 1
-			weightx = 0.1
-		})
-
-		add(workingDirectoryComponent, base().apply {
-			gridx = 1
-			gridy = 1
-			weightx = 0.1
-			fill = GridBagConstraints.HORIZONTAL
-		})
-
-		add(environmentVariables, base().apply {
-			gridx = 0
+		add(environmentVariables, base(true, 0, 2, 0.1).apply {
 			gridwidth = 2
-			gridy = 2
-			weightx = 0.1
-			fill = GridBagConstraints.HORIZONTAL
 		})
 	}
 }
