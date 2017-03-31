@@ -15,6 +15,7 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.ui.RawCommandLineEditor
 import com.intellij.ui.components.JBLabel
 import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
 import java.awt.Insets
 import javax.swing.JPanel
 
@@ -30,12 +31,19 @@ object LiceConfigurationType : ConfigurationTypeBase(
 }
 
 class LiceRunConfigPanel(
-		private var scriptComponent: TextFieldWithBrowseButton,
-		private var programParametersComponent: RawCommandLineEditor,
-		private var workingDirectoryComponent: TextFieldWithBrowseButton,
-		private var environmentVariables: EnvironmentVariablesComponent) : JPanel() {
+
+) : JPanel() {
+	private var scriptComponent: TextFieldWithBrowseButton
+	private var programParametersComponent: RawCommandLineEditor
+	private var workingDirectoryComponent: TextFieldWithBrowseButton
+	private var environmentVariables: EnvironmentVariablesComponent
 
 	init {
+		layout = GridBagLayout()
+		scriptComponent = TextFieldWithBrowseButton()
+		programParametersComponent = RawCommandLineEditor()
+		workingDirectoryComponent = TextFieldWithBrowseButton()
+		environmentVariables = EnvironmentVariablesComponent()
 		val base: () -> GridBagConstraints = {
 			GridBagConstraints().apply {
 				insets = Insets(3, 3, 3, 3)
@@ -43,7 +51,7 @@ class LiceRunConfigPanel(
 			}
 		}
 
-		val moduleLabel = JBLabel("Script Path")
+		val moduleLabel = JBLabel("Lice Script Path")
 		add(moduleLabel, base().apply {
 			gridx = 0
 			gridy = 0
@@ -87,12 +95,7 @@ class LiceRunConfiguration(
 	override fun checkConfiguration() = Unit
 	override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> =
 			object : SettingsEditor<LiceRunConfiguration>() {
-				private val panel = LiceRunConfigPanel(
-						TextFieldWithBrowseButton(),
-						RawCommandLineEditor(),
-						TextFieldWithBrowseButton(),
-						EnvironmentVariablesComponent()
-				)
+				private val panel = LiceRunConfigPanel()
 
 				override fun createEditor() = panel
 				override fun resetEditorFrom(configuration: LiceRunConfiguration) = Unit
