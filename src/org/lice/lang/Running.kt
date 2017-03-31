@@ -9,6 +9,7 @@ import com.intellij.execution.Executor
 import com.intellij.execution.configuration.EnvironmentVariablesComponent
 import com.intellij.execution.configurations.*
 import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
@@ -31,7 +32,7 @@ object LiceConfigurationType : ConfigurationTypeBase(
 }
 
 class LiceRunConfigPanel(
-
+		val project: Project
 ) : JPanel() {
 	private var scriptComponent: TextFieldWithBrowseButton
 	private var programParametersComponent: RawCommandLineEditor
@@ -44,6 +45,13 @@ class LiceRunConfigPanel(
 		programParametersComponent = RawCommandLineEditor()
 		workingDirectoryComponent = TextFieldWithBrowseButton()
 		environmentVariables = EnvironmentVariablesComponent()
+		scriptComponent.isEditable = true
+		scriptComponent.addBrowseFolderListener(
+				"Choose a Lice Script",
+				"Choose a Lice Script for Execution",
+				project,
+				FileChooserDescriptor(true, false, false, false, false, false)
+		)
 		val base: () -> GridBagConstraints = {
 			GridBagConstraints().apply {
 				insets = Insets(3, 3, 3, 3)
@@ -95,7 +103,7 @@ class LiceRunConfiguration(
 	override fun checkConfiguration() = Unit
 	override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> =
 			object : SettingsEditor<LiceRunConfiguration>() {
-				private val panel = LiceRunConfigPanel()
+				private val panel = LiceRunConfigPanel(project)
 
 				override fun createEditor() = panel
 				override fun resetEditorFrom(configuration: LiceRunConfiguration) = Unit
