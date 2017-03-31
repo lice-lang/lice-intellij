@@ -1,10 +1,4 @@
 ; nothing here
 
-(def boy a b
-  (|> a))
 
-(defexpr expr param
-  (|> (boy next door)
-      (expr next)))
-(
-
+(println "Hello World")
