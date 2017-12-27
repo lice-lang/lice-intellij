@@ -1,4 +1,6 @@
 ; nothing here
 
+(print "Hello World")
 
-(println "Hello World")
+; omega-combinator
+((lambda x (x x)) (lambda x (x x)))

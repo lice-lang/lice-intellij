@@ -23,10 +23,10 @@ object LiceInfo {
 			.getProperties()
 			.getProperty("idea.plugins.path")}/lice-intellij/lib/lice.jar"
 	val is32Bit = File("../jre").exists()
-	val JAVA_PATH = File(
+	val JAVA_PATH: String = File(
 			if (is32Bit) "../jre/bin/java.exe"
 			else "../jre64/bin/java.exe"
-	).absolutePath!!
+	).absolutePath
 	val JAVA_PATH_WRAPPED = "\"" + JAVA_PATH + "\""
 	val LICE_PATH_WRAPPED = "\"" + LICE_PATH + "\""
 	val KOTLIN_RUNTIME_PATH = File("../lib/kotlin-runtime.jar").absolutePath!!

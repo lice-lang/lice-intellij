@@ -8,12 +8,9 @@ package org.lice.tools
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.components.JBScrollPane
 import org.apache.commons.lang.StringUtils
-import org.lice.compiler.model.StringLeafNode
-import org.lice.compiler.model.StringMiddleNode
-import org.lice.compiler.model.StringNode
-import org.lice.compiler.parse.buildNode
 import org.lice.lang.LiceInfo
-import org.lice.repl.VERSION_CODE
+import org.lice.model.*
+import org.lice.parse.buildNode
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.io.File
@@ -73,7 +70,7 @@ private fun createTreeRootFromFile(file: File): UINode {
  * @author ice1000
  */
 fun displaySyntaxTree(file: File) {
-	val frame = JFrame("Lice Syntax Tree $VERSION_CODE")
+	val frame = JFrame("Lice Syntax Tree")
 	frame.layout = BorderLayout()
 	frame.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
 	frame.setLocation(80, 80)
@@ -93,9 +90,7 @@ fun displaySyntaxTree(file: File) {
 ;""")
 			root.children().toList().forEach { mapDisplay2Ast(it as UINode, sb) }
 			val name = file.neighbour()
-			File(name)
-					.apply { if (!exists()) createNewFile() }
-					.writeText(sb.toString())
+			File(name).apply { if (!exists()) createNewFile() }.writeText(sb.toString())
 			Messages.showMessageDialog("""Successfully Export to:
 $name""", "Export Lice Code", LiceInfo.LICE_ICON)
 			frame.add(button, BorderLayout.SOUTH)

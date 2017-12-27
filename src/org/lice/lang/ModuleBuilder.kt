@@ -37,7 +37,7 @@ class LiceModuleType : ModuleType<LiceModuleWizardSetup>(ID) {
 
 	override fun getName() = LANGUAGE_NAME
 	override fun getDescription() = "Empty Lice module"
-	override fun getBigIcon() = LiceInfo.LICE_BIG_ICON
-	override fun getNodeIcon(p0: Boolean) = bigIcon
+	override fun getIcon() = LiceInfo.LICE_BIG_ICON
+	override fun getNodeIcon(p0: Boolean) = icon
 }
 

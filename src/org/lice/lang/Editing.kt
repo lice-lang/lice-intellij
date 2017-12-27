@@ -9,23 +9,20 @@ import com.intellij.CommonBundle
 import com.intellij.icons.AllIcons
 import com.intellij.ide.actions.CreateFileAction
 import com.intellij.lang.Commenter
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiDirectory
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFileFactory
-import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
-import com.intellij.spellchecker.tokenizer.Tokenizer
+import com.intellij.psi.*
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
+import com.intellij.spellchecker.inspections.PlainTextSplitter
+import com.intellij.spellchecker.tokenizer.*
 import org.apache.commons.lang.StringUtils
-import org.lice.compiler.util.println
 import org.lice.lang.LiceInfo.EXTENSION
 import org.lice.lang.LiceInfo.LICE_ICON
+import org.lice.lang.psi.LiceTokenType
 import org.lice.tools.displaySemanticTree
 import org.lice.tools.displaySyntaxTree
 import java.io.File
@@ -34,25 +31,16 @@ import javax.swing.Icon
 
 
 class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
-	override fun getActionName(p0: PsiDirectory?, p1: String?) =
-			CAPTION
+	override fun getActionName(p0: PsiDirectory?, p1: String?) = CAPTION
+	override fun getErrorTitle(): String = CommonBundle.getErrorTitle()
+	override fun getDefaultExtension() = EXTENSION
 
-	override fun getErrorTitle() =
-			CommonBundle.getErrorTitle()!!
-
-	override fun getDefaultExtension() =
-			EXTENSION
-
-	override fun create(
-			name: String?,
-			directory: PsiDirectory?
-	): Array<PsiElement?> {
-		val origin = name ?: "new-file${System.currentTimeMillis()}.$EXTENSION"
-		val fixedExtension = when (FileUtilRt.getExtension(origin)) {
-			EXTENSION -> origin
-			else -> "$origin.$EXTENSION"
+	override fun create(name: String, directory: PsiDirectory): Array<PsiElement> {
+		val fixedExtension = when (FileUtilRt.getExtension(name)) {
+			EXTENSION -> name
+			else -> "$name.$EXTENSION"
 		}
-		return arrayOf(directory?.add(PsiFileFactory
+		return arrayOf(directory.add(PsiFileFactory
 				.getInstance(directory.project)
 				.createFileFromText(fixedExtension, LiceFileType, """;
 ; Created by ${System.getenv("USERNAME")} on ${LocalDate.now()}
@@ -139,13 +127,12 @@ class RunLiceFile : LiceFileActions(
 							), ";") + "\"",
 							"org.lice.repl.Main",
 							"\"" + file.path + "\""
-					), " ").println(),
+					), " ").also { println(it) },
 					null,
 					File(file.parent.path)
 			)
 		}
 	}
-
 }
 
 class ShowLiceFileSyntaxTree : LiceFileActions(
@@ -156,11 +143,7 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 		compatibleFiles(e).forEach { file ->
 			FileDocumentManager
 					.getInstance()
-					.getDocument(file)?.let { doc ->
-				FileDocumentManager
-						.getInstance()
-						.saveDocument(doc)
-			}
+					.getDocument(file)?.let(FileDocumentManager.getInstance()::saveDocument)
 			displaySyntaxTree(File(file.path))
 		}
 	}
@@ -174,33 +157,17 @@ class ShowLiceFileSemanticTree : LiceFileActions(
 		compatibleFiles(e).forEach { file ->
 			FileDocumentManager
 					.getInstance()
-					.getDocument(file)?.let { doc ->
-				FileDocumentManager
-						.getInstance()
-						.saveDocument(doc)
-			}
+					.getDocument(file)
+					?.let(FileDocumentManager.getInstance()::saveDocument)
 			displaySemanticTree(File(file.path))
 		}
 	}
 }
 
 class LiceCommenter : Commenter {
-	override fun getCommentedBlockCommentPrefix() =
-			blockCommentPrefix
-
-	override fun getCommentedBlockCommentSuffix() =
-			blockCommentSuffix
-
+	override fun getCommentedBlockCommentPrefix() = blockCommentPrefix
+	override fun getCommentedBlockCommentSuffix() = blockCommentSuffix
 	override fun getBlockCommentPrefix() = null
 	override fun getBlockCommentSuffix() = null
-
 	override fun getLineCommentPrefix() = ";"
-}
-
-class LiceSpellCheckingStrategy : SpellcheckingStrategy() {
-	override fun getTokenizer(element: PsiElement): Tokenizer<PsiElement> {
-		return super.getTokenizer(element)
-//		return when (element.elementType) {
-//		}
-	}
 }

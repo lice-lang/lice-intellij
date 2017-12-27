@@ -18,9 +18,9 @@ Lice language support.
 		<lang.commenter
 				language="Lice"
 				implementationClass="org.lice.lang.LiceCommenter"/>
-		<spellchecker.support
-				language="Lice"
-				implementationClass="org.lice.lang.LiceSpellCheckingStrategy"/>
+		<!--<spellchecker.support-->
+		<!--language="Lice"-->
+		<!--implementationClass="org.lice.lang.LiceSpellCheckingStrategy"/>-->
 		<lang.braceMatcher
 				language="Lice"
 				implementationClass="org.lice.lang.LiceBraceMatcher"/>
@@ -28,9 +28,6 @@ Lice language support.
 				implementation="org.lice.lang.LiceLiveTemplateProvider"/>
 		<liveTemplateContext
 				implementation="org.lice.lang.LiceContext"/>
-		<lang.parserDefinition
-				language="Lice"
-				implementationClass="org.lice.lang.psi.LiceParserDefinition"/>
 		<codeStyleSettingsProvider
 				implementation="org.lice.lang.LiceCodeStyleSettingsProvider"/>
 		<langCodeStyleSettingsProvider
@@ -39,7 +36,7 @@ Lice language support.
 				builderClass="org.lice.lang.LiceModuleWizardSetup"
 				id="DEMO_STEP"
 				order="first"/>
-		<configurationType implementation="org.lice.lang.LiceConfigurationType" />
+		<configurationType implementation="org.lice.lang.LiceConfigurationType"/>
 	</extensions>
 
 	<actions>
@@ -55,8 +52,8 @@ Lice language support.
 		</action>
 		<group id="Lice.Group" text="Lice">
 			<action id="Lice.RunFile" class="org.lice.lang.RunLiceFile"/>
-			<action id="Lice.ShowSyntaxTree" class="org.lice.lang.ShowLiceFileSyntaxTree" />
-			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTree" />
+			<action id="Lice.ShowSyntaxTree" class="org.lice.lang.ShowLiceFileSyntaxTree"/>
+			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTree"/>
 			<add-to-group
 					group-id="ProjectViewPopupMenuRunGroup"
 					anchor="last"/>
