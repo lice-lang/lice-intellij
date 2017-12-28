@@ -9,4 +9,4 @@
 	tokenTypeClass='org.lice.lang.LiceTokenType'
 }
 
-symbol ::=
+methodCall ::= LB (STR | SYM)* RB
