@@ -18,9 +18,6 @@ Lice language support.
 		<lang.commenter
 				language="Lice"
 				implementationClass="org.lice.lang.LiceCommenter"/>
-		<!--<spellchecker.support-->
-		<!--language="Lice"-->
-		<!--implementationClass="org.lice.lang.LiceSpellCheckingStrategy"/>-->
 		<lang.braceMatcher
 				language="Lice"
 				implementationClass="org.lice.lang.LiceBraceMatcher"/>
@@ -28,15 +25,6 @@ Lice language support.
 				implementation="org.lice.lang.LiceLiveTemplateProvider"/>
 		<liveTemplateContext
 				implementation="org.lice.lang.LiceContext"/>
-		<codeStyleSettingsProvider
-				implementation="org.lice.lang.LiceCodeStyleSettingsProvider"/>
-		<langCodeStyleSettingsProvider
-				implementation="org.lice.lang.LiceLangCodeStyleSettingsProvider"/>
-		<moduleBuilder
-				builderClass="org.lice.lang.LiceModuleWizardSetup"
-				id="DEMO_STEP"
-				order="first"/>
-		<configurationType implementation="org.lice.lang.LiceConfigurationType"/>
 	</extensions>
 
 	<actions>
@@ -51,7 +39,7 @@ Lice language support.
 					relative-to-action="NewFile"/>
 		</action>
 		<group id="Lice.Group" text="Lice">
-			<action id="Lice.RunFile" class="org.lice.lang.RunLiceFile"/>
+			<!--<action id="Lice.RunFile" class="org.lice.lang.RunLiceFile"/>-->
 			<action id="Lice.ShowSyntaxTree" class="org.lice.lang.ShowLiceFileSyntaxTree"/>
 			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTree"/>
 			<add-to-group

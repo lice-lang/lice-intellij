@@ -32,7 +32,7 @@ object LiceConfigurationType : ConfigurationTypeBase(
 }
 
 class LiceRunConfigPanel(
-		val project: Project
+		project: Project
 ) : JPanel() {
 	private var scriptComponent: TextFieldWithBrowseButton
 	private var programParametersComponent: RawCommandLineEditor

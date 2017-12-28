@@ -56,9 +56,7 @@ object LiceSyntaxTreeViewerFactory {
 	private fun File.neighbour() = "$parent/$name-edited-${System.currentTimeMillis()}.lice"
 
 	fun create(file: File): JComponent = try {
-		JBScrollPane(Tree(createTreeRootFromFile(file)).apply {
-			preferredSize = Dimension(520, 520)
-		})
+		JBScrollPane(Tree(createTreeRootFromFile(file)))
 	} catch (e: Exception) {
 		JTextArea(e.message)
 	}

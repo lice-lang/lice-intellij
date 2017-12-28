@@ -12,6 +12,7 @@ import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.*
 import org.lice.tools.LiceSemanticTreeViewerFactory
 import org.lice.tools.LiceSyntaxTreeViewerFactory
+import java.awt.Dimension
 import java.io.File
 import java.time.LocalDate
 import javax.swing.Icon
@@ -43,20 +44,18 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LiceInfo.LICE_ICON) {
 				"Enter a new lice script name",
 				"New Lice script",
 				Messages.getQuestionIcon(),
-				"file-name${System.currentTimeMillis()}.${LiceInfo.EXTENSION}",
+				"",
 				validator
 		)
 		return validator.createdElements
 	}
 
 	private companion object Caption {
-		private val CAPTION = "New Lice File"
+		private const val CAPTION = "New Lice File"
 	}
 }
 
-
 abstract class LiceFileActions(text: String, description: String, icon: Icon) : AnAction(text, description, icon) {
-
 	protected fun compatibleFiles(e: AnActionEvent) = CommonDataKeys
 			.VIRTUAL_FILE_ARRAY
 			.getData(e.dataContext)
@@ -66,40 +65,6 @@ abstract class LiceFileActions(text: String, description: String, icon: Icon) : 
 	override fun update(e: AnActionEvent) {
 		e.presentation.isEnabledAndVisible = compatibleFiles(e).run {
 			isNotEmpty() and all { LiceInfo.EXTENSION == it.extension }
-		}
-	}
-
-}
-
-class RunLiceFile : LiceFileActions(
-		"Run Lice script",
-		"Run Lice script with lice interpreter",
-		AllIcons.Toolwindows.ToolWindowRun) {
-
-	override fun actionPerformed(e: AnActionEvent) {
-		compatibleFiles(e).forEach { file ->
-			FileDocumentManager
-					.getInstance()
-					.getDocument(file)?.let { doc ->
-				FileDocumentManager
-						.getInstance()
-						.saveDocument(doc)
-			}
-//			Runtime.getRuntime().exec(
-//					StringUtils.join(arrayOf(
-//							LiceInfo.JAVA_PATH_WRAPPED,
-//							"-classpath",
-//							"\"" + StringUtils.join(arrayOf(
-//									LiceInfo.KOTLIN_RUNTIME_PATH,
-//									LiceInfo.KOTLIN_REFLECT_PATH,
-//									LiceInfo.LICE_PATH
-//							), ";") + "\"",
-//							"org.lice.repl.Main",
-//							"\"" + file.path + "\""
-//					), " ").also { println(it) },
-//					null,
-//					File(file.parent.path)
-//			)
 		}
 	}
 }
@@ -114,10 +79,11 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 					.getInstance()
 					.getDocument(file)?.let(FileDocumentManager.getInstance()::saveDocument)
 			val view = LiceSyntaxTreeViewerFactory.create(File(file.path))
-			JBPopupFactory.getInstance()
+			val popup = JBPopupFactory.getInstance()
 					.createComponentPopupBuilder(view, view)
 					.createPopup()
-					.showInFocusCenter()
+			popup.size = Dimension(520, 520)
+			popup.showInFocusCenter()
 		}
 	}
 }
@@ -133,10 +99,11 @@ class ShowLiceFileSemanticTree : LiceFileActions(
 					.getDocument(file)
 					?.let(FileDocumentManager.getInstance()::saveDocument)
 			val view = LiceSemanticTreeViewerFactory.create(File(file.path))
-			JBPopupFactory.getInstance()
+			val popup = JBPopupFactory.getInstance()
 					.createComponentPopupBuilder(view, view)
 					.createPopup()
-					.showInFocusCenter()
+			popup.size = Dimension(520, 520)
+			popup.showInFocusCenter()
 		}
 	}
 }
