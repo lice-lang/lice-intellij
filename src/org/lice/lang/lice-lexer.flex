@@ -21,17 +21,17 @@ RB=\)
 %%
 
 <YYINITIAL> {
-  {WHITE_SPACE}+
-    { return LiceTokenType.WHITE_SPACE; }
-  {COMMENT}
-    { return LiceTokenType.COMMENT; }
-  {LB}
-    { return LiceTokenType.LB; }
-  {STR}
-    { return LiceTokenType.STR; }
-  {SYM}
-    { return LiceTokenType.SYM; }
-  {RB}
-    { return LiceTokenType.RB; }
+	{WHITE_SPACE}+
+		{ return LiceTokenType.WHITE_SPACE; }
+	{COMMENT}
+		{ return LiceTokenType.COMMENT; }
+	{LB}
+		{ return LiceTokenType.LB; }
+	{STR}
+		{ return LiceTokenType.STR; }
+	{SYM}
+		{ return LiceTokenType.SYM; }
+	{RB}
+		{ return LiceTokenType.RB; }
 }
 

@@ -1,9 +1,12 @@
 {
-  parserClass='org.lice.lang.LiceParser'
-  extends='com.intellij.extapi.psi.ASTWrapperPsiElement'
-  psiClassPrefix='Lice'
-  psiImplClassSuffix='Impl'
-  psiPackage='org.lice.lang.psi'
+	parserClass='org.lice.lang.LiceParser'
+	extends='com.intellij.extapi.psi.ASTWrapperPsiElement'
+	psiClassPrefix='Lice'
+	psiImplClassSuffix='Impl'
+	psiPackage='org.lice.lang.psi'
+	psiImplPackage='org.lice.lang.psi.impl'
 
-
+	tokenTypeClass='org.lice.lang.LiceTokenType'
 }
+
+symbol ::=
