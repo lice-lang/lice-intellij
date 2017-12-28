@@ -9,7 +9,7 @@
 Lice language support.
 ]]></description>
 
-	<idea-version since-build="162.0"/>
+	<idea-version since-build="145.0"/>
 
 	<depends>com.intellij.modules.lang</depends>
 

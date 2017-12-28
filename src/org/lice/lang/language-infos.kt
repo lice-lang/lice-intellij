@@ -14,7 +14,7 @@ import com.intellij.psi.tree.IElementType
 import org.lice.lang.LiceInfo.EXTENSION
 import org.lice.lang.LiceInfo.LANGUAGE_NAME
 import org.lice.lang.LiceInfo.LICE_ICON
-import org.lice.lang.psi.LiceTokenType
+import org.lice.lang.psi.LiceTypes
 
 object LiceLanguage : Language(LANGUAGE_NAME, "text/$EXTENSION") {
 	override fun getDisplayName() = LANGUAGE_NAME
@@ -35,14 +35,14 @@ class LiceFileTypeFactory : FileTypeFactory() {
 class LiceBraceMatcher : PairedBraceMatcher {
 	private companion object Pairs {
 		private val PAIRS = arrayOf(BracePair(
-				LiceTokenType.LEFT_BRACE,
-				LiceTokenType.RIGHT_BRACE,
+				LiceTypes.LEFT_BRACE,
+				LiceTypes.RIGHT_BRACE,
 				false
 		))
 	}
 
 	override fun getPairs() = PAIRS
-	override fun getCodeConstructStart(psiFile: PsiFile, p1: Int) = p1
+	override fun getCodeConstructStart(psiFile: PsiFile, openingBraceOffset: Int) = openingBraceOffset
 	override fun isPairedBracesAllowedBeforeType(type: IElementType, iElementType: IElementType?) = true
 }
 
