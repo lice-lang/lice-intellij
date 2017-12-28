@@ -11,34 +11,28 @@ import com.intellij.lang.*
 import com.intellij.openapi.fileTypes.*
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
-import org.lice.lang.LiceInfo.EXTENSION
-import org.lice.lang.LiceInfo.LANGUAGE_NAME
-import org.lice.lang.LiceInfo.LICE_ICON
-import org.lice.lang.psi.LiceTypes
 
-object LiceLanguage : Language(LANGUAGE_NAME, "text/$EXTENSION") {
+object LiceLanguage : Language(LANGUAGE_NAME, "text/$LICE_EXTENSION") {
 	override fun getDisplayName() = LANGUAGE_NAME
 	override fun isCaseSensitive() = true
 }
 
 object LiceFileType : LanguageFileType(LiceLanguage) {
-	override fun getDefaultExtension() = EXTENSION
+	override fun getDefaultExtension() = LICE_EXTENSION
 	override fun getName() = "$LANGUAGE_NAME file"
 	override fun getIcon() = LICE_ICON
 	override fun getDescription() = LANGUAGE_NAME
 }
 
 class LiceFileTypeFactory : FileTypeFactory() {
-	override fun createFileTypes(consumer: FileTypeConsumer) = consumer.consume(LiceFileType, EXTENSION)
+	override fun createFileTypes(consumer: FileTypeConsumer) = consumer.consume(LiceFileType, LICE_EXTENSION)
 }
 
 class LiceBraceMatcher : PairedBraceMatcher {
 	private companion object Pairs {
-		private val PAIRS = arrayOf(BracePair(
-				LiceTypes.LEFT_BRACE,
-				LiceTypes.RIGHT_BRACE,
-				false
-		))
+		private val PAIRS = arrayOf<BracePair>(
+				// BracePair(LiceTypes.LEFT_BRACE, LiceTypes.RIGHT_BRACE, false)
+		)
 	}
 
 	override fun getPairs() = PAIRS
@@ -54,5 +48,5 @@ class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 }
 
 class LiceContext : TemplateContextType(LANGUAGE_NAME, LANGUAGE_NAME) {
-	override fun isInContext(file: PsiFile, p1: Int) = file.name.endsWith(".$EXTENSION")
+	override fun isInContext(file: PsiFile, p1: Int) = file.name.endsWith(".$LICE_EXTENSION")
 }
