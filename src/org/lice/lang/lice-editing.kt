@@ -12,5 +12,5 @@ class LiceCommenter : Commenter {
 	override fun getCommentedBlockCommentSuffix() = blockCommentSuffix
 	override fun getBlockCommentPrefix() = null
 	override fun getBlockCommentSuffix() = null
-	override fun getLineCommentPrefix() = ";"
+	override fun getLineCommentPrefix() = "; "
 }

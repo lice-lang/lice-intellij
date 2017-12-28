@@ -46,11 +46,5 @@ Lice language support.
 					group-id="ProjectViewPopupMenuRunGroup"
 					anchor="last"/>
 		</group>
-		<action
-				text="Start Lice Repl"
-				class="org.lice.lang.StartReplAction"
-				id="Lice.StartRepl">
-			<add-to-group group-id="MainToolBar" anchor="after"/>
-		</action>
 	</actions>
 </idea-plugin>
