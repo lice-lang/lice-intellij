@@ -1,0 +1,9 @@
+{
+  parserClass='org.lice.lang.LiceParser'
+  extends='com.intellij.extapi.psi.ASTWrapperPsiElement'
+  psiClassPrefix='Lice'
+  psiImplClassSuffix='Impl'
+  psiPackage='org.lice.lang.psi'
+
+
+}

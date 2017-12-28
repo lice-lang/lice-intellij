@@ -1,4 +1,4 @@
-package org.lice.lang.psi;
+package org.lice.lang;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;

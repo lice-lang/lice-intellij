@@ -1,8 +1,7 @@
-package org.lice.lang.psi
+package org.lice.lang
 
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
-import org.lice.lang.LiceLanguage
 
 class LiceTokenType(debugName: String) : IElementType(debugName, LiceLanguage) {
 	companion object {
