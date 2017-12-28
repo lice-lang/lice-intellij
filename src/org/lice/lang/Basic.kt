@@ -7,12 +7,8 @@ package org.lice.lang
 
 import com.intellij.codeInsight.template.TemplateContextType
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
-import com.intellij.lang.BracePair
-import com.intellij.lang.Language
-import com.intellij.lang.PairedBraceMatcher
-import com.intellij.openapi.fileTypes.FileTypeConsumer
-import com.intellij.openapi.fileTypes.FileTypeFactory
-import com.intellij.openapi.fileTypes.LanguageFileType
+import com.intellij.lang.*
+import com.intellij.openapi.fileTypes.*
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import org.lice.lang.LiceInfo.EXTENSION
@@ -33,8 +29,7 @@ object LiceFileType : LanguageFileType(LiceLanguage) {
 }
 
 class LiceFileTypeFactory : FileTypeFactory() {
-	override fun createFileTypes(consumer: FileTypeConsumer) =
-			consumer.consume(LiceFileType, EXTENSION)
+	override fun createFileTypes(consumer: FileTypeConsumer) = consumer.consume(LiceFileType, EXTENSION)
 }
 
 class LiceBraceMatcher : PairedBraceMatcher {
@@ -47,24 +42,17 @@ class LiceBraceMatcher : PairedBraceMatcher {
 	}
 
 	override fun getPairs() = PAIRS
-	override fun getCodeConstructStart(p0: PsiFile?, p1: Int) = p1
-	override fun isPairedBracesAllowedBeforeType(
-			type: IElementType,
-			iElementType: IElementType?) =
-			true
+	override fun getCodeConstructStart(psiFile: PsiFile, p1: Int) = p1
+	override fun isPairedBracesAllowedBeforeType(type: IElementType, iElementType: IElementType?) = true
 }
 
 //class LiceLiveTemplateContext : FileTypeBasedContextType("Lice", "Lice", LiceFileType)
 
 class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
-	override fun getDefaultLiveTemplateFiles() =
-			arrayOf("liveTemplates/Lice")
-
-	override fun getHiddenLiveTemplateFiles() =
-			null
+	override fun getDefaultLiveTemplateFiles() = arrayOf("liveTemplates/Lice")
+	override fun getHiddenLiveTemplateFiles() = null
 }
 
 class LiceContext : TemplateContextType(LANGUAGE_NAME, LANGUAGE_NAME) {
-	override fun isInContext(file: PsiFile, p1: Int) =
-			file.name.endsWith(".$EXTENSION")
+	override fun isInContext(file: PsiFile, p1: Int) = file.name.endsWith(".$EXTENSION")
 }

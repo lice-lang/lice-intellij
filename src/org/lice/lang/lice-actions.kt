@@ -7,11 +7,11 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.*
-import org.apache.commons.lang.StringUtils
-import org.lice.tools.displaySemanticTree
-import org.lice.tools.displaySyntaxTree
+import org.lice.tools.LiceSemanticTreeViewerFactory
+import org.lice.tools.LiceSyntaxTreeViewerFactory
 import java.io.File
 import java.time.LocalDate
 import javax.swing.Icon
@@ -55,11 +55,7 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LiceInfo.LICE_ICON) {
 }
 
 
-abstract class LiceFileActions(
-		text: String,
-		description: String,
-		icon: Icon
-) : AnAction(text, description, icon) {
+abstract class LiceFileActions(text: String, description: String, icon: Icon) : AnAction(text, description, icon) {
 
 	protected fun compatibleFiles(e: AnActionEvent) = CommonDataKeys
 			.VIRTUAL_FILE_ARRAY
@@ -67,11 +63,9 @@ abstract class LiceFileActions(
 			?.filter { file -> file.fileType is LiceFileType }
 			?: emptyList()
 
-	override fun update(e: AnActionEvent?) {
-		e?.presentation?.run {
-			isEnabledAndVisible = compatibleFiles(e).run {
-				isNotEmpty() and all { LiceInfo.EXTENSION == it.extension }
-			}
+	override fun update(e: AnActionEvent) {
+		e.presentation.isEnabledAndVisible = compatibleFiles(e).run {
+			isNotEmpty() and all { LiceInfo.EXTENSION == it.extension }
 		}
 	}
 
@@ -91,21 +85,21 @@ class RunLiceFile : LiceFileActions(
 						.getInstance()
 						.saveDocument(doc)
 			}
-			Runtime.getRuntime().exec(
-					StringUtils.join(arrayOf(
-							LiceInfo.JAVA_PATH_WRAPPED,
-							"-classpath",
-							"\"" + StringUtils.join(arrayOf(
-									LiceInfo.KOTLIN_RUNTIME_PATH,
-									LiceInfo.KOTLIN_REFLECT_PATH,
-									LiceInfo.LICE_PATH
-							), ";") + "\"",
-							"org.lice.repl.Main",
-							"\"" + file.path + "\""
-					), " ").also { println(it) },
-					null,
-					File(file.parent.path)
-			)
+//			Runtime.getRuntime().exec(
+//					StringUtils.join(arrayOf(
+//							LiceInfo.JAVA_PATH_WRAPPED,
+//							"-classpath",
+//							"\"" + StringUtils.join(arrayOf(
+//									LiceInfo.KOTLIN_RUNTIME_PATH,
+//									LiceInfo.KOTLIN_REFLECT_PATH,
+//									LiceInfo.LICE_PATH
+//							), ";") + "\"",
+//							"org.lice.repl.Main",
+//							"\"" + file.path + "\""
+//					), " ").also { println(it) },
+//					null,
+//					File(file.parent.path)
+//			)
 		}
 	}
 }
@@ -119,7 +113,11 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 			FileDocumentManager
 					.getInstance()
 					.getDocument(file)?.let(FileDocumentManager.getInstance()::saveDocument)
-			displaySyntaxTree(File(file.path))
+			val view = LiceSyntaxTreeViewerFactory.create(File(file.path))
+			JBPopupFactory.getInstance()
+					.createComponentPopupBuilder(view, view)
+					.createPopup()
+					.showInFocusCenter()
 		}
 	}
 }
@@ -134,7 +132,11 @@ class ShowLiceFileSemanticTree : LiceFileActions(
 					.getInstance()
 					.getDocument(file)
 					?.let(FileDocumentManager.getInstance()::saveDocument)
-			displaySemanticTree(File(file.path))
+			val view = LiceSemanticTreeViewerFactory.create(File(file.path))
+			JBPopupFactory.getInstance()
+					.createComponentPopupBuilder(view, view)
+					.createPopup()
+					.showInFocusCenter()
 		}
 	}
 }
