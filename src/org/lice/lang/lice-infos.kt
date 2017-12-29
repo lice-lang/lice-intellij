@@ -6,8 +6,10 @@
 package org.lice.lang
 
 import com.intellij.codeInsight.template.TemplateContextType
+import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.lang.Language
 import com.intellij.openapi.fileTypes.*
+import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 
 object LiceLanguage : Language(LANGUAGE_NAME, "text/$LICE_EXTENSION") {
@@ -20,6 +22,10 @@ object LiceFileType : LanguageFileType(LiceLanguage) {
 	override fun getName() = "$LANGUAGE_NAME file"
 	override fun getIcon() = LICE_ICON
 	override fun getDescription() = LANGUAGE_NAME
+}
+
+class LiceFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, LiceLanguage) {
+	override fun getFileType() = LiceFileType
 }
 
 class LiceFileTypeFactory : FileTypeFactory() {

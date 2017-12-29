@@ -7,6 +7,8 @@
 	psiImplPackage='org.lice.lang.psi.impl'
 
 	tokenTypeClass='org.lice.lang.LiceTokenType'
+	elementTypeHolderClass='org.lice.lang.psi.LiceTypes'
+	elementTypeClass='org.lice.lang.psi.LiceElementTypes'
 }
 
 methodCall ::= LB (STR | SYM)* RB
