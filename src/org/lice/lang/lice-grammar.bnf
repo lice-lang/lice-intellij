@@ -12,3 +12,5 @@
 }
 
 methodCall ::= LB (STR | SYM)* RB
+
+//file ::= methodCall*
