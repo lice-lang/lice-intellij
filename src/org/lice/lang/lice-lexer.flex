@@ -20,28 +20,18 @@ RB=\)
 
 %%
 
-<YYINITIAL>
+<YYINITIAL> {
 	{WHITE_SPACE}+
 		{ return LiceTokenType.WHITE_SPACE; }
-
-<YYINITIAL>
 	{COMMENT}
 		{ return LiceTokenType.COMMENT; }
-
-<YYINITIAL>
 	{LB}
 		{ return LiceTokenType.LB; }
-
-<YYINITIAL>
 	{STR}
 		{ return LiceTokenType.STR; }
-
-<YYINITIAL>
 	{SYM}
 		{ return LiceTokenType.SYM; }
-
-<YYINITIAL>
 	{RB}
 		{ return LiceTokenType.RB; }
-
+}
 

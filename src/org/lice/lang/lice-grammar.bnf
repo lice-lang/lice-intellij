@@ -8,9 +8,12 @@
 
 	tokenTypeClass='org.lice.lang.LiceTokenType'
 	elementTypeHolderClass='org.lice.lang.psi.LiceTypes'
-	elementTypeClass='org.lice.lang.psi.LiceElementTypes'
+	elementTypeClass='org.lice.lang.LiceElementType'
+	psiImplUtilClass='org.lice.lang.psi.impl.LiceImplUtils'
 }
 
-methodCall ::= LB (STR | SYM)* RB
+file ::= methodCall*
+methodCall ::= '(' (String | Symbol)* ')'
 
-//file ::= methodCall*
+String ::= '"' "regexp:[^\"]"* '"'
+Symbol ::= "regexp:[^ \t\n\r()]"*

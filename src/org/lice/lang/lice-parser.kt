@@ -1,20 +1,15 @@
 package org.lice.lang
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.*
 import com.intellij.openapi.project.Project
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IFileElementType
+import org.lice.lang.psi.LiceTypes
 
 
 class LiceParserDefinition : ParserDefinition {
-	override fun createElement(astNode: ASTNode): PsiElement {
-		val type = astNode.elementType
-		println(type)
-		return ASTWrapperPsiElement(astNode)
-	}
-
+	override fun createElement(astNode: ASTNode): PsiElement = LiceTypes.Factory.createElement(astNode)
 	override fun getFileNodeType() = FILE
 	override fun createFile(viewProvider: FileViewProvider) = LiceFile(viewProvider)
 	override fun createParser(project: Project) = LiceParser()
