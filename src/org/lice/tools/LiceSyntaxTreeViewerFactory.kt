@@ -50,8 +50,6 @@ object LiceSyntaxTreeViewerFactory {
 		return mapAst2Display(ast, DefaultMutableTreeNode(ast))
 	}
 
-	private fun File.neighbour() = "$parent/$name-edited-${System.currentTimeMillis()}.lice"
-
 	fun create(file: File): JComponent = try {
 		JBScrollPane(Tree(createTreeRootFromFile(file)))
 	} catch (e: Exception) {
@@ -63,6 +61,7 @@ object LiceSyntaxTreeViewerFactory {
  * @author ice1000
  */
 fun displaySemanticTree(file: File) {
+	private fun File.neighbour() = "$parent/$name-edited-${System.currentTimeMillis()}.lice"
 	val frame = JFrame("Lice Semantic Tree")
 	ToolWindowFactory { project, toolWindow ->
 	}

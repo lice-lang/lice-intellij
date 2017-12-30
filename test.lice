@@ -5,7 +5,7 @@
 		(+ (fib (- n 1)) (fib (- n 2)))))
 
 ;; command line output
-(print "String literals")
+(print "String literals", )
 
 ;; omega-combinator
 ((lambda x (x x)) (lambda x (x x)))

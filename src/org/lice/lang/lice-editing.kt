@@ -59,9 +59,14 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 	}
 
 	override fun getTokenHighlights(type: IElementType): Array<TextAttributesKey> = when (type) {
-		LiceTypes.RIGHT_BRACKET, LiceTypes.LEFT_BRACKET -> BRACKET_KEYS
+		LiceTypes.RIGHT_BRACKET,
+		LiceTypes.LEFT_BRACKET -> BRACKET_KEYS
 		LiceTypes.STR -> STRING_KEYS
 		LiceTypes.SYM -> SYMBOL_KEYS
+		LiceTypes.BIN_NUM,
+		LiceTypes.DEC_NUM,
+		LiceTypes.OCT_NUM,
+		LiceTypes.FLOAT_NUM -> NUMBER_KEYS
 		LiceTypes.COMMENT -> COMMENT_KEYS
 		else -> arrayOf()
 	}

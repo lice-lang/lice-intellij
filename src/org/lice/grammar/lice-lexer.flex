@@ -22,36 +22,45 @@ RBRACKET=\)
 
 STRING_LITERAL=\"([^\"]*)\"
 
-SYNBOL=[a-zA-Z!@#$%\^&*_=:<>.?/\\+\-*/%\[\]{}|]+
+DIGIT=[0-9]
 
 HEX_NUM=0[xX][0-9a-fA-F]+
 OCT_NUM=0[oO][0-7]+
 BIN_NUM=0[bB][01]+
-DEC_NUM=[0-9]+[dDfFbBsSlLnNmM]
+DEC_NUM={DIGIT}+[dDfFbBsSlLnNmM]?
+FLOAT={DIGIT}+\.{DIGIT}+[dDfFmM]?
+NUMBER={BIN_NUM}|{OCT_NUM}|{DEC_NUM}|{HEX_NUM}|{FLOAT}
 
-FLOAT=[0-9]+\.[0-9]+[dDfFmM]
+SYMBOL_CHAR=[a-zA-Z!@#$%\^&*_=:<>.?/\\+\-*/%\[\]{}|]
+SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
+
+%state AFTER_NUM
 
 %%
 
-<YYINITIAL>
-	{COMMENT}
-		{ yybegin(YYINITIAL); return LiceTypes.COMMENT; }
+<YYINITIAL> {COMMENT}
+		{ return LiceTypes.COMMENT; }
 
-<YYINITIAL>
-	{LBRACKET}
-		{ yybegin(YYINITIAL); return LiceTypes.LEFT_BRACKET; }
+<YYINITIAL> {LBRACKET}
+		{ return LiceTypes.LEFT_BRACKET; }
 
-<YYINITIAL>
-	{STRING_LITERAL}
-		{ yybegin(YYINITIAL); return LiceTypes.STR; }
+<YYINITIAL> {STRING_LITERAL}
+		{ return LiceTypes.STR; }
 
-<YYINITIAL>
-	{SYNBOL}
-		{ yybegin(YYINITIAL); return LiceTypes.SYM; }
+<YYINITIAL> {SYMBOL}
+		{ return LiceTypes.SYM; }
 
-<YYINITIAL>
-	{RBRACKET}
-		{ yybegin(YYINITIAL); return LiceTypes.RIGHT_BRACKET; }
+<YYINITIAL> {RBRACKET}
+		{ return LiceTypes.RIGHT_BRACKET; }
+
+<YYINITIAL> {NUMBER}
+		{ yybegin(AFTER_NUM); return LiceTypes.NUMBER; }
+
+<AFTER_NUM> {
+	{SYMBOL}
+		{ return TokenType.BAD_CHARACTER; }
+}
 
 {WHITE_SPACE}+
 	{ yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+
