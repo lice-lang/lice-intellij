@@ -1,6 +1,11 @@
-; nothing here
+;; comments
+(def fib n
+	(if (in? (list 1 2) n)
+		1
+		(+ (fib (- n 1)) (fib (- n 2)))))
 
-(print "Hello World")
+;; command line output
+(print "String literals")
 
-; omega-combinator
+;; omega-combinator
 ((lambda x (x x)) (lambda x (x x)))

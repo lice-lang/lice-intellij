@@ -16,6 +16,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
+import org.intellij.lang.annotations.Language
 import org.lice.lang.psi.LiceTypes
 
 class LiceCommenter : Commenter {
@@ -48,13 +49,11 @@ class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 class LiceSyntaxHighlighter : SyntaxHighlighter {
 	companion object {
 		@JvmField val SYMBOL = TextAttributesKey.createTextAttributesKey("LICE_SYMBOL", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE)
-		@JvmField val FUNCTION_CALL = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_CALL", DefaultLanguageHighlighterColors.FUNCTION_CALL)
 		@JvmField val NUMBER = TextAttributesKey.createTextAttributesKey("LICE_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
 		@JvmField val COMMENT = TextAttributesKey.createTextAttributesKey("LICE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
 		@JvmField val STRING = TextAttributesKey.createTextAttributesKey("LICE_STRING", DefaultLanguageHighlighterColors.STRING)
 		@JvmField val BRACKET = TextAttributesKey.createTextAttributesKey("LICE_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
 		private val SYMBOL_KEYS = arrayOf(SYMBOL)
-		private val FUNCTION_CALL_KEYS = arrayOf(FUNCTION_CALL)
 		private val NUMBER_KEYS = arrayOf(NUMBER)
 		private val COMMENT_KEYS = arrayOf(COMMENT)
 		private val STRING_KEYS = arrayOf(STRING)
@@ -90,6 +89,7 @@ class LiceColorSettingsPage : ColorSettingsPage {
 	override fun getAdditionalHighlightingTagToDescriptorMap() = null
 	override fun getAttributeDescriptors() = DESCRIPTORS
 	override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
+	@Language("Lice")
 	override fun getDemoText() = """
 ;; comments
 (def fib n
