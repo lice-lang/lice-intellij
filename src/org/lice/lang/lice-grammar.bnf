@@ -13,7 +13,4 @@
 }
 
 file ::= methodCall*
-methodCall ::= '(' (String | Symbol)* ')'
-
-String ::= '"' "regexp:[^\"]"* '"'
-Symbol ::= "regexp:[^ \t\n\r()]"*
+methodCall ::= '(' (STR | SYM | methodCall)* ')'

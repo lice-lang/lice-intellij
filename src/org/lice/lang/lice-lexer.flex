@@ -2,6 +2,8 @@ package org.lice.lang;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.TokenType;
+import org.lice.lang.psi.LiceTypes;
 
 %%
 
@@ -10,28 +12,37 @@ import com.intellij.psi.tree.IElementType;
 %unicode
 %function advance
 %type IElementType
+%eof{ return;
+%eof}
 
 COMMENT=;[^\n]*
 WHITE_SPACE=[, \n\r\t]
-SYM=([^;, \n\r\t])+
-STR=\"[^\"]*\"
-LB=\(
-RB=\)
+SYNBOL_OR_NUMBER=([^;, \n\r\t\(\)])+
+STRING_LITERAL=\"([^\"]*)\"
+LBRACKET=\(
+RBRACKET=\)
 
 %%
 
-<YYINITIAL> {
-	{WHITE_SPACE}+
-		{ return LiceTokenType.WHITE_SPACE; }
+<YYINITIAL>
 	{COMMENT}
-		{ return LiceTokenType.COMMENT; }
-	{LB}
-		{ return LiceTokenType.LB; }
-	{STR}
-		{ return LiceTokenType.STR; }
-	{SYM}
-		{ return LiceTokenType.SYM; }
-	{RB}
-		{ return LiceTokenType.RB; }
-}
+		{ yybegin(YYINITIAL); return LiceTokenType.COMMENT; }
 
+<YYINITIAL>
+	{LBRACKET}
+		{ yybegin(YYINITIAL); return LiceTokenType.LB; }
+
+<YYINITIAL>
+	{STRING_LITERAL}
+		{ yybegin(YYINITIAL); return LiceTypes.STR; }
+
+<YYINITIAL>
+	{SYNBOL_OR_NUMBER}
+		{ yybegin(YYINITIAL); return LiceTypes.SYM; }
+
+<YYINITIAL>
+	{RBRACKET}
+		{ yybegin(YYINITIAL); return LiceTokenType.RB; }
+
+{WHITE_SPACE}+
+	{ yybegin(YYINITIAL); return LiceTokenType.WHITE_SPACE; }

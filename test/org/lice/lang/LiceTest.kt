@@ -1,4 +1,9 @@
 package org.lice.lang
 
-fun Array<String>.main() {
+import org.junit.Test
+
+class StarPlatinum {
+	@Test
+	fun oraOraOraOra() {
+	}
 }
