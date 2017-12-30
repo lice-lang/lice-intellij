@@ -31,6 +31,8 @@ Lice language support.
 		<lang.syntaxHighlighterFactory
 				language="Lice"
 				implementationClass="org.lice.lang.LiceSyntaxHighlighterFactory"/>
+		<colorSettingsPage
+				implementation="org.lice.lang.LiceColorSettingsPage"/>
 	</extensions>
 
 	<actions>

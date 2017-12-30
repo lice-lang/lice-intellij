@@ -39,22 +39,12 @@
       <option name="Lice" value="true" />
     </context>
   </template>
-  <template name="p" value="(println $END$)" description="println" toReformat="false" toShortenFQNames="true">
+  <template name="p" value="(print $END$)" description="print" toReformat="true" toShortenFQNames="true">
     <context>
       <option name="Lice" value="true" />
     </context>
   </template>
-  <template name="pr" value="(print $END$)" description="print" toReformat="true" toShortenFQNames="true">
-    <context>
-      <option name="Lice" value="true" />
-    </context>
-  </template>
-  <template name="pe" value="(println-err $END$)" description="println-err" toReformat="true" toShortenFQNames="true">
-    <context>
-      <option name="Lice" value="true" />
-    </context>
-  </template>
-  <template name="pre" value="(print-err $END$)" description="print-err" toReformat="true" toShortenFQNames="true">
+  <template name="sout" value="(print $END$)" description="print" toReformat="true" toShortenFQNames="true">
     <context>
       <option name="Lice" value="true" />
     </context>
