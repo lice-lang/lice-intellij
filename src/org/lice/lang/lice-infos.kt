@@ -12,16 +12,16 @@ import com.intellij.openapi.fileTypes.*
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 
-object LiceLanguage : Language(LANGUAGE_NAME, "text/$LICE_EXTENSION") {
-	override fun getDisplayName() = LANGUAGE_NAME
+object LiceLanguage : Language(LICE_NAME, "text/$LICE_EXTENSION") {
+	override fun getDisplayName() = LICE_NAME
 	override fun isCaseSensitive() = true
 }
 
 object LiceFileType : LanguageFileType(LiceLanguage) {
 	override fun getDefaultExtension() = LICE_EXTENSION
-	override fun getName() = "$LANGUAGE_NAME file"
+	override fun getName() = "$LICE_NAME file"
 	override fun getIcon() = LICE_ICON
-	override fun getDescription() = LANGUAGE_NAME
+	override fun getDescription() = LICE_NAME
 }
 
 class LiceFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, LiceLanguage) {
@@ -32,6 +32,6 @@ class LiceFileTypeFactory : FileTypeFactory() {
 	override fun createFileTypes(consumer: FileTypeConsumer) = consumer.consume(LiceFileType, LICE_EXTENSION)
 }
 
-class LiceContext : TemplateContextType(LANGUAGE_NAME, LANGUAGE_NAME) {
+class LiceContext : TemplateContextType(LICE_NAME, LICE_NAME) {
 	override fun isInContext(file: PsiFile, p1: Int) = file.name.endsWith(".$LICE_EXTENSION")
 }

@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory
+import com.intellij.openapi.options.colors.*
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
@@ -45,13 +46,13 @@ class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 }
 
 class LiceSyntaxHighlighter : SyntaxHighlighter {
-	private companion object {
-		private val SYMBOL = TextAttributesKey.createTextAttributesKey("LICE_SYMBOL", DefaultLanguageHighlighterColors.IDENTIFIER)
-		private val FUNCTION_CALL = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_CALL", DefaultLanguageHighlighterColors.FUNCTION_CALL)
-		private val NUMBER = TextAttributesKey.createTextAttributesKey("LICE_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
-		private val COMMENT = TextAttributesKey.createTextAttributesKey("LICE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
-		private val STRING = TextAttributesKey.createTextAttributesKey("LICE_COMMENT", DefaultLanguageHighlighterColors.STRING)
-		private val BRACKET = TextAttributesKey.createTextAttributesKey("LICE_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
+	companion object {
+		@JvmField val SYMBOL = TextAttributesKey.createTextAttributesKey("LICE_SYMBOL", DefaultLanguageHighlighterColors.IDENTIFIER)
+		@JvmField val FUNCTION_CALL = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_CALL", DefaultLanguageHighlighterColors.FUNCTION_CALL)
+		@JvmField val NUMBER = TextAttributesKey.createTextAttributesKey("LICE_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
+		@JvmField val COMMENT = TextAttributesKey.createTextAttributesKey("LICE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
+		@JvmField val STRING = TextAttributesKey.createTextAttributesKey("LICE_STRING", DefaultLanguageHighlighterColors.STRING)
+		@JvmField val BRACKET = TextAttributesKey.createTextAttributesKey("LICE_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
 		private val SYMBOL_KEYS = arrayOf(SYMBOL)
 		private val FUNCTION_CALL_KEYS = arrayOf(FUNCTION_CALL)
 		private val NUMBER_KEYS = arrayOf(NUMBER)
@@ -73,4 +74,23 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 
 class LiceSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
 	override fun getSyntaxHighlighter(project: Project?, file: VirtualFile?) = LiceSyntaxHighlighter()
+}
+
+class LiceColorSettingsPage : ColorSettingsPage {
+	private companion object {
+		val DESCRIPTORS = arrayOf(
+				AttributesDescriptor("Symbol", LiceSyntaxHighlighter.SYMBOL),
+				AttributesDescriptor("Bracket", LiceSyntaxHighlighter.BRACKET),
+				AttributesDescriptor("String", LiceSyntaxHighlighter.STRING))
+	}
+
+	override fun getHighlighter() = LiceSyntaxHighlighter()
+	override fun getIcon() = LICE_ICON
+	override fun getDisplayName() = LICE_NAME
+	override fun getAdditionalHighlightingTagToDescriptorMap() = null
+	override fun getAttributeDescriptors() = DESCRIPTORS
+	override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
+	override fun getDemoText() = """
+
+"""
 }

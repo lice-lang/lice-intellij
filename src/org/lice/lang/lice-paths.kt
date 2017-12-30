@@ -16,7 +16,7 @@ import java.io.File
 @JvmField val LICE_AST_NODE0_ICON = IconLoader.getIcon("/icons/ast_node_0.png")
 
 const val LICE_EXTENSION = "lice"
-const val LANGUAGE_NAME = "Lice"
+const val LICE_NAME = "Lice"
 
 @JvmField val LICE_PATH = "${System
 		.getProperties()

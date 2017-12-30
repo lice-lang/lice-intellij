@@ -21,7 +21,7 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 		private const val CAPTION = "New Lice File"
 	}
 
-	override fun getActionName(p0: PsiDirectory?, p1: String?) = CAPTION
+	override fun getActionName(directory: PsiDirectory?, s: String?) = CAPTION
 	override fun getErrorTitle(): String = CommonBundle.getErrorTitle()
 	override fun getDefaultExtension() = LICE_EXTENSION
 
