@@ -8,7 +8,7 @@ import org.lice.lang.psi.LiceTypes;
 %%
 
 %{
-	public LiceLexer() { this((java.io.Read) null); }
+	public LiceLexer() { this((java.io.Reader) null); }
 %}
 
 %class LiceLexer
