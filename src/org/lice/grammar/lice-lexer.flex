@@ -35,7 +35,7 @@ DEC_NUM={DIGIT}+[dDfFbBsSlLnNmM]?
 FLOAT={DIGIT}+\.{DIGIT}+[dDfFmM]?
 NUMBER={BIN_NUM}|{OCT_NUM}|{DEC_NUM}|{HEX_NUM}|{FLOAT}
 
-SYMBOL_CHAR=[a-zA-Z!@#$%\^&*_=:<>.?/\\+\-*/%\[\]{}|]
+SYMBOL_CHAR=[a-zA-Z!@$%\^&*_:=<|>?.\\+\-*/%\[\]#{}]
 SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 
 %state AFTER_NUM
@@ -43,7 +43,7 @@ SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 %%
 
 <AFTER_NUM> {SYMBOL}
-	{ return TokenType.BAD_CHARACTER; }
+	{ yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
 
 {COMMENT}
 	{ yybegin(YYINITIAL); return LiceTypes.COMMENT; }
