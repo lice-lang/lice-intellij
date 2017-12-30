@@ -63,10 +63,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		LiceTypes.LEFT_BRACKET -> BRACKET_KEYS
 		LiceTypes.STR -> STRING_KEYS
 		LiceTypes.SYM -> SYMBOL_KEYS
-		LiceTypes.BIN_NUM,
-		LiceTypes.DEC_NUM,
-		LiceTypes.OCT_NUM,
-		LiceTypes.FLOAT_NUM -> NUMBER_KEYS
+		LiceTypes.NUMBER -> NUMBER_KEYS
 		LiceTypes.COMMENT -> COMMENT_KEYS
 		else -> arrayOf()
 	}

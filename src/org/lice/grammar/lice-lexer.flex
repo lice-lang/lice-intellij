@@ -7,6 +7,10 @@ import org.lice.lang.psi.LiceTypes;
 
 %%
 
+%{
+	public LiceLexer() { this((java.io.Read) null); }
+%}
+
 %class LiceLexer
 %implements FlexLexer
 %unicode
@@ -38,28 +42,26 @@ SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 
 %%
 
-<YYINITIAL> {COMMENT}
-		{ return LiceTypes.COMMENT; }
+<AFTER_NUM> {SYMBOL}
+	{ return TokenType.BAD_CHARACTER; }
 
-<YYINITIAL> {LBRACKET}
-		{ return LiceTypes.LEFT_BRACKET; }
+{COMMENT}
+	{ yybegin(YYINITIAL); return LiceTypes.COMMENT; }
 
-<YYINITIAL> {STRING_LITERAL}
-		{ return LiceTypes.STR; }
+{LBRACKET}
+	{ yybegin(YYINITIAL); return LiceTypes.LEFT_BRACKET; }
 
-<YYINITIAL> {SYMBOL}
-		{ return LiceTypes.SYM; }
+{STRING_LITERAL}
+	{ yybegin(YYINITIAL); return LiceTypes.STR; }
 
-<YYINITIAL> {RBRACKET}
-		{ return LiceTypes.RIGHT_BRACKET; }
+{SYMBOL}
+	{ yybegin(YYINITIAL); return LiceTypes.SYM; }
 
-<YYINITIAL> {NUMBER}
-		{ yybegin(AFTER_NUM); return LiceTypes.NUMBER; }
+{RBRACKET}
+	{ yybegin(YYINITIAL); return LiceTypes.RIGHT_BRACKET; }
 
-<AFTER_NUM> {
-	{SYMBOL}
-		{ return TokenType.BAD_CHARACTER; }
-}
+{NUMBER}
+	{ yybegin(AFTER_NUM); return LiceTypes.NUMBER; }
 
 {WHITE_SPACE}+
 	{ yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
