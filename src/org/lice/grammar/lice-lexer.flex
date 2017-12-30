@@ -17,10 +17,19 @@ import org.lice.lang.psi.LiceTypes;
 
 COMMENT=;[^\n]*
 WHITE_SPACE=[, \n\r\t]
-SYNBOL_OR_NUMBER=([^;, \n\r\t\(\)\"])+
-STRING_LITERAL=\"([^\"]*)\"
 LBRACKET=\(
 RBRACKET=\)
+
+STRING_LITERAL=\"([^\"]*)\"
+
+SYNBOL=[a-zA-Z!@#$%\^&*_=:<>.?/\\+\-*/%\[\]{}|]+
+
+HEX_NUM=0[xX][0-9a-fA-F]+
+OCT_NUM=0[oO][0-7]+
+BIN_NUM=0[bB][01]+
+DEC_NUM=[0-9]+[dDfFbBsSlLnNmM]
+
+FLOAT=[0-9]+\.[0-9]+[dDfFmM]
 
 %%
 
@@ -37,7 +46,7 @@ RBRACKET=\)
 		{ yybegin(YYINITIAL); return LiceTypes.STR; }
 
 <YYINITIAL>
-	{SYNBOL_OR_NUMBER}
+	{SYNBOL}
 		{ yybegin(YYINITIAL); return LiceTypes.SYM; }
 
 <YYINITIAL>

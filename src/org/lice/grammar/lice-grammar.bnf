@@ -15,4 +15,6 @@
 file ::= liceElement*
 methodCall ::= LEFT_BRACKET liceElement* RIGHT_BRACKET
 liceElement ::= STR | numberOrSymbol | COMMENT | methodCall
-numberOrSymbol ::= SYM
+
+numberOrSymbol ::= SYM | number
+number ::= FLOAT_NUM | DOUBLE_NUM | DEC_NUM | HEX_NUM | BIN_NUM | OCT_NUM | BIG_INT | BIG_DEC
