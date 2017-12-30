@@ -91,6 +91,20 @@ class LiceColorSettingsPage : ColorSettingsPage {
 	override fun getAttributeDescriptors() = DESCRIPTORS
 	override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
 	override fun getDemoText() = """
+;; recursive fibonacci
+(def fib n (if
+  (in? (list 1 2) n) 1
+  (+ (fib (- n 1)) (fib (- n 2)))))
 
+;; greatest common divisor
+(def gcd a b (if (== b 0) a (gcd b (% a b))))
+
+;; call-by-name functions
+(defexpr my-if condition a (if condition a))
+
+"String literals"
+
+;; command line output
+(print "Lice is awesome!")
 """
 }
