@@ -12,5 +12,6 @@
 	psiImplUtilClass='org.lice.lang.psi.impl.LiceImplUtils'
 }
 
-file ::= methodCall*
-methodCall ::= '(' (STR | SYM | methodCall)* ')'
+file ::= liceElement*
+methodCall ::= LEFT_BRACKET liceElement* RIGHT_BRACKET
+liceElement ::= STR | SYM | COMMENT | methodCall

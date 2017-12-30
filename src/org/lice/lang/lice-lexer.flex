@@ -17,7 +17,7 @@ import org.lice.lang.psi.LiceTypes;
 
 COMMENT=;[^\n]*
 WHITE_SPACE=[, \n\r\t]
-SYNBOL_OR_NUMBER=([^;, \n\r\t\(\)])+
+SYNBOL_OR_NUMBER=([^;, \n\r\t\(\)\"])+
 STRING_LITERAL=\"([^\"]*)\"
 LBRACKET=\(
 RBRACKET=\)
@@ -26,11 +26,11 @@ RBRACKET=\)
 
 <YYINITIAL>
 	{COMMENT}
-		{ yybegin(YYINITIAL); return LiceTokenType.COMMENT; }
+		{ yybegin(YYINITIAL); return LiceTypes.COMMENT; }
 
 <YYINITIAL>
 	{LBRACKET}
-		{ yybegin(YYINITIAL); return LiceTokenType.LB; }
+		{ yybegin(YYINITIAL); return LiceTypes.LEFT_BRACKET; }
 
 <YYINITIAL>
 	{STRING_LITERAL}
@@ -42,7 +42,7 @@ RBRACKET=\)
 
 <YYINITIAL>
 	{RBRACKET}
-		{ yybegin(YYINITIAL); return LiceTokenType.RB; }
+		{ yybegin(YYINITIAL); return LiceTypes.RIGHT_BRACKET; }
 
 {WHITE_SPACE}+
-	{ yybegin(YYINITIAL); return LiceTokenType.WHITE_SPACE; }
+	{ yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
