@@ -23,12 +23,9 @@ const val LANGUAGE_NAME = "Lice"
 		.getProperty("idea.plugins.path")}/lice-intellij/lib/lice.jar"
 
 @JvmField val is32Bit = File("../jre").exists()
-@JvmField val JAVA_PATH: String = File(
-		if (is32Bit) "../jre/bin/java.exe"
-		else "../jre64/bin/java.exe"
-).absolutePath
+@JvmField val JAVA_PATH: String = File("../jre${if (is32Bit) "" else "64"}/bin/java.exe").absolutePath
 
-@JvmField val JAVA_PATH_WRAPPED = "\"" + JAVA_PATH + "\""
-@JvmField val LICE_PATH_WRAPPED = "\"" + LICE_PATH + "\""
+@JvmField val JAVA_PATH_WRAPPED = "\"$JAVA_PATH\""
+@JvmField val LICE_PATH_WRAPPED = "\"$LICE_PATH\""
 @JvmField val KOTLIN_RUNTIME_PATH: String = File("../lib/kotlin-runtime.jar").absolutePath
 @JvmField val KOTLIN_REFLECT_PATH: String = File("../lib/kotlin-reflect.jar").absolutePath

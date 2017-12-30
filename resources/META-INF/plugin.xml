@@ -28,6 +28,9 @@ Lice language support.
 		<lang.parserDefinition
 				language="Lice"
 				implementationClass="org.lice.lang.LiceParserDefinition"/>
+		<lang.syntaxHighlighterFactory
+				language="Lice"
+				implementationClass="org.lice.lang.LiceSyntaxHighlighterFactory"/>
 	</extensions>
 
 	<actions>

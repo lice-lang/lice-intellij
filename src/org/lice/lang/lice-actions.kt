@@ -17,6 +17,10 @@ import java.time.LocalDate
 import javax.swing.Icon
 
 class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
+	private companion object Caption {
+		private const val CAPTION = "New Lice File"
+	}
+
 	override fun getActionName(p0: PsiDirectory?, p1: String?) = CAPTION
 	override fun getErrorTitle(): String = CommonBundle.getErrorTitle()
 	override fun getDefaultExtension() = LICE_EXTENSION
@@ -48,10 +52,6 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 		)
 		return validator.createdElements
 	}
-
-	private companion object Caption {
-		private const val CAPTION = "New Lice File"
-	}
 }
 
 abstract class LiceFileActions(text: String, description: String, icon: Icon) : AnAction(text, description, icon) {
@@ -69,7 +69,7 @@ abstract class LiceFileActions(text: String, description: String, icon: Icon) : 
 }
 
 class ShowLiceFileSyntaxTree : LiceFileActions(
-		"View Syntax Tree",
+		"View Lice Syntax Tree",
 		"View Lice file syntax tree in a window",
 		LICE_AST_NODE_ICON) {
 	override fun actionPerformed(e: AnActionEvent) {
@@ -88,7 +88,7 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 }
 
 class ShowLiceFileSemanticTree : LiceFileActions(
-		"View Semantic Tree",
+		"View Lice Semantic Tree",
 		"View Lice file semantic tree in a window",
 		LICE_AST_NODE2_ICON) {
 	override fun actionPerformed(e: AnActionEvent) {

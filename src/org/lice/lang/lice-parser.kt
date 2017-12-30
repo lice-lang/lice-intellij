@@ -9,6 +9,10 @@ import org.lice.lang.psi.LiceTypes
 
 
 class LiceParserDefinition : ParserDefinition {
+	private companion object {
+		private val FILE = IFileElementType(Language.findInstance(LiceLanguage::class.java))
+	}
+
 	override fun createElement(astNode: ASTNode): PsiElement = LiceTypes.Factory.createElement(astNode)
 	override fun getFileNodeType() = FILE
 	override fun createFile(viewProvider: FileViewProvider) = LiceFile(viewProvider)
@@ -18,8 +22,4 @@ class LiceParserDefinition : ParserDefinition {
 	override fun createLexer(project: Project) = LiceLexerAdapter()
 	override fun spaceExistanceTypeBetweenTokens(astNode: ASTNode, astNode2: ASTNode) =
 			ParserDefinition.SpaceRequirements.MAY
-
-	companion object {
-		@JvmField val FILE = IFileElementType(Language.findInstance(LiceLanguage::class.java))
-	}
 }
