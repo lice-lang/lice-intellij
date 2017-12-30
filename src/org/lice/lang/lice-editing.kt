@@ -29,9 +29,7 @@ class LiceCommenter : Commenter {
 
 class LiceBraceMatcher : PairedBraceMatcher {
 	private companion object Pairs {
-		private val PAIRS = arrayOf(
-				BracePair(LiceTypes.LEFT_BRACKET, LiceTypes.RIGHT_BRACKET, false)
-		)
+		private val PAIRS = arrayOf(BracePair(LiceTypes.LEFT_BRACKET, LiceTypes.RIGHT_BRACKET, false))
 	}
 
 	override fun getPairs() = PAIRS

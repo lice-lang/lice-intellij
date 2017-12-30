@@ -10,7 +10,6 @@ import com.intellij.ui.treeStructure.Tree
 import org.apache.commons.lang.StringUtils
 import org.lice.model.*
 import org.lice.parse.buildNode
-import java.awt.Dimension
 import java.io.File
 import javax.swing.JComponent
 import javax.swing.JTextArea
@@ -22,9 +21,7 @@ object LiceSyntaxTreeViewerFactory {
 	 */
 	private fun mapAst2Display(node: StringNode, viewRoot: DefaultMutableTreeNode): DefaultMutableTreeNode = when (node) {
 		is StringLeafNode -> DefaultMutableTreeNode(node)
-		is StringMiddleNode -> viewRoot.apply {
-			node.list.subList(1, node.list.size).forEach { add(mapAst2Display(it, DefaultMutableTreeNode(it))) }
-		}
+		is StringMiddleNode -> viewRoot.apply { node.list.forEach { add(mapAst2Display(it, DefaultMutableTreeNode(it))) } }
 		else -> DefaultMutableTreeNode("null")
 	}
 
