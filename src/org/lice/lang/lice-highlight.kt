@@ -3,6 +3,7 @@ package org.lice.lang
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
+import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory
@@ -12,6 +13,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
+import org.lice.core.SymbolList
 import org.lice.lang.psi.*
 
 
@@ -23,6 +25,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		@JvmField val STRING = TextAttributesKey.createTextAttributesKey("LICE_STRING", DefaultLanguageHighlighterColors.STRING)
 		@JvmField val BRACKET = TextAttributesKey.createTextAttributesKey("LICE_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
 		@JvmField val FUNCTION_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_CALL", DefaultLanguageHighlighterColors.STATIC_METHOD)
+		@JvmField val UNRESOLVED_SYMBOL = TextAttributesKey.createTextAttributesKey("LICE_UNRESOLVED", HighlighterColors.TEXT)
 		private val SYMBOL_KEYS = arrayOf(SYMBOL)
 		private val NUMBER_KEYS = arrayOf(NUMBER)
 		private val COMMENT_KEYS = arrayOf(COMMENT)
@@ -54,28 +57,37 @@ class LiceAnnotator : Annotator {
 
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
-			if (callee.text in defFamily) {
-				val elementCount = element.elementList.size
-				if (elementCount <= 1) {
-					holder.createErrorAnnotation(
-							TextRange(callee.textRange.startOffset, callee.textRange.endOffset),
-							"Missing function name")
-					return@let
+			when (callee.text) {
+				"undef" -> {
+
 				}
-				val functionToBeDefined: LiceElement = element.elementList[1]
-				val symbol = functionToBeDefined.symbol ?: run {
-					holder.createErrorAnnotation(
-							TextRange(functionToBeDefined.textRange.startOffset, functionToBeDefined.textRange.endOffset),
-							"Function name expected")
-					return@let
+				in defFamily -> {
+					val elementCount = element.elementList.size
+					if (elementCount <= 1) {
+						holder.createErrorAnnotation(
+								TextRange(callee.textRange.endOffset, element.textRange.endOffset + 1),
+								"Missing function name")
+						return@let
+					}
+					val functionToBeDefined: LiceElement = element.elementList[1]
+					val symbol = functionToBeDefined.symbol ?: run {
+						holder.createErrorAnnotation(
+								TextRange(functionToBeDefined.textRange.startOffset, functionToBeDefined.textRange.endOffset),
+								"Function name should be a symbol")
+						return@let
+					}
+					holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
+							.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
+					if (elementCount <= 2) {
+						holder.createErrorAnnotation(
+								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+								"Missing function body")
+						return@let
+					}
 				}
-				holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
-						.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
-				if (elementCount <= 2) {
-					holder.createErrorAnnotation(
-							TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
-							"Missing function body")
-					return@let
+				!in SymbolList.preludeSymbols -> {
+					holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
+							.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
 				}
 			}
 		}
