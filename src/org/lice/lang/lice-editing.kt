@@ -7,15 +7,8 @@ package org.lice.lang
 
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.*
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
-import com.intellij.openapi.editor.colors.TextAttributesKey
-import com.intellij.openapi.fileTypes.SyntaxHighlighter
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory
 import com.intellij.openapi.options.colors.*
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
-import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import org.intellij.lang.annotations.Language
 import org.lice.lang.psi.LiceTypes
@@ -46,37 +39,6 @@ class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 	override fun getHiddenLiveTemplateFiles() = null
 }
 
-class LiceSyntaxHighlighter : SyntaxHighlighter {
-	companion object {
-		@JvmField val SYMBOL = TextAttributesKey.createTextAttributesKey("LICE_SYMBOL", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE)
-		@JvmField val NUMBER = TextAttributesKey.createTextAttributesKey("LICE_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
-		@JvmField val COMMENT = TextAttributesKey.createTextAttributesKey("LICE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
-		@JvmField val STRING = TextAttributesKey.createTextAttributesKey("LICE_STRING", DefaultLanguageHighlighterColors.STRING)
-		@JvmField val BRACKET = TextAttributesKey.createTextAttributesKey("LICE_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
-		private val SYMBOL_KEYS = arrayOf(SYMBOL)
-		private val NUMBER_KEYS = arrayOf(NUMBER)
-		private val COMMENT_KEYS = arrayOf(COMMENT)
-		private val STRING_KEYS = arrayOf(STRING)
-		private val BRACKET_KEYS = arrayOf(BRACKET)
-	}
-
-	override fun getTokenHighlights(type: IElementType?): Array<TextAttributesKey> = when (type) {
-		LiceTypes.RIGHT_BRACKET,
-		LiceTypes.LEFT_BRACKET -> BRACKET_KEYS
-		LiceTypes.STR -> STRING_KEYS
-		LiceTypes.SYM -> SYMBOL_KEYS
-		LiceTypes.NUMBER -> NUMBER_KEYS
-		LiceTypes.COMMENT, TokenType.WHITE_SPACE -> COMMENT_KEYS
-		else -> arrayOf()
-	}
-
-	override fun getHighlightingLexer() = LiceLexerAdapter()
-}
-
-class LiceSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
-	override fun getSyntaxHighlighter(project: Project?, file: VirtualFile?) = LiceSyntaxHighlighter()
-}
-
 class LiceColorSettingsPage : ColorSettingsPage {
 	private companion object {
 		val DESCRIPTORS = arrayOf(
@@ -84,7 +46,8 @@ class LiceColorSettingsPage : ColorSettingsPage {
 				AttributesDescriptor("Bracket", LiceSyntaxHighlighter.BRACKET),
 				AttributesDescriptor("String", LiceSyntaxHighlighter.STRING),
 				AttributesDescriptor("Number", LiceSyntaxHighlighter.NUMBER),
-				AttributesDescriptor("Ignored character", LiceSyntaxHighlighter.COMMENT))
+				AttributesDescriptor("Ignored character", LiceSyntaxHighlighter.COMMENT),
+				AttributesDescriptor("Direct function call", LiceSyntaxHighlighter.FUNCTION_CALL))
 	}
 
 	override fun getHighlighter() = LiceSyntaxHighlighter()
@@ -102,6 +65,6 @@ class LiceColorSettingsPage : ColorSettingsPage {
 		(+ (fib (- n 1)) (fib (- n 2)))))
 
 ;; command line output
-(print "String literals")
+(print "String", " ", "literals")
 """
 }
