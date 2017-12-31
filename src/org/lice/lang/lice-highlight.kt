@@ -12,7 +12,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import org.lice.core.SymbolList
 import org.lice.lang.psi.*
@@ -25,7 +24,8 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		@JvmField val COMMENT = TextAttributesKey.createTextAttributesKey("LICE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
 		@JvmField val STRING = TextAttributesKey.createTextAttributesKey("LICE_STRING", DefaultLanguageHighlighterColors.STRING)
 		@JvmField val BRACKET = TextAttributesKey.createTextAttributesKey("LICE_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
-		@JvmField val FUNCTION_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_CALL", DefaultLanguageHighlighterColors.STATIC_METHOD)
+		@JvmField val FUNCTION_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_DEF", DefaultLanguageHighlighterColors.STATIC_METHOD)
+		@JvmField val VARIABLE_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_VARIABLE_DEF", DefaultLanguageHighlighterColors.STATIC_FIELD)
 		@JvmField val UNRESOLVED_SYMBOL = TextAttributesKey.createTextAttributesKey("LICE_UNRESOLVED", HighlighterColors.TEXT)
 		private val SYMBOL_KEYS = arrayOf(SYMBOL)
 		private val NUMBER_KEYS = arrayOf(NUMBER)
@@ -40,7 +40,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		LiceTypes.STR -> STRING_KEYS
 		LiceTypes.SYM -> SYMBOL_KEYS
 		LiceTypes.NUM -> NUMBER_KEYS
-		LiceTypes.COMMENT, TokenType.WHITE_SPACE -> COMMENT_KEYS
+		LiceTypes.COMMENT -> COMMENT_KEYS
 		else -> arrayOf()
 	}
 
@@ -53,25 +53,43 @@ class LiceSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
 
 class LiceAnnotator : Annotator {
 	companion object {
-		private val defFamily = listOf("def", "deflazy", "defexpr", "->")
+		private val defFamily = listOf("def", "deflazy", "defexpr")
+		private val setFamily = listOf("->", "<->")
 	}
 
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
 			when (callee.text) {
 				"undef" -> {
-					val functionUndef = checkName(element, holder, callee) ?: return@let
-					if (functionUndef.text in SymbolList.preludeSymbols) {
+					val funUndefined = checkName(element, holder, callee, "function") ?: return@let
+					if (funUndefined.text in SymbolList.preludeSymbols) {
 						holder.createWarningAnnotation(
-								TextRange(functionUndef.textRange.startOffset, functionUndef.textRange.endOffset),
+								TextRange(funUndefined.textRange.startOffset, funUndefined.textRange.endOffset),
 								"Trying to undef a standard function")
 					}
 				}
-				in defFamily -> {
-					val functionDef = checkName(element, holder, callee) ?: return@let
-					val symbol = functionDef.symbol ?: run {
+				in setFamily -> {
+					val varDefined = checkName(element, holder, callee, "variable") ?: return@let
+					val symbol = varDefined.symbol ?: run {
 						holder.createErrorAnnotation(
-								TextRange(functionDef.textRange.startOffset, functionDef.textRange.endOffset),
+								TextRange(varDefined.textRange.startOffset, varDefined.textRange.endOffset),
+								"Variable name should be a symbol")
+						return@let
+					}
+					holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
+							.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
+					if (element.elementList.size <= 2) {
+						holder.createErrorAnnotation(
+								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+								"Missing variable value")
+						return@let
+					}
+				}
+				in defFamily -> {
+					val funDefined = checkName(element, holder, callee, "function or variable") ?: return@let
+					val symbol = funDefined.symbol ?: run {
+						holder.createErrorAnnotation(
+								TextRange(funDefined.textRange.startOffset, funDefined.textRange.endOffset),
 								"Function name should be a symbol")
 						return@let
 					}
@@ -92,14 +110,23 @@ class LiceAnnotator : Annotator {
 	 * @author ice1000
 	 * @return null if unavailable
 	 */
-	private fun checkName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode): LiceElement? {
+	private fun checkName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode, type: String): LiceElement? {
 		val elementCount = element.elementList.size
 		if (elementCount <= 1) {
 			holder.createErrorAnnotation(
 					TextRange(callee.textRange.endOffset, element.textRange.endOffset + 1),
-					"Missing function name")
+					"Missing $type name")
 			return null
 		}
-		return element.elementList[1]
+		val text = element.elementList[1]
+		if (text.text in SymbolList.preludeSymbols) {
+			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
+			if (text.text in defFamily || text.text in setFamily)
+				holder.createErrorAnnotation(range, """Trying to overwrite an important standard name,
+					|static analysis may not work if you overwrite it
+				""".trimMargin())
+			else holder.createWarningAnnotation(range, "Trying to overwrite a standard name")
+		}
+		return text
 	}
 }

@@ -33,8 +33,7 @@ Lice language support.
 				implementationClass="org.lice.lang.LiceSyntaxHighlighterFactory"/>
 		<colorSettingsPage
 				implementation="org.lice.lang.LiceColorSettingsPage"/>
-		<additionalTextAttributes scheme="Default" file="/colorScheme/LiceDefault.xml"/>
-		<additionalTextAttributes scheme="Darcula" file="/colorScheme/LiceDarcula.xml"/>
+		<bundledColorScheme path="/colorScheme/LiceDefault"/>
 		<annotator
 				language="Lice"
 				implementationClass="org.lice.lang.LiceAnnotator"/>
