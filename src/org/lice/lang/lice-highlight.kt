@@ -27,6 +27,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		@JvmField val FUNCTION_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_DEF", DefaultLanguageHighlighterColors.STATIC_METHOD)
 		@JvmField val VARIABLE_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_VARIABLE_DEF", DefaultLanguageHighlighterColors.STATIC_FIELD)
 		@JvmField val UNRESOLVED_SYMBOL = TextAttributesKey.createTextAttributesKey("LICE_UNRESOLVED", HighlighterColors.TEXT)
+		@JvmField val IMPORTANT_SYMBOLS = TextAttributesKey.createTextAttributesKey("LICE_IMPORTANT_SYMBOLS", DefaultLanguageHighlighterColors.KEYWORD)
 		private val SYMBOL_KEYS = arrayOf(SYMBOL)
 		private val NUMBER_KEYS = arrayOf(NUMBER)
 		private val COMMENT_KEYS = arrayOf(COMMENT)
@@ -111,6 +112,8 @@ class LiceAnnotator : Annotator {
 	 * @return null if unavailable
 	 */
 	private fun checkName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode, type: String): LiceElement? {
+		if (isImportant(callee.text)) holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
+				.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 		val elementCount = element.elementList.size
 		if (elementCount <= 1) {
 			holder.createErrorAnnotation(
@@ -121,12 +124,13 @@ class LiceAnnotator : Annotator {
 		val text = element.elementList[1]
 		if (text.text in SymbolList.preludeSymbols) {
 			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
-			if (text.text in defFamily || text.text in setFamily)
-				holder.createErrorAnnotation(range, """Trying to overwrite an important standard name,
-					|static analysis may not work if you overwrite it
-				""".trimMargin())
+			val txt = text.text
+			if (isImportant(txt))
+				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
 			else holder.createWarningAnnotation(range, "Trying to overwrite a standard name")
 		}
 		return text
 	}
+
+	private fun isImportant(txt: String) = txt in defFamily || txt in setFamily || txt == "undef"
 }

@@ -7,20 +7,17 @@ package org.lice.lang
 
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.*
-import com.intellij.openapi.editor.impl.ColorProvider
 import com.intellij.openapi.options.colors.*
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import org.intellij.lang.annotations.Language
 import org.lice.lang.psi.LiceTypes
-import java.awt.Color
 
 class LiceCommenter : Commenter {
 	override fun getCommentedBlockCommentPrefix() = blockCommentPrefix
 	override fun getCommentedBlockCommentSuffix() = blockCommentSuffix
 	override fun getBlockCommentPrefix() = null
 	override fun getBlockCommentSuffix() = null
-
 	override fun getLineCommentPrefix() = "; "
 }
 
@@ -44,13 +41,15 @@ class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 class LiceColorSettingsPage : ColorSettingsPage {
 	private companion object {
 		val DESCRIPTORS = arrayOf(
-				AttributesDescriptor("Symbol", LiceSyntaxHighlighter.SYMBOL),
+				AttributesDescriptor("Symbols//Ordinary symbols", LiceSyntaxHighlighter.SYMBOL),
+				AttributesDescriptor("Symbols//Important symbols", LiceSyntaxHighlighter.IMPORTANT_SYMBOLS),
 				AttributesDescriptor("Bracket", LiceSyntaxHighlighter.BRACKET),
 				AttributesDescriptor("String", LiceSyntaxHighlighter.STRING),
 				AttributesDescriptor("Number", LiceSyntaxHighlighter.NUMBER),
 				AttributesDescriptor("Ignored character", LiceSyntaxHighlighter.COMMENT),
-				AttributesDescriptor("Functions//Direct function call", LiceSyntaxHighlighter.FUNCTION_DEFINITION),
-				AttributesDescriptor("Functions//Unresolved function", LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
+				AttributesDescriptor("Definitions//Function definition", LiceSyntaxHighlighter.FUNCTION_DEFINITION),
+				AttributesDescriptor("Definitions//Variable definition", LiceSyntaxHighlighter.VARIABLE_DEFINITION),
+				AttributesDescriptor("Reference//Unresolved function", LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
 	}
 
 	override fun getHighlighter() = LiceSyntaxHighlighter()
