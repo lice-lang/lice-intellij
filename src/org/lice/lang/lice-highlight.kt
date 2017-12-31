@@ -38,7 +38,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		LiceTypes.LEFT_BRACKET -> BRACKET_KEYS
 		LiceTypes.STR -> STRING_KEYS
 		LiceTypes.SYM -> SYMBOL_KEYS
-		LiceTypes.NUMBER -> NUMBER_KEYS
+		LiceTypes.NUM -> NUMBER_KEYS
 		LiceTypes.COMMENT, TokenType.WHITE_SPACE -> COMMENT_KEYS
 		else -> arrayOf()
 	}
@@ -54,6 +54,8 @@ class LiceAnnotator : Annotator {
 	companion object {
 		private val defFamily = listOf("def", "deflazy", "defexpr")
 	}
+
+	private val existingSymbols = SymbolList.preludeSymbols.toMutableList()
 
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
@@ -78,6 +80,7 @@ class LiceAnnotator : Annotator {
 					}
 					holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
 							.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
+					existingSymbols += symbol.text
 					if (elementCount <= 2) {
 						holder.createErrorAnnotation(
 								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
@@ -85,7 +88,7 @@ class LiceAnnotator : Annotator {
 						return@let
 					}
 				}
-				!in SymbolList.preludeSymbols -> {
+				!in existingSymbols -> {
 					holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
 							.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
 				}

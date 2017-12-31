@@ -47,7 +47,8 @@ class LiceColorSettingsPage : ColorSettingsPage {
 				AttributesDescriptor("String", LiceSyntaxHighlighter.STRING),
 				AttributesDescriptor("Number", LiceSyntaxHighlighter.NUMBER),
 				AttributesDescriptor("Ignored character", LiceSyntaxHighlighter.COMMENT),
-				AttributesDescriptor("Direct function call", LiceSyntaxHighlighter.FUNCTION_DEFINITION))
+				AttributesDescriptor("Functions//Direct function call", LiceSyntaxHighlighter.FUNCTION_DEFINITION),
+				AttributesDescriptor("Functions//Unresolved function", LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
 	}
 
 	override fun getHighlighter() = LiceSyntaxHighlighter()
