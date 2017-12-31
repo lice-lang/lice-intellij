@@ -56,24 +56,15 @@ class LiceAnnotator : Annotator {
 		private val defFamily = listOf("def", "deflazy", "defexpr", "->")
 	}
 
-	private val existingSymbols = SymbolList.preludeSymbols.toMutableList()
-
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
 			when (callee.text) {
 				"undef" -> {
 					val functionUndefined = checkName(element, holder, callee) ?: return@let
-					if (functionUndefined.text in existingSymbols) {
-						if (functionUndefined.text in SymbolList.preludeSymbols) {
-							holder.createWarningAnnotation(
-									TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
-									"Trying to undef a standard function")
-						}
-					} else {
-						holder.createInfoAnnotation(
-								TextRange(functionUndefined.textRange.startOffset, functionUndefined.textRange.endOffset),
-								"Unresolved reference")
-								.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
+					if (functionUndefined.text in SymbolList.preludeSymbols) {
+						holder.createWarningAnnotation(
+								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+								"Trying to undef a standard function")
 					}
 				}
 				in defFamily -> {
@@ -86,7 +77,6 @@ class LiceAnnotator : Annotator {
 					}
 					holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
 							.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
-					existingSymbols += symbol.text
 					if (element.elementList.size <= 2) {
 						holder.createErrorAnnotation(
 								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
@@ -94,16 +84,14 @@ class LiceAnnotator : Annotator {
 						return@let
 					}
 				}
-				!in existingSymbols -> {
-					holder.createInfoAnnotation(
-							TextRange(callee.textRange.startOffset, callee.textRange.endOffset),
-							"Unresolved reference")
-							.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
-				}
 			}
 		}
 	}
 
+	/**
+	 * @author ice1000
+	 * @return null if unavailable
+	 */
 	private fun checkName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode): LiceElement? {
 		val elementCount = element.elementList.size
 		if (elementCount <= 1) {
