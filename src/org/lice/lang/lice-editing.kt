@@ -63,11 +63,13 @@ class LiceColorSettingsPage : ColorSettingsPage {
 	override fun getDemoText() = """
 ;; comments
 (def fib n
-	(if (in? (list 1 2) n)
+	(if (<= n 2)
 		1
 		(+ (fib (- n 1)) (fib (- n 2)))))
 
+(undef unresolved-reference)
+
 ;; command line output
-(print "String", " ", "literals")
+(print "String", "literals")
 """
 }

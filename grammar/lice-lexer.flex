@@ -19,8 +19,8 @@ import org.lice.lang.psi.LiceTypes;
 %eof{ return;
 %eof}
 
-COMMENT=;[^\n]*
-WHITE_SPACE=[, \n\r\t]
+COMMENT=,|(;[^\n]*)
+WHITE_SPACE=[ \n\r\t]
 LBRACKET=\(
 RBRACKET=\)
 

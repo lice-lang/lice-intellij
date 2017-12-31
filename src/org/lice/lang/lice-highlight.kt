@@ -53,7 +53,7 @@ class LiceSyntaxHighlighterFactory : SyntaxHighlighterFactory() {
 
 class LiceAnnotator : Annotator {
 	companion object {
-		private val defFamily = listOf("def", "deflazy", "defexpr")
+		private val defFamily = listOf("def", "deflazy", "defexpr", "->")
 	}
 
 	private val existingSymbols = SymbolList.preludeSymbols.toMutableList()
