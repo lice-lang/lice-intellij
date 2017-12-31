@@ -9,12 +9,14 @@
 	tokenTypeClass='org.lice.lang.LiceTokenType'
 	elementTypeHolderClass='org.lice.lang.psi.LiceTypes'
 	elementTypeClass='org.lice.lang.LiceElementType'
-	psiImplUtilClass='org.lice.lang.psi.impl.LiceImplUtils'
+	psiImplUtilClass='org.lice.lang.psi.impl.LicePsiImplUtils'
 }
 
-file ::= liceElement*
-methodCall ::= LEFT_BRACKET liceElement+ RIGHT_BRACKET
-liceElement ::= STR | numberOrSymbol | COMMENT | null | methodCall
+file ::= element*
+methodCall ::= LEFT_BRACKET element+ RIGHT_BRACKET
+element ::= STR | numberOrSymbol | COMMENT | null | methodCall
 null ::= LEFT_BRACKET RIGHT_BRACKET
 
-numberOrSymbol ::= SYM | NUMBER
+numberOrSymbol ::= SYM | NUMBER {
+	methods=[getSymbol]
+}

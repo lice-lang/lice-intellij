@@ -10,8 +10,8 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.*
-import org.lice.tools.LiceSemanticTreeViewerFactory
-import org.lice.tools.LiceSyntaxTreeViewerFactory
+import org.lice.lang.tools.LiceSemanticTreeViewerFactory
+import org.lice.lang.tools.LiceSyntaxTreeViewerFactory
 import java.awt.Dimension
 import java.io.File
 import java.time.LocalDate

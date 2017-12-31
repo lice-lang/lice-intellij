@@ -15,6 +15,7 @@ import com.intellij.openapi.options.colors.*
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
+import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import org.intellij.lang.annotations.Language
 import org.lice.lang.psi.LiceTypes
@@ -65,8 +66,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		LiceTypes.STR -> STRING_KEYS
 		LiceTypes.SYM -> SYMBOL_KEYS
 		LiceTypes.NUMBER -> NUMBER_KEYS
-		LiceTypes.COMMENT -> COMMENT_KEYS
-	// TokenType.WHITE_SPACE -> arrayOf()
+		LiceTypes.COMMENT, TokenType.WHITE_SPACE -> COMMENT_KEYS
 		else -> arrayOf()
 	}
 
@@ -83,7 +83,8 @@ class LiceColorSettingsPage : ColorSettingsPage {
 				AttributesDescriptor("Symbol", LiceSyntaxHighlighter.SYMBOL),
 				AttributesDescriptor("Bracket", LiceSyntaxHighlighter.BRACKET),
 				AttributesDescriptor("String", LiceSyntaxHighlighter.STRING),
-				AttributesDescriptor("Number", LiceSyntaxHighlighter.NUMBER))
+				AttributesDescriptor("Number", LiceSyntaxHighlighter.NUMBER),
+				AttributesDescriptor("Ignored character", LiceSyntaxHighlighter.COMMENT))
 	}
 
 	override fun getHighlighter() = LiceSyntaxHighlighter()

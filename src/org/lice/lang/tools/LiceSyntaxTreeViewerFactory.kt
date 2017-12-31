@@ -3,7 +3,7 @@
  *
  * @author ice1000
  */
-package org.lice.tools
+package org.lice.lang.tools
 
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.treeStructure.Tree
