@@ -7,11 +7,13 @@ package org.lice.lang
 
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.*
+import com.intellij.openapi.editor.impl.ColorProvider
 import com.intellij.openapi.options.colors.*
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
 import org.intellij.lang.annotations.Language
 import org.lice.lang.psi.LiceTypes
+import java.awt.Color
 
 class LiceCommenter : Commenter {
 	override fun getCommentedBlockCommentPrefix() = blockCommentPrefix

@@ -1,5 +1,6 @@
 package org.lice.lang
 
+import com.intellij.lang.ASTNode
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
@@ -61,27 +62,32 @@ class LiceAnnotator : Annotator {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
 			when (callee.text) {
 				"undef" -> {
-
+					val functionUndefined = checkName(element, holder, callee) ?: return@let
+					if (functionUndefined.text in existingSymbols) {
+						if (functionUndefined.text in SymbolList.preludeSymbols) {
+							holder.createWarningAnnotation(
+									TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+									"Trying to undef a standard function")
+						}
+					} else {
+						holder.createInfoAnnotation(
+								TextRange(functionUndefined.textRange.startOffset, functionUndefined.textRange.endOffset),
+								"Unresolved reference")
+								.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
+					}
 				}
 				in defFamily -> {
-					val elementCount = element.elementList.size
-					if (elementCount <= 1) {
+					val functionDefined = checkName(element, holder, callee) ?: return@let
+					val symbol = functionDefined.symbol ?: run {
 						holder.createErrorAnnotation(
-								TextRange(callee.textRange.endOffset, element.textRange.endOffset + 1),
-								"Missing function name")
-						return@let
-					}
-					val functionToBeDefined: LiceElement = element.elementList[1]
-					val symbol = functionToBeDefined.symbol ?: run {
-						holder.createErrorAnnotation(
-								TextRange(functionToBeDefined.textRange.startOffset, functionToBeDefined.textRange.endOffset),
+								TextRange(functionDefined.textRange.startOffset, functionDefined.textRange.endOffset),
 								"Function name should be a symbol")
 						return@let
 					}
 					holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
 							.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
 					existingSymbols += symbol.text
-					if (elementCount <= 2) {
+					if (element.elementList.size <= 2) {
 						holder.createErrorAnnotation(
 								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
 								"Missing function body")
@@ -89,10 +95,23 @@ class LiceAnnotator : Annotator {
 					}
 				}
 				!in existingSymbols -> {
-					holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
+					holder.createInfoAnnotation(
+							TextRange(callee.textRange.startOffset, callee.textRange.endOffset),
+							"Unresolved reference")
 							.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
 				}
 			}
 		}
+	}
+
+	private fun checkName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode): LiceElement? {
+		val elementCount = element.elementList.size
+		if (elementCount <= 1) {
+			holder.createErrorAnnotation(
+					TextRange(callee.textRange.endOffset, element.textRange.endOffset + 1),
+					"Missing function name")
+			return null
+		}
+		return element.elementList[1]
 	}
 }
