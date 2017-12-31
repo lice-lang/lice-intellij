@@ -3,6 +3,7 @@ package org.lice.lang
 import com.intellij.CommonBundle
 import com.intellij.ide.actions.CreateFileAction
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
@@ -48,8 +49,7 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 				"New Lice script",
 				Messages.getQuestionIcon(),
 				"",
-				validator
-		)
+				validator)
 		return validator.createdElements
 	}
 }
@@ -82,7 +82,7 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 					.createComponentPopupBuilder(view, view)
 					.createPopup()
 			popup.size = Dimension(520, 520)
-			popup.showInFocusCenter()
+			ApplicationManager.getApplication().invokeLater(popup::showInFocusCenter)
 		}
 	}
 }
@@ -102,7 +102,7 @@ class ShowLiceFileSemanticTree : LiceFileActions(
 					.createComponentPopupBuilder(view, view)
 					.createPopup()
 			popup.size = Dimension(520, 520)
-			popup.showInFocusCenter()
+			ApplicationManager.getApplication().invokeLater(popup::showInFocusCenter)
 		}
 	}
 }
