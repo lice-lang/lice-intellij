@@ -17,6 +17,10 @@ It provides syntax highlighting and some structural editing tools.
 + [X] Parser and lexer
 + [X] Braces matcher
 + [X] Highlighting
-+ [ ] Running config
++ [X] Giving warnings to dangerous operations
++ [ ] Resolving reference
++ [ ] Completion
++ [ ] Run configurations
 + [ ] Renaming
 + [ ] Quick fixes
++ [ ] Structural editing
