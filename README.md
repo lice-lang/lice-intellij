@@ -5,6 +5,8 @@ based on the intellij platform.
 
 It provides syntax highlighting and some structural editing tools.
 
+![image](https://user-images.githubusercontent.com/16398479/34459213-6907ce42-ee24-11e7-8ef5-4b47d02c12a9.png)
+
 ## Progress
 
 + [X] Live templates

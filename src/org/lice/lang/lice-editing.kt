@@ -58,13 +58,14 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		private val BRACKET_KEYS = arrayOf(BRACKET)
 	}
 
-	override fun getTokenHighlights(type: IElementType): Array<TextAttributesKey> = when (type) {
+	override fun getTokenHighlights(type: IElementType?): Array<TextAttributesKey> = when (type) {
 		LiceTypes.RIGHT_BRACKET,
 		LiceTypes.LEFT_BRACKET -> BRACKET_KEYS
 		LiceTypes.STR -> STRING_KEYS
 		LiceTypes.SYM -> SYMBOL_KEYS
 		LiceTypes.NUMBER -> NUMBER_KEYS
 		LiceTypes.COMMENT -> COMMENT_KEYS
+	// TokenType.WHITE_SPACE -> arrayOf()
 		else -> arrayOf()
 	}
 
@@ -80,7 +81,8 @@ class LiceColorSettingsPage : ColorSettingsPage {
 		val DESCRIPTORS = arrayOf(
 				AttributesDescriptor("Symbol", LiceSyntaxHighlighter.SYMBOL),
 				AttributesDescriptor("Bracket", LiceSyntaxHighlighter.BRACKET),
-				AttributesDescriptor("String", LiceSyntaxHighlighter.STRING))
+				AttributesDescriptor("String", LiceSyntaxHighlighter.STRING),
+				AttributesDescriptor("Number", LiceSyntaxHighlighter.NUMBER))
 	}
 
 	override fun getHighlighter() = LiceSyntaxHighlighter()
