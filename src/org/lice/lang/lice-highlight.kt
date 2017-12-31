@@ -60,18 +60,18 @@ class LiceAnnotator : Annotator {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
 			when (callee.text) {
 				"undef" -> {
-					val functionUndefined = checkName(element, holder, callee) ?: return@let
-					if (functionUndefined.text in SymbolList.preludeSymbols) {
+					val functionUndef = checkName(element, holder, callee) ?: return@let
+					if (functionUndef.text in SymbolList.preludeSymbols) {
 						holder.createWarningAnnotation(
-								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+								TextRange(functionUndef.textRange.startOffset, functionUndef.textRange.endOffset),
 								"Trying to undef a standard function")
 					}
 				}
 				in defFamily -> {
-					val functionDefined = checkName(element, holder, callee) ?: return@let
-					val symbol = functionDefined.symbol ?: run {
+					val functionDef = checkName(element, holder, callee) ?: return@let
+					val symbol = functionDef.symbol ?: run {
 						holder.createErrorAnnotation(
-								TextRange(functionDefined.textRange.startOffset, functionDefined.textRange.endOffset),
+								TextRange(functionDef.textRange.startOffset, functionDef.textRange.endOffset),
 								"Function name should be a symbol")
 						return@let
 					}
