@@ -62,7 +62,7 @@ SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 	{ yybegin(YYINITIAL); return LiceTypes.RIGHT_BRACKET; }
 
 {NUMBER}
-	{ yybegin(AFTER_NUM); return LiceTypes.NUMBER; }
+	{ yybegin(AFTER_NUM); return LiceTypes.NUM; }
 
 {WHITE_SPACE}+
 	{ yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }

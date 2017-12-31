@@ -13,11 +13,12 @@
 }
 
 file ::= element*
-element ::= STR | numberOrSymbol | COMMENT | null | methodCall
+element ::= STR | number | symbol | COMMENT | null | methodCall
 null ::= LEFT_BRACKET RIGHT_BRACKET
 
 methodCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 	methods=[getCallee]
 }
 
-numberOrSymbol ::= SYM | NUMBER
+number ::= NUM
+symbol ::= SYM

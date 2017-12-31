@@ -12,8 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
-import org.lice.lang.psi.LiceMethodCall
-import org.lice.lang.psi.LiceTypes
+import org.lice.lang.psi.*
 
 
 class LiceSyntaxHighlighter : SyntaxHighlighter {
@@ -56,15 +55,28 @@ class LiceAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
 			if (callee.text in defFamily) {
-				if (element.elementList.size <= 1) {
-					holder.createWarningAnnotation(
+				val elementCount = element.elementList.size
+				if (elementCount <= 1) {
+					holder.createErrorAnnotation(
 							TextRange(callee.textRange.startOffset, callee.textRange.endOffset),
 							"Missing function name")
 					return@let
 				}
-				val functionDefined = element.elementList[1]
-				holder.createInfoAnnotation(TextRange(functionDefined.textRange.startOffset, functionDefined.textRange.endOffset), null)
+				val functionToBeDefined: LiceElement = element.elementList[1]
+				val symbol = functionToBeDefined.symbol ?: run {
+					holder.createErrorAnnotation(
+							TextRange(functionToBeDefined.textRange.startOffset, functionToBeDefined.textRange.endOffset),
+							"Function name expected")
+					return@let
+				}
+				holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
 						.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
+				if (elementCount <= 2) {
+					holder.createErrorAnnotation(
+							TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+							"Missing function body")
+					return@let
+				}
 			}
 		}
 	}
