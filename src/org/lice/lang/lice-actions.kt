@@ -34,7 +34,7 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 		return arrayOf(directory.add(PsiFileFactory
 				.getInstance(directory.project)
 				.createFileFromText(fixedExtension, LiceFileType, """;
-; Created by ${System.getenv("USERNAME")} on ${LocalDate.now()}
+; Created by ${System.getenv("USER")} on ${LocalDate.now()}
 ;
 
 (|>)

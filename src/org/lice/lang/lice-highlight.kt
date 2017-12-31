@@ -23,7 +23,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		@JvmField val COMMENT = TextAttributesKey.createTextAttributesKey("LICE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
 		@JvmField val STRING = TextAttributesKey.createTextAttributesKey("LICE_STRING", DefaultLanguageHighlighterColors.STRING)
 		@JvmField val BRACKET = TextAttributesKey.createTextAttributesKey("LICE_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
-		@JvmField val FUNCTION_CALL = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_CALL", DefaultLanguageHighlighterColors.INSTANCE_METHOD)
+		@JvmField val FUNCTION_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_CALL", DefaultLanguageHighlighterColors.STATIC_METHOD)
 		private val SYMBOL_KEYS = arrayOf(SYMBOL)
 		private val NUMBER_KEYS = arrayOf(NUMBER)
 		private val COMMENT_KEYS = arrayOf(COMMENT)
@@ -56,9 +56,15 @@ class LiceAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
 			if (callee.text in defFamily) {
-				val functionDefined = element.elementList[2]
-				holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
-						.textAttributes = LiceSyntaxHighlighter.FUNCTION_CALL
+				if (element.elementList.size <= 1) {
+					holder.createWarningAnnotation(
+							TextRange(callee.textRange.startOffset, callee.textRange.endOffset),
+							"Missing function name")
+					return@let
+				}
+				val functionDefined = element.elementList[1]
+				holder.createInfoAnnotation(TextRange(functionDefined.textRange.startOffset, functionDefined.textRange.endOffset), null)
+						.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
 			}
 		}
 	}
