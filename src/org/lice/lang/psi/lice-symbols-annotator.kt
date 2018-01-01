@@ -12,6 +12,9 @@ class LiceAnnotator : Annotator {
 	companion object {
 		private val defFamily = listOf("def", "deflazy", "defexpr")
 		private val setFamily = listOf("->", "<->")
+		private val closureFamily = listOf("lambda", "expr", "lazy")
+
+		private val importantFamily = defFamily + setFamily + closureFamily
 	}
 
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -76,7 +79,7 @@ class LiceAnnotator : Annotator {
 		if (text.text in SymbolList.preludeSymbols) {
 			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
 			val txt = text.text
-			if (isImportant(txt))
+			if (txt in importantFamily)
 				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
 			else holder.createWarningAnnotation(range, "Trying to overwrite a standard name")
 		}
@@ -84,7 +87,7 @@ class LiceAnnotator : Annotator {
 	}
 
 	private fun simplyCheckName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode, type: String): LiceElement? {
-		if (isImportant(callee.text)) holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
+		if (callee.text in importantFamily) holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
 				.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 		val elementCount = element.elementList.size
 		if (elementCount <= 1) {
@@ -96,5 +99,4 @@ class LiceAnnotator : Annotator {
 		return element.elementList[1]
 	}
 
-	private fun isImportant(txt: String) = txt in defFamily || txt in setFamily || txt == "undef"
 }
