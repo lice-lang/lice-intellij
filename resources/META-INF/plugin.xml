@@ -38,10 +38,10 @@ Provides syntax highlighting, error reporting, code completion, reference resolv
 		<bundledColorScheme path="/colorScheme/LiceDefault"/>
 		<annotator
 				language="Lice"
-				implementationClass="org.lice.lang.LiceAnnotator"/>
+				implementationClass="org.lice.lang.psi.LiceAnnotator"/>
 		<annotator
 				language="JAVA"
-				implementationClass="org.lice.lang.LiceSymbolsExtractingAnnotator"/>
+				implementationClass="org.lice.lang.psi.LiceSymbolsExtractingAnnotator"/>
 	</extensions>
 
 	<actions>

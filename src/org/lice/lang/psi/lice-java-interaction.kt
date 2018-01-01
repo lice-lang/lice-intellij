@@ -1,10 +1,11 @@
-package org.lice.lang
+package org.lice.lang.psi
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import org.lice.core.SymbolList
+import org.lice.lang.LiceSyntaxHighlighter
 
 class LiceSymbolsExtractingAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
