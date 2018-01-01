@@ -15,7 +15,7 @@ class LiceAnnotator : Annotator {
 	}
 
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-		if (element is LiceMethodCall) element.callee?.let { callee ->
+		if (element is LiceMethodCall) element.liceCallee?.let { callee ->
 			when (callee.text) {
 				"undef" -> {
 					val funUndefined = simplyCheckName(element, holder, callee, "function") ?: return@let
