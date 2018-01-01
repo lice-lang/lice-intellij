@@ -62,48 +62,52 @@ class LiceAnnotator : Annotator {
 		if (element is LiceMethodCall) element.callee?.let { callee ->
 			when (callee.text) {
 				"undef" -> {
-					val funUndefined = checkName(element, holder, callee, "function") ?: return@let
+					val funUndefined = simplyCheckName(element, holder, callee, "function") ?: return@let
 					if (funUndefined.text in SymbolList.preludeSymbols) {
 						holder.createWarningAnnotation(
 								TextRange(funUndefined.textRange.startOffset, funUndefined.textRange.endOffset),
 								"Trying to undef a standard function")
 					}
 				}
-				in setFamily -> {
-					val varDefined = checkName(element, holder, callee, "variable") ?: return@let
-					val symbol = varDefined.symbol ?: run {
-						holder.createErrorAnnotation(
-								TextRange(varDefined.textRange.startOffset, varDefined.textRange.endOffset),
-								"Variable name should be a symbol")
-						return@let
-					}
-					holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
-							.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
-					if (element.elementList.size <= 2) {
-						holder.createErrorAnnotation(
-								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
-								"Missing variable value")
-						return@let
-					}
-				}
-				in defFamily -> {
-					val funDefined = checkName(element, holder, callee, "function or variable") ?: return@let
-					val symbol = funDefined.symbol ?: run {
-						holder.createErrorAnnotation(
-								TextRange(funDefined.textRange.startOffset, funDefined.textRange.endOffset),
-								"Function name should be a symbol")
-						return@let
-					}
-					holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
-							.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
-					if (element.elementList.size <= 2) {
-						holder.createErrorAnnotation(
-								TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
-								"Missing function body")
-						return@let
-					}
-				}
+				in setFamily -> dealWithSetFamily(element, holder, callee)
+				in defFamily -> dealWithDefFamily(element, holder, callee)
 			}
+		}
+	}
+
+	private fun dealWithDefFamily(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode) {
+		val funDefined = checkName(element, holder, callee, "function or variable") ?: return
+		val symbol = funDefined.symbol ?: run {
+			holder.createErrorAnnotation(
+					TextRange(funDefined.textRange.startOffset, funDefined.textRange.endOffset),
+					"Function name should be a symbol")
+			return
+		}
+		holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
+				.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
+		if (element.elementList.size <= 2) {
+			holder.createErrorAnnotation(
+					TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+					"Missing function body")
+			return
+		}
+	}
+
+	private fun dealWithSetFamily(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode) {
+		val varDefined = checkName(element, holder, callee, "variable") ?: return
+		val symbol = varDefined.symbol ?: run {
+			holder.createErrorAnnotation(
+					TextRange(varDefined.textRange.startOffset, varDefined.textRange.endOffset),
+					"Variable name should be a symbol")
+			return
+		}
+		holder.createInfoAnnotation(TextRange(symbol.textRange.startOffset, symbol.textRange.endOffset), null)
+				.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
+		if (element.elementList.size <= 2) {
+			holder.createErrorAnnotation(
+					TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+					"Missing variable value")
+			return
 		}
 	}
 
@@ -112,6 +116,18 @@ class LiceAnnotator : Annotator {
 	 * @return null if unavailable
 	 */
 	private fun checkName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode, type: String): LiceElement? {
+		val text = simplyCheckName(element, holder, callee, type) ?: return null
+		if (text.text in SymbolList.preludeSymbols) {
+			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
+			val txt = text.text
+			if (isImportant(txt))
+				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
+			else holder.createWarningAnnotation(range, "Trying to overwrite a standard name")
+		}
+		return text
+	}
+
+	private fun simplyCheckName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode, type: String): LiceElement? {
 		if (isImportant(callee.text)) holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
 				.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 		val elementCount = element.elementList.size
@@ -121,15 +137,7 @@ class LiceAnnotator : Annotator {
 					"Missing $type name")
 			return null
 		}
-		val text = element.elementList[1]
-		if (text.text in SymbolList.preludeSymbols) {
-			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
-			val txt = text.text
-			if (isImportant(txt))
-				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
-			else holder.createWarningAnnotation(range, "Trying to overwrite a standard name")
-		}
-		return text
+		return element.elementList[1]
 	}
 
 	private fun isImportant(txt: String) = txt in defFamily || txt in setFamily || txt == "undef"
