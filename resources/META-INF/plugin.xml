@@ -39,6 +39,9 @@ Provides syntax highlighting, error reporting, code completion, reference resolv
 		<annotator
 				language="Lice"
 				implementationClass="org.lice.lang.LiceAnnotator"/>
+		<annotator
+				language="JAVA"
+				implementationClass="org.lice.lang.LiceSymbolsExtractingAnnotator"/>
 	</extensions>
 
 	<actions>

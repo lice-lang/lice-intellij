@@ -8,6 +8,11 @@ import java.nio.file.Paths
 
 class StarPlatinum {
 	@Test
+	fun ora() {
+		SymbolList::class.java.canonicalName.let(::println)
+	}
+
+	@Test
 	fun oraOraOraOra() {
 		//language=Lice
 		Lice.run("((233))").let(::println)

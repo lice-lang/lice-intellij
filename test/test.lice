@@ -11,8 +11,8 @@
 
 ; define a call-by-name function
 (defexpr fold ls init op
- (for-each index-var ls
-   (-> init (op init index-var))))
+	(for-each index-var ls
+		(-> init (op init index-var))))
 
 ; invoke the function defined above
 (fold (.. 1 4) 0 +)
