@@ -13,7 +13,7 @@
 }
 
 file ::= element*
-element ::= STR | number | symbol | COMMENT | null | methodCall
+element ::= STR | number | symbol | comment | null | methodCall
 null ::= LEFT_BRACKET RIGHT_BRACKET
 
 methodCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
@@ -22,3 +22,7 @@ methodCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 
 number ::= NUM
 symbol ::= SYM
+comment ::= LINE_COMMENT {
+	methods=[isValidHost updateText createLiteralTextEscaper]
+	implements=['org.lice.lang.psi.impl.LiceInjectionElement']
+}

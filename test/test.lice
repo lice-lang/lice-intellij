@@ -28,3 +28,9 @@
 
 ;; omega-combinator
 ((lambda x (x x)) (lambda x (x x)))
+
+((lambda l
+	(l "qaq" "qaq" "qaq"))
+	(lambda a b c (|>
+		(print a)
+		(print (str-con " " b)) (print c))))

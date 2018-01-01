@@ -35,7 +35,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		LiceTypes.STR -> STRING_KEYS
 		LiceTypes.SYM -> SYMBOL_KEYS
 		LiceTypes.NUM -> NUMBER_KEYS
-		LiceTypes.COMMENT -> COMMENT_KEYS
+		LiceTypes.LINE_COMMENT -> COMMENT_KEYS
 		else -> arrayOf()
 	}
 

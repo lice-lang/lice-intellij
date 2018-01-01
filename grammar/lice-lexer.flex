@@ -47,7 +47,7 @@ SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 	{ yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
 
 {COMMENT}
-	{ yybegin(YYINITIAL); return LiceTypes.COMMENT; }
+	{ yybegin(YYINITIAL); return LiceTypes.LINE_COMMENT; }
 
 {LBRACKET}
 	{ yybegin(YYINITIAL); return LiceTypes.LEFT_BRACKET; }
