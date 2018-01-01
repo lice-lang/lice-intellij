@@ -22,6 +22,7 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		@JvmField val VARIABLE_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_VARIABLE_DEF", DefaultLanguageHighlighterColors.STATIC_FIELD)
 		@JvmField val UNRESOLVED_SYMBOL = TextAttributesKey.createTextAttributesKey("LICE_UNRESOLVED", HighlighterColors.TEXT)
 		@JvmField val IMPORTANT_SYMBOLS = TextAttributesKey.createTextAttributesKey("LICE_IMPORTANT_SYMBOLS", DefaultLanguageHighlighterColors.KEYWORD)
+		@JvmField val PARAMETER = TextAttributesKey.createTextAttributesKey("LICE_PARAMETER", DefaultLanguageHighlighterColors.PARAMETER)
 		private val SYMBOL_KEYS = arrayOf(SYMBOL)
 		private val NUMBER_KEYS = arrayOf(NUMBER)
 		private val COMMENT_KEYS = arrayOf(COMMENT)
