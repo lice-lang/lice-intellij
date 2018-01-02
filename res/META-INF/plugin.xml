@@ -6,9 +6,15 @@
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">Lice</vendor>
 
 	<description><![CDATA[
-Lice language support.
-
-Provides syntax highlighting, error reporting, code completion, reference resolving and some structural editing tools.
+Lice language support.<br/>
+Functions provided:<br/><br/>
+<ul>
+  <li>Semantics-based highlighting</li>
+  <li>Error reporting</li>
+  <li>Code completion</li>
+  <li>Reference resolving</li>
+  <li>Structural editing tools</li>
+</ul>
 ]]></description>
 
 	<idea-version since-build="145.0"/>
