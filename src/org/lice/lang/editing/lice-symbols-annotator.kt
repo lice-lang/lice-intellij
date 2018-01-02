@@ -18,6 +18,7 @@ object LiceSymbols {
 
 	@JvmField val importantFamily = defFamily + setFamily + closureFamily
 	@JvmField val allSymbols = SymbolList.preludeSymbols + SymbolList.preludeVariables
+	@JvmField val allSymbolsForCompletion = SymbolList.preludeSymbols.map { "$it " } + SymbolList.preludeVariables
 }
 
 class LiceAnnotator : Annotator {
@@ -28,7 +29,7 @@ class LiceAnnotator : Annotator {
 			when (callee.text) {
 				"undef" -> {
 					val funUndefined = simplyCheckName(element, holder, callee, "function") ?: return@let
-					if (funUndefined.text in SymbolList.preludeSymbols) {
+					if (funUndefined.text in LiceSymbols.allSymbols) {
 						holder.createWeakWarningAnnotation(
 								TextRange(funUndefined.textRange.startOffset, funUndefined.textRange.endOffset),
 								"Trying to undef a standard function")
@@ -86,7 +87,7 @@ class LiceAnnotator : Annotator {
 		val elementCount = elementList.size
 		if (elementCount <= 1) {
 			holder.createWarningAnnotation(
-					TextRange(callee.textRange.endOffset, element.textRange.endOffset + 1),
+					TextRange(callee.textRange.endOffset - 1, element.textRange.endOffset),
 					"Missing $type name")
 			return null
 		}
