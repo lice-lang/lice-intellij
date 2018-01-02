@@ -6,11 +6,12 @@ package org.lice.lang.psi.impl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.impl.source.tree.injected.StringLiteralEscaper
-import org.lice.lang.psi.LiceMethodCall
-import org.lice.lang.psi.LiceTypes
+import org.lice.lang.psi.*
 
-val LiceMethodCall.liceCallee: ASTNode?
+val LiceFunctionCall.liceCallee: ASTNode?
 	get() = node.findChildByType(LiceTypes.ELEMENT)
+
+interface LiceInjectionElement : PsiLanguageInjectionHost
 
 fun LiceInjectionElement.isValidHost() = true
 
@@ -26,4 +27,3 @@ fun LiceInjectionElement.createLiteralTextEscaper(): StringLiteralEscaper<LiceIn
 	return StringLiteralEscaper(this)
 }
 
-interface LiceInjectionElement : PsiLanguageInjectionHost

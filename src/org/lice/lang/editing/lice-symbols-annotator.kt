@@ -22,7 +22,7 @@ object LiceSymbols {
 
 class LiceAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-		if (element is LiceMethodCall) element.liceCallee?.let { callee ->
+		if (element is LiceFunctionCall) element.liceCallee?.let { callee ->
 			if (callee.text in LiceSymbols.importantFamily) holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
 					.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 			when (callee.text) {
@@ -39,14 +39,14 @@ class LiceAnnotator : Annotator {
 					checkName(funDefined, holder)
 					val symbol = funDefined.getSafeSymbol(holder, "Function") ?: return@let
 					holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
-					if (element.elementList.size <= 2) missingBody(holder, element, "function body")
+					if (element.elementList.size <= 2) missingBody(element, holder, "function body")
 				}
 				in LiceSymbols.setFamily -> {
 					val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return
 					checkName(varDefined, holder)
 					val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
 					holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
-					if (element.elementList.size <= 2) missingBody(holder, element, "variable value")
+					if (element.elementList.size <= 2) missingBody(element, holder, "variable value")
 				}
 				in LiceSymbols.closureFamily -> {
 					val elementList = element.elementList
@@ -54,7 +54,7 @@ class LiceAnnotator : Annotator {
 						val param = elementList[i]
 						if (param !is LiceComment && checkParameter(param, holder)) break
 					}
-					if (elementList.size <= 1) missingBody(holder, element, "lambda body")
+					if (elementList.size <= 1) missingBody(element, holder, "lambda body")
 				}
 			}
 		}
@@ -75,7 +75,7 @@ class LiceAnnotator : Annotator {
 		}
 	}
 
-	private fun missingBody(holder: AnnotationHolder, element: LiceMethodCall, type: String) {
+	private fun missingBody(element: LiceFunctionCall, holder: AnnotationHolder, type: String) {
 		holder.createWarningAnnotation(
 				TextRange(element.textRange.endOffset - 1, element.textRange.endOffset), "Missing $type")
 	}
@@ -84,7 +84,7 @@ class LiceAnnotator : Annotator {
 	 * @author ice1000
 	 * @return null if unavailable
 	 */
-	private fun simplyCheckName(element: LiceMethodCall, holder: AnnotationHolder, callee: ASTNode, type: String): LiceElement? {
+	private fun simplyCheckName(element: LiceFunctionCall, holder: AnnotationHolder, callee: ASTNode, type: String): LiceElement? {
 		val elementList: MutableList<LiceElement> = element.elementList
 		val elementCount = elementList.size
 		if (elementCount <= 1) {
