@@ -25,7 +25,7 @@ class LiceAnnotator : Annotator {
 				"undef" -> {
 					val funUndefined = simplyCheckName(element, holder, callee, "function") ?: return@let
 					if (funUndefined.text in SymbolList.preludeSymbols) {
-						holder.createWarningAnnotation(
+						holder.createWeakWarningAnnotation(
 								TextRange(funUndefined.textRange.startOffset, funUndefined.textRange.endOffset),
 								"Trying to undef a standard function")
 					}
@@ -64,12 +64,12 @@ class LiceAnnotator : Annotator {
 			val txt = text.text
 			if (txt in importantFamily)
 				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
-			else holder.createWarningAnnotation(range, "Trying to overwrite a standard name")
+			else holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name")
 		}
 	}
 
 	private fun missingBody(holder: AnnotationHolder, element: LiceMethodCall, type: String) {
-		holder.createErrorAnnotation(
+		holder.createWarningAnnotation(
 				TextRange(element.textRange.endOffset - 1, element.textRange.endOffset), "Missing $type")
 	}
 
@@ -81,7 +81,7 @@ class LiceAnnotator : Annotator {
 		val elementList: MutableList<LiceElement> = element.elementList
 		val elementCount = elementList.size
 		if (elementCount <= 1) {
-			holder.createErrorAnnotation(
+			holder.createWarningAnnotation(
 					TextRange(callee.textRange.endOffset, element.textRange.endOffset + 1),
 					"Missing $type name")
 			return null

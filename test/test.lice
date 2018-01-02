@@ -34,4 +34,5 @@
 	(l "qaq" "qaq" "qaq"))
 	(lambda a b c (|>
 		(print a)
-		(print (str-con " " b)) (print c))))
+		(print (str-con " " b))
+		(print c))))

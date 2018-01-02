@@ -5,7 +5,7 @@ based on the intellij platform.
 
 It provides syntax highlighting and some structural editing tools.
 
-![image](https://user-images.githubusercontent.com/16398479/34461046-d85aa50e-ee5a-11e7-8f22-0c854291037a.png)
+![image](https://user-images.githubusercontent.com/16398479/34474538-4034de86-efbb-11e7-82a1-aee82ae4fe78.png)
 
 ## Progress
 
