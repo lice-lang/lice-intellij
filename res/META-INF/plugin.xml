@@ -19,12 +19,12 @@ Provides syntax highlighting, error reporting, code completion, reference resolv
 		<fileTypeFactory implementation="org.lice.lang.LiceFileTypeFactory"/>
 		<lang.commenter
 				language="Lice"
-				implementationClass="org.lice.lang.LiceCommenter"/>
+				implementationClass="org.lice.lang.editing.LiceCommenter"/>
 		<lang.braceMatcher
 				language="Lice"
-				implementationClass="org.lice.lang.LiceBraceMatcher"/>
+				implementationClass="org.lice.lang.editing.LiceBraceMatcher"/>
 		<defaultLiveTemplatesProvider
-				implementation="org.lice.lang.LiceLiveTemplateProvider"/>
+				implementation="org.lice.lang.editing.LiceLiveTemplateProvider"/>
 		<liveTemplateContext
 				implementation="org.lice.lang.LiceContext"/>
 		<lang.parserDefinition
@@ -38,10 +38,13 @@ Provides syntax highlighting, error reporting, code completion, reference resolv
 		<bundledColorScheme path="/colorScheme/LiceDefault"/>
 		<annotator
 				language="Lice"
-				implementationClass="org.lice.lang.psi.LiceAnnotator"/>
+				implementationClass="org.lice.lang.editing.LiceAnnotator"/>
 		<annotator
 				language="JAVA"
 				implementationClass="org.lice.lang.psi.LiceSymbolsExtractingAnnotator"/>
+		<completion.contributor
+				language="Lice"
+				implementationClass="org.lice.lang.editing.LiceBuiltinSymbolsCompletionContributor"/>
 	</extensions>
 
 	<actions>
