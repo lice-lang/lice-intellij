@@ -1,5 +1,8 @@
 ## Lice IntelliJ
 
+[![JetBrains Plugins](https://img.shields.io/jetbrains/plugin/v/10319-lice.svg)](https://plugins.jetbrains.com/plugin/10319-lice)
+[![JetBrains plugins](https://img.shields.io/jetbrains/plugin/d/10319-lice.svg)](https://plugins.jetbrains.com/plugin/10319-lice)
+
 This is a IDE for [the Lice programming language](https://github.com/lice-lang/lice),
 based on the intellij platform.
 
