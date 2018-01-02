@@ -9,7 +9,9 @@ import com.intellij.psi.impl.source.tree.injected.StringLiteralEscaper
 import org.lice.lang.psi.LiceMethodCall
 import org.lice.lang.psi.LiceTypes
 
-val LiceMethodCall.liceCallee: ASTNode? get() = node.findChildByType(LiceTypes.ELEMENT)
+val LiceMethodCall.liceCallee: ASTNode?
+	get() = node.findChildByType(LiceTypes.ELEMENT)
+
 fun LiceInjectionElement.isValidHost() = true
 
 fun LiceInjectionElement.updateText(string: String): LiceInjectionElement {

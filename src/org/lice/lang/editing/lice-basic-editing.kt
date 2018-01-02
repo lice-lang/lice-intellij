@@ -5,10 +5,13 @@
  */
 package org.lice.lang.editing
 
+import com.intellij.codeInsight.template.FileTypeBasedContextType
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.*
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
+import org.lice.lang.LICE_NAME
+import org.lice.lang.LiceFileType
 import org.lice.lang.psi.LiceTypes
 
 class LiceCommenter : Commenter {
@@ -28,8 +31,6 @@ class LiceBraceMatcher : PairedBraceMatcher {
 	override fun getCodeConstructStart(psiFile: PsiFile, openingBraceOffset: Int) = openingBraceOffset
 	override fun isPairedBracesAllowedBeforeType(type: IElementType, elementType: IElementType?) = true
 }
-
-// class LiceLiveTemplateContext : FileTypeBasedContextType("Lice", "Lice", LiceFileType)
 
 class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 	override fun getDefaultLiveTemplateFiles() = arrayOf("liveTemplates/Lice")

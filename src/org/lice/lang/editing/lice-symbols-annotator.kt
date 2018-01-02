@@ -9,6 +9,7 @@ import org.lice.core.SymbolList
 import org.lice.lang.LiceSyntaxHighlighter
 import org.lice.lang.psi.LiceElement
 import org.lice.lang.psi.LiceMethodCall
+import org.lice.lang.psi.impl.liceCallee
 
 object LiceSymbols {
 	@JvmField val defFamily = listOf("def", "deflazy", "defexpr")
