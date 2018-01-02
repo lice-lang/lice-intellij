@@ -7,8 +7,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import org.lice.core.SymbolList
 import org.lice.lang.LiceSyntaxHighlighter
-import org.lice.lang.psi.LiceElement
-import org.lice.lang.psi.LiceMethodCall
+import org.lice.lang.psi.*
 import org.lice.lang.psi.impl.liceCallee
 
 object LiceSymbols {
@@ -51,7 +50,10 @@ class LiceAnnotator : Annotator {
 				}
 				in LiceSymbols.closureFamily -> {
 					val elementList = element.elementList
-					for (i in 1..elementList.size - 2) if (checkParameter(elementList[i], holder)) break
+					for (i in 1..elementList.size - 2) {
+						val param = elementList[i]
+						if (param !is LiceComment && checkParameter(param, holder)) break
+					}
 					if (elementList.size <= 1) missingBody(holder, element, "lambda body")
 				}
 			}
@@ -91,7 +93,10 @@ class LiceAnnotator : Annotator {
 					"Missing $type name")
 			return null
 		}
-		for (i in 2..elementCount - 2) if (checkParameter(elementList[i], holder)) break
+		for (i in 2..elementCount - 2) {
+			val param = elementList[i]
+			if (param !is LiceComment && checkParameter(param, holder)) break
+		}
 		return elementList[1]
 	}
 

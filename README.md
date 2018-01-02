@@ -7,6 +7,8 @@ It provides syntax highlighting and some structural editing tools.
 
 ![image](https://user-images.githubusercontent.com/16398479/34474538-4034de86-efbb-11e7-82a1-aee82ae4fe78.png)
 
+For more screenshots please see [issue #1](https://github.com/lice-lang/lice-intellij/issues/1).
+
 ## Progress
 
 + [X] Live templates
