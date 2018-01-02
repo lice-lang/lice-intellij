@@ -3,7 +3,7 @@
  *
  * @author ice1000
  */
-package org.lice.lang
+package org.lice.lang.editing
 
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.*
