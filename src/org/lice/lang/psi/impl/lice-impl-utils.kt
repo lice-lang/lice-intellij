@@ -23,7 +23,6 @@ fun LiceInjectionElement.updateText(string: String): LiceInjectionElement {
 }
 
 fun LiceInjectionElement.createLiteralTextEscaper(): StringLiteralEscaper<LiceInjectionElement> {
-	println("Boy next door")
 	return StringLiteralEscaper(this)
 }
 

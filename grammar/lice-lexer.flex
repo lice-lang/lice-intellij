@@ -36,7 +36,7 @@ DEC_NUM={DIGIT}+[dDfFbBsSlLnNmM]?
 FLOAT={DIGIT}+\.{DIGIT}+[dDfFmM]?
 NUMBER={BIN_NUM}|{OCT_NUM}|{DEC_NUM}|{HEX_NUM}|{FLOAT}
 
-SYMBOL_CHAR=[a-zA-Z!@$%\^&*_:=<|>?.\\+\-~*/%\[\]#{}]
+SYMBOL_CHAR=[a-zA-Z!@$\^&_:=<|>?.\\+\-~*/%\[\]#{}]
 SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 
 %state AFTER_NUM
