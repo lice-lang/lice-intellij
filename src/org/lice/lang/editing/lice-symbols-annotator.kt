@@ -8,7 +8,6 @@ import com.intellij.psi.PsiElement
 import org.lice.core.SymbolList
 import org.lice.lang.LiceSyntaxHighlighter
 import org.lice.lang.psi.*
-import org.lice.lang.psi.impl.liceCallee
 
 object LiceSymbols {
 	@JvmField val defFamily = listOf("def", "deflazy", "defexpr")
@@ -89,7 +88,7 @@ class LiceAnnotator : Annotator {
 		val elementCount = elementList.size
 		if (elementCount <= 1) {
 			holder.createWarningAnnotation(
-					TextRange(callee.textRange.endOffset - 1, element.textRange.endOffset),
+					TextRange(callee.textRange.endOffset, element.textRange.endOffset),
 					"Missing $type name")
 			return null
 		}

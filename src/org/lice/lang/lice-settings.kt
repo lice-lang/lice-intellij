@@ -1,7 +1,15 @@
 package org.lice.lang
 
+import com.intellij.execution.Executor
+import com.intellij.execution.configurations.*
+import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.options.colors.*
+import com.intellij.openapi.project.Project
+import com.intellij.ui.layout.panel
 import org.intellij.lang.annotations.Language
+import java.awt.TextField
+import javax.swing.JComponent
 
 class LiceColorSettingsPage : ColorSettingsPage {
 	private companion object {
@@ -36,4 +44,36 @@ class LiceColorSettingsPage : ColorSettingsPage {
 ;; command line output
 (print "String", "literals")
 """
+}
+
+class LiceConfigurationType : ConfigurationType {
+	override fun getIcon() = LICE_BIG_ICON
+	override fun getDisplayName() = LICE_NAME
+	override fun getConfigurationTypeDescription() = "Lice run configuration type"
+	override fun getId() = "LICE_RUN_CONFIGURATION"
+	override fun getConfigurationFactories() = arrayOf(LiceConfigurationFactory(this))
+}
+
+class LiceConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
+	override fun getName() = "Lice configuration factory"
+	override fun createTemplateConfiguration(project: Project) = LiceRunConfiguration(project, this)
+}
+
+class LiceRunConfiguration(project: Project, factory: ConfigurationFactory)
+	: RunConfigurationBase(project, factory, LICE_NAME) {
+	override fun getConfigurationEditor() = LiceSettingsEditor()
+	override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? = null
+}
+
+class LiceSettingsEditor : SettingsEditor<LiceRunConfiguration>() {
+	override fun createEditor() = panel {
+		noteRow("Do something")
+		row {  }
+	}
+
+	override fun applyEditorTo(configuration: LiceRunConfiguration) {
+	}
+
+	override fun resetEditorFrom(configuration: LiceRunConfiguration) {
+	}
 }
