@@ -68,7 +68,6 @@ class LiceRunConfiguration(project: Project, factory: ConfigurationFactory)
 class LiceSettingsEditor : SettingsEditor<LiceRunConfiguration>() {
 	override fun createEditor() = panel {
 		noteRow("Do something")
-		row {  }
 	}
 
 	override fun applyEditorTo(configuration: LiceRunConfiguration) {

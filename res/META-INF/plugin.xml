@@ -49,6 +49,7 @@ Functions provided:<br/><br/>
 		<completion.contributor
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceBuiltinSymbolsCompletionContributor"/>
+		<configurationType implementation="org.lice.lang.LiceConfigurationType"/>
 	</extensions>
 
 	<actions>
