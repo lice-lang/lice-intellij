@@ -10,9 +10,8 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 import org.jdom.Element
 import org.lice.lang.*
 
-
 class LiceModuleSettings {
-	@JvmField var mainClass = LICE_MAIN
+	@JvmField var mainClass = LICE_MAIN_DEFAULT
 	@JvmField var jarPath = LICE_PATH
 }
 
@@ -51,8 +50,6 @@ class LiceFacet(
 	}
 }
 
-class LiceFacetSupportProvider : FacetBasedFrameworkSupportProvider<LiceFacet>(LiceFacetType) {
-	override fun setupConfiguration(p0: LiceFacet?, p1: ModifiableRootModel?, p2: FrameworkVersion?) {
-
-	}
+class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvider<LiceFacet>(LiceFacetType) {
+	override fun setupConfiguration(facet: LiceFacet?, model: ModifiableRootModel?, version: FrameworkVersion?) = Unit
 }

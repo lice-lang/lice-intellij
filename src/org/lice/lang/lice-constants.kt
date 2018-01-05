@@ -34,4 +34,4 @@ const val LICE_NAME = "Lice"
 
 val LICE_FACET_ID = FacetTypeId<LiceFacet>(LICE_NAME)
 
-const val LICE_MAIN = "org.lice.repl.Main"
+const val LICE_MAIN_DEFAULT = "org.lice.repl.Main"

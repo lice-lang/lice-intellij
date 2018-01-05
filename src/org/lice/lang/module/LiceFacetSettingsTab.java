@@ -6,16 +6,20 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-import static org.lice.lang.Lice_constantsKt.LICE_NAME;
+import static org.lice.lang.Lice_constantsKt.*;
 
 public class LiceFacetSettingsTab extends FacetEditorTab {
 	private JPanel mainPanel;
 	private JTextField jarPathField;
 	private JTextField mainClassField;
+	private JButton usePluginJarButton;
+	private JButton resetToDefaultButton;
 	private @NotNull LiceModuleSettings settings;
 
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
 		this.settings = settings;
+		resetToDefaultButton.addActionListener(actionEvent -> mainClassField.setText(LICE_MAIN_DEFAULT));
+		usePluginJarButton.addActionListener(actionEvent -> jarPathField.setText(LICE_PATH));
 	}
 
 	@Override public @NotNull JComponent createComponent() {

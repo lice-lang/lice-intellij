@@ -61,7 +61,7 @@ Functions provided:<br/><br/>
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceBuiltinSymbolsCompletionContributor"/>
 		<configurationType implementation="org.lice.lang.LiceConfigurationType"/>
-		<framework.type implementation="org.lice.lang.module.LiceFrameworkType"/>
+		<frameworkSupport implementation="org.lice.lang.module.LiceFacetBasedFrameworkSupportProvider"/>
 	</extensions>
 
 	<actions>
