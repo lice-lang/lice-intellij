@@ -9,6 +9,9 @@ import javax.swing.*;
 
 import static org.lice.lang.Lice_constantsKt.*;
 
+/**
+ * @author ice1000
+ */
 public class LiceFacetSettingsTab extends FacetEditorTab {
 	private @NotNull JPanel mainPanel;
 	private @NotNull JTextField jarPathField;

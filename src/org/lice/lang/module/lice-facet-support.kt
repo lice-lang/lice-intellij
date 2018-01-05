@@ -42,6 +42,7 @@ class LiceFacet(
 
 	companion object {
 		@JvmField val LICE_FACET_ID = FacetTypeId<LiceFacet>(LICE_NAME)
+		fun getInstance(module: Module) = FacetManager.getInstance(module).getFacetByType(LICE_FACET_ID)
 	}
 }
 
