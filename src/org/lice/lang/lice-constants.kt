@@ -5,7 +5,9 @@
  */
 package org.lice.lang
 
+import com.intellij.facet.FacetTypeId
 import com.intellij.openapi.util.IconLoader
+import org.lice.lang.module.LiceFacet
 import java.io.File
 
 @JvmField val LICE_ICON = IconLoader.getIcon("/icons/lice.png")
@@ -29,3 +31,7 @@ const val LICE_NAME = "Lice"
 @JvmField val LICE_PATH_WRAPPED = "\"$LICE_PATH\""
 @JvmField val KOTLIN_RUNTIME_PATH: String = File("../lib/kotlin-runtime.jar").absolutePath
 @JvmField val KOTLIN_REFLECT_PATH: String = File("../lib/kotlin-reflect.jar").absolutePath
+
+val LICE_FACET_ID = FacetTypeId<LiceFacet>(LICE_NAME)
+
+const val LICE_MAIN = "org.lice.repl.Main"
