@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.*
+import org.intellij.lang.annotations.Language
 import org.lice.lang.tool.LiceSemanticTreeViewerFactory
 import org.lice.lang.tool.LiceSyntaxTreeViewerFactory
 import java.awt.Dimension
@@ -33,9 +34,9 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 		}
 		return arrayOf(directory.add(PsiFileFactory
 				.getInstance(directory.project)
-				.createFileFromText(fixedExtension, LiceFileType, """;
-; Created by ${System.getenv("USER")} on ${LocalDate.now()}
-;
+				.createFileFromText(fixedExtension, LiceFileType, """;;
+;; Created by ${System.getenv("USER")} on ${LocalDate.now()}
+;;
 
 (|>)
 """)))

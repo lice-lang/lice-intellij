@@ -3,7 +3,7 @@
 	<name>Lice</name>
 	<version>1.1</version>
 	<category>Custom Languages</category>
-	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">Lice</vendor>
+	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
 	<description><![CDATA[
 Lice language support.<br/>
@@ -61,6 +61,7 @@ Functions provided:<br/><br/>
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceBuiltinSymbolsCompletionContributor"/>
 		<configurationType implementation="org.lice.lang.LiceConfigurationType"/>
+		<framework.type implementation="org.lice.lang.module.LiceFrameworkType"/>
 	</extensions>
 
 	<actions>
