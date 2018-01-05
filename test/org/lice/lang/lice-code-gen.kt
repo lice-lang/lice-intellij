@@ -16,14 +16,17 @@ class StarPlatinum {
 	fun oraOraOraOra() {
 		//language=Lice
 		Lice.run("((233))").let(::println)
+		//language=Lice
 		Lice.run("((\"666\"))").let(::println)
 	}
 
 	@Test
 	fun generateStdlibStub() {
-		(SymbolList.preludeSymbols.map { "(defexpr $it ()) ;; this is a stub, used for indexing" }
+		(SymbolList.preludeSymbols.map { //language=Lice
+			"(defexpr $it ()) ;; this is a stub, used for indexing" }
 				+
-				SymbolList.preludeVariables.map { "(-> $it ()) ;; this is a stub, used for indexing" })
+				SymbolList.preludeVariables.map { //language=Lice
+					"(-> $it ()) ;; this is a stub, used for indexing" })
 				.sorted()
 				.joinToString("\n")
 				.let {
