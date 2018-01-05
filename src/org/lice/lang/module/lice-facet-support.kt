@@ -2,7 +2,7 @@ package org.lice.lang.module
 
 import com.intellij.facet.*
 import com.intellij.facet.ui.*
-import com.intellij.ide.util.frameworkSupport.FrameworkVersion
+import com.intellij.ide.util.frameworkSupport.*
 import com.intellij.openapi.components.*
 import com.intellij.openapi.module.*
 import com.intellij.openapi.roots.ModifiableRootModel
