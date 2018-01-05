@@ -18,6 +18,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
 		this.settings = settings;
+		mainClassField.setText(LICE_MAIN_DEFAULT);
 		resetToDefaultButton.addActionListener(actionEvent -> mainClassField.setText(LICE_MAIN_DEFAULT));
 		usePluginJarButton.addActionListener(actionEvent -> jarPathField.setText(LICE_PATH));
 	}
