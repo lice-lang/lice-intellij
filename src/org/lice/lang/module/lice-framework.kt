@@ -8,13 +8,8 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.roots.ModifiableModelsProvider
 import com.intellij.openapi.roots.ModifiableRootModel
-import com.intellij.openapi.roots.libraries.LibraryPresentationProvider
-import com.intellij.openapi.roots.libraries.NewLibraryConfiguration
-import com.intellij.openapi.roots.ui.configuration.libraries.CustomLibraryDescription
-import com.intellij.openapi.vfs.VirtualFile
 import org.lice.lang.LICE_BIG_ICON
 import org.lice.lang.LICE_NAME
-import javax.swing.JComponent
 
 class LiceFrameworkType : FrameworkTypeEx(LICE_NAME) {
 	override fun getIcon() = LICE_BIG_ICON
