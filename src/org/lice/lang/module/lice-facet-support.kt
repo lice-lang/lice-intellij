@@ -6,6 +6,7 @@ import com.intellij.ide.util.frameworkSupport.FrameworkVersion
 import com.intellij.openapi.components.*
 import com.intellij.openapi.module.*
 import com.intellij.openapi.roots.ModifiableRootModel
+import com.intellij.openapi.roots.OrderRootType
 import com.intellij.util.xmlb.XmlSerializerUtil
 import org.jdom.Element
 import org.lice.lang.*
@@ -41,7 +42,6 @@ class LiceFacet(
 
 	companion object {
 		@JvmField val LICE_FACET_ID = FacetTypeId<LiceFacet>(LICE_NAME)
-		fun getInstance(module: Module) = FacetManager.getInstance(module).getFacetByType(LICE_FACET_ID)
 	}
 }
 
@@ -49,7 +49,8 @@ class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvide
 	override fun getVersions() = LICE_VERSIONS.map(::LiceSdkVersion)
 	override fun getTitle() = LICE_NAME
 	override fun setupConfiguration(facet: LiceFacet, model: ModifiableRootModel, version: FrameworkVersion) {
-		val sdk = version as? LiceSdkVersion ?: return
+		val orderEntry = model.orderEntries.firstOrNull { it.presentableName.contains("lice", true) } ?: return
+		orderEntry.getFiles(OrderRootType.CLASSES).firstOrNull()?.let { facet.configuration.settings.jarPath = it.path }
 	}
 }
 

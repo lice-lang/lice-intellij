@@ -10,16 +10,17 @@ import javax.swing.*;
 import static org.lice.lang.Lice_constantsKt.*;
 
 public class LiceFacetSettingsTab extends FacetEditorTab {
-	private JPanel mainPanel;
-	private JTextField jarPathField;
-	private JTextField mainClassField;
-	private JButton usePluginJarButton;
-	private JButton resetToDefaultButton;
+	private @NotNull JPanel mainPanel;
+	private @NotNull JTextField jarPathField;
+	private @NotNull JTextField mainClassField;
+	private @NotNull JButton usePluginJarButton;
+	private @NotNull JButton resetToDefaultButton;
 	private @NotNull LiceModuleSettings settings;
 
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
 		this.settings = settings;
-		mainClassField.setText(LICE_MAIN_DEFAULT);
+		mainClassField.setText(settings.mainClass);
+		jarPathField.setText(settings.jarPath);
 		resetToDefaultButton.addActionListener(actionEvent -> mainClassField.setText(LICE_MAIN_DEFAULT));
 		usePluginJarButton.addActionListener(actionEvent -> jarPathField.setText(LICE_PATH));
 	}
@@ -33,7 +34,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 				mainClassField.getText().trim().equals(settings.mainClass);
 	}
 
-	@Override public @Nls String getDisplayName() {
+	@Override public @Nls @NotNull String getDisplayName() {
 		return LICE_NAME;
 	}
 }
