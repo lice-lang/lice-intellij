@@ -7,7 +7,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.*
 import org.lice.lang.psi.LiceTypes
 
-
 class LiceParserDefinition : ParserDefinition {
 	private companion object {
 		private val FILE = IFileElementType(Language.findInstance(LiceLanguage::class.java))
