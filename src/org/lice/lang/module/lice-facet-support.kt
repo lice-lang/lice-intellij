@@ -38,7 +38,7 @@ object LiceFacetType : FacetType<LiceFacet, LiceFacetConfiguration>(LICE_FACET_I
 }
 
 class LiceFacet(
-		facetType: FacetType<out Facet<*>, *>,
+		facetType: FacetType<LiceFacet, LiceFacetConfiguration>,
 		module: Module,
 		configuration: LiceFacetConfiguration,
 		underlyingFacet: Facet<*>?) : Facet<LiceFacetConfiguration>(facetType, module, LICE_NAME, configuration, underlyingFacet) {
@@ -51,5 +51,7 @@ class LiceFacet(
 }
 
 class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvider<LiceFacet>(LiceFacetType) {
+	override fun getVersions() = LICE_VERSIONS.map(::LiceSdkVersion)
+	override fun getTitle() = LICE_NAME
 	override fun setupConfiguration(facet: LiceFacet?, model: ModifiableRootModel?, version: FrameworkVersion?) = Unit
 }

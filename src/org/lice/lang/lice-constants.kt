@@ -9,6 +9,7 @@ import com.intellij.facet.FacetTypeId
 import com.intellij.openapi.util.IconLoader
 import org.jetbrains.annotations.NonNls
 import org.lice.lang.module.LiceFacet
+import org.lice.lang.module.LiceSdkVersion
 import java.io.File
 
 @JvmField val LICE_ICON = IconLoader.getIcon("/icons/lice.png")
@@ -37,3 +38,5 @@ import java.io.File
 
 @NonNls const val LICE_MAIN_DEFAULT = "org.lice.repl.Main"
 @NonNls const val URL_GITHUB = "https://github.com/lice-lang/lice/releases"
+
+@JvmField @NonNls val LICE_VERSIONS: List<String> = listOf("3.2.0", "3.2.1")
