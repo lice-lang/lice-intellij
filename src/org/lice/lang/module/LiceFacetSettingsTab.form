@@ -22,7 +22,10 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <editable value="false"/>
+          <enabled value="true"/>
+        </properties>
       </component>
       <component id="6f63" class="javax.swing.JLabel">
         <constraints>
@@ -47,6 +50,7 @@
           </grid>
         </constraints>
         <properties>
+          <enabled value="false"/>
           <hideActionText value="false"/>
           <horizontalAlignment value="0"/>
           <horizontalTextPosition value="4"/>
