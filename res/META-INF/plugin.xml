@@ -48,8 +48,8 @@ Functions provided:<br/><br/>
 				implementationClass="org.lice.lang.LiceSyntaxHighlighterFactory"/>
 		<colorSettingsPage
 				implementation="org.lice.lang.LiceColorSettingsPage"/>
-		<additionalTextAttributes scheme="Darcula" file="/colorScheme/LiceDefault.xml"/>
-		<additionalTextAttributes scheme="Default" file="/colorScheme/LiceDefault.xml"/>
+		<additionalTextAttributes scheme="Darcula" file="/colorSchemes/LiceDefault.xml"/>
+		<additionalTextAttributes scheme="Default" file="/colorSchemes/LiceDefault.xml"/>
 		<annotator
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceAnnotator"/>
