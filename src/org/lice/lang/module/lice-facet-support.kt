@@ -53,9 +53,3 @@ class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvide
 	}
 }
 
-class LiceFacetLoader : ApplicationComponent {
-	override fun getComponentName() = LICE_NAME
-	override fun initComponent() {
-		super.initComponent()
-	}
-}
