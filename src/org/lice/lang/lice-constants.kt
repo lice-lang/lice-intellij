@@ -29,13 +29,12 @@ import java.io.File
 @JvmField val is32Bit = File("../jre").exists()
 @JvmField val JAVA_PATH: String = File("../jre${if (is32Bit) "" else "64"}/bin/java.exe").absolutePath
 
-@JvmField @NonNls val JAVA_PATH_WRAPPED = "\"$JAVA_PATH\""
-@JvmField @NonNls val LICE_PATH_WRAPPED = "\"$LICE_PATH\""
+@JvmField @NonNls val JAVA_PATH_WRAPPED = """"$JAVA_PATH""""
+@JvmField @NonNls val LICE_PATH_WRAPPED = """"$LICE_PATH""""
 @JvmField @NonNls val KOTLIN_RUNTIME_PATH: String = File("../lib/kotlin-runtime.jar").absolutePath
 @JvmField @NonNls val KOTLIN_REFLECT_PATH: String = File("../lib/kotlin-reflect.jar").absolutePath
 
-@JvmField val LICE_FACET_ID = FacetTypeId<LiceFacet>(LICE_NAME)
-
+@NonNls const val LICE_RUN_CONFIG_ID = "LICE_RUN_CONFIGURATION"
 @NonNls const val LICE_MAIN_DEFAULT = "org.lice.repl.Main"
 @NonNls const val URL_GITHUB = "https://github.com/lice-lang/lice/releases"
 

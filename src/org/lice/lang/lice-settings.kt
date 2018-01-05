@@ -46,7 +46,7 @@ class LiceConfigurationType : ConfigurationType {
 	override fun getIcon() = LICE_BIG_ICON
 	override fun getDisplayName() = LICE_NAME
 	override fun getConfigurationTypeDescription() = "Lice run configuration type"
-	override fun getId() = "LICE_RUN_CONFIGURATION"
+	override fun getId() = LICE_RUN_CONFIG_ID
 	override fun getConfigurationFactories() = arrayOf(LiceConfigurationFactory(this))
 }
 
@@ -54,4 +54,9 @@ class LiceConfigurationFactory(
 		type: ConfigurationType) : ConfigurationFactory(type) {
 	override fun getName() = "Lice configuration factory"
 	override fun createTemplateConfiguration(project: Project) = LiceRunConfiguration(project, this)
+}
+
+class LiceModuleSettings {
+	@JvmField var mainClass = LICE_MAIN_DEFAULT
+	@JvmField var jarPath = LICE_PATH
 }

@@ -3,6 +3,7 @@ package org.lice.lang.module;
 import com.intellij.facet.ui.FacetEditorTab;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
+import org.lice.lang.LiceModuleSettings;
 
 import javax.swing.*;
 
