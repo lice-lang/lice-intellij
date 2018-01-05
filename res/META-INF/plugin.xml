@@ -12,6 +12,7 @@ Functions provided:<br/><br/>
   <li>Semantics-based highlighting</li>
   <li>Error reporting</li>
   <li>Code completion</li>
+  <li>SDK configuration and code execution</li>
 </ul>
 ]]></description>
 
@@ -20,7 +21,7 @@ Functions provided:<br/><br/>
 
 <ul>
   <li>Fixed color settings bug</li>
-  <li>Run configuration</li>
+  <li>Added SDK configuration and code execution</li>
 </ul>
 ]]></change-notes>
 
