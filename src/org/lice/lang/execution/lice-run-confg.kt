@@ -1,10 +1,10 @@
 package org.lice.lang.execution
 
+import com.intellij.execution.CommonJavaRunConfigurationParameters
 import com.intellij.execution.Executor
 import com.intellij.execution.configurations.*
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.components.PathMacroManager
-import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
 import org.jdom.Element
@@ -13,41 +13,49 @@ import org.lice.lang.LICE_NAME
 class LiceRunConfiguration(
 		project: Project,
 		factory: ConfigurationFactory)
-	: RunConfigurationBase(project, factory, LICE_NAME) {
-	var vmParams = ""
-	var workingDir = ""
-	var programArgument = ""
+	: RunConfigurationBase(project, factory, LICE_NAME),
+		CommonJavaRunConfigurationParameters {
+	override fun setAlternativeJrePath(s: String?) = Unit
+	override fun setProgramParameters(s: String?) = Unit
+	override fun getEnvs(): MutableMap<String, String> = mutableMapOf()
+	override fun isPassParentEnvs() = true
+	override fun isAlternativeJrePathEnabled() = false
+	override fun getPackage() = null
+	override fun getRunClass() = null
+	override fun getWorkingDirectory() = workingDir
+	override fun getVMParameters() = vmParams
+	override fun setAlternativeJrePathEnabled(bool: Boolean) = Unit
+	override fun setPassParentEnvs(bool: Boolean) = Unit
+	override fun setEnvs(map: MutableMap<String, String>) = Unit
+	override fun getProgramParameters() = null
+	override fun getAlternativeJrePath() = null
+	private var vmParams = ""
+	private var workingDir = ""
 	var jarLocation = ""
-	override fun getConfigurationEditor() = LiceSettingsEditor(this, project)
+
+	override fun setWorkingDirectory(s: String?) {
+		s?.let { workingDir = it }
+	}
+
+	override fun setVMParameters(s: String?) {
+		s?.let { vmParams = it }
+	}
+
+	override fun getConfigurationEditor() = LiceRunConfigurationEditor(project, this)
 	override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? = null
 	override fun writeExternal(element: Element) {
 		PathMacroManager.getInstance(project).expandPaths(element)
 		super.writeExternal(element)
 		JDOMExternalizer.write(element, "vmParams", vmParams)
 		JDOMExternalizer.write(element, "jarLocation", jarLocation)
+		JDOMExternalizer.write(element, "workingDir", workingDir)
 	}
 
 	override fun readExternal(element: Element) {
 		super.readExternal(element)
-		vmParams = JDOMExternalizer.readString(element, "vmParams") ?: ""
-		jarLocation = JDOMExternalizer.readString(element, "jarLocation") ?: ""
+		JDOMExternalizer.readString(element, "vmParams")?.let { vmParams = it }
+		JDOMExternalizer.readString(element, "jarLocation")?.let { jarLocation = it }
+		JDOMExternalizer.readString(element, "workingDir")?.let { workingDir = it }
 		PathMacroManager.getInstance(project).collapsePathsRecursively(element)
 	}
 }
-
-class LiceSettingsEditor(
-		@JvmField internal var settings: LiceRunConfiguration,
-		@JvmField val project: Project) : SettingsEditor<LiceRunConfiguration>() {
-	override fun createEditor() = LiceRunConfigurationEditor(project).createEditor()
-	override fun applyEditorTo(configuration: LiceRunConfiguration) {
-		configuration.vmParams = settings.vmParams
-		configuration.jarLocation = settings.jarLocation
-	}
-
-	override fun resetEditorFrom(configuration: LiceRunConfiguration) {
-		settings.vmParams = configuration.vmParams
-		settings.jarLocation = configuration.jarLocation
-	}
-}
-
-class LiceRunConfigState

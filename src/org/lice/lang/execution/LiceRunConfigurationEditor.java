@@ -14,19 +14,23 @@ public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfigurat
 	private @NotNull JPanel mainPanel;
 	private @NotNull CommonJavaParametersPanel javaParamsPanel;
 	private @NotNull Project project;
+	private @NotNull LiceRunConfiguration settings;
 
-	public LiceRunConfigurationEditor(@NotNull Project project) {
+	public LiceRunConfigurationEditor(
+			@NotNull Project project, @NotNull LiceRunConfiguration settings) {
 		this.project = project;
-	}
-
-	public @NotNull JPanel getMainPanel() {
-		return mainPanel;
+		this.settings = settings;
+		javaParamsPanel.getProgramParametersComponent().setEnabled(false);
 	}
 
 	@Override protected void resetEditorFrom(@NotNull LiceRunConfiguration configuration) {
+		javaParamsPanel.reset(configuration);
+		settings.setJarLocation(configuration.getJarLocation());
 	}
 
 	@Override protected void applyEditorTo(@NotNull LiceRunConfiguration configuration) {
+		javaParamsPanel.applyTo(configuration);
+		configuration.setJarLocation(settings.getJarLocation());
 	}
 
 	@NotNull @Override protected JPanel createEditor() {
