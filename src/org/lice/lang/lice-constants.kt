@@ -5,11 +5,8 @@
  */
 package org.lice.lang
 
-import com.intellij.facet.FacetTypeId
 import com.intellij.openapi.util.IconLoader
 import org.jetbrains.annotations.NonNls
-import org.lice.lang.module.LiceFacet
-import org.lice.lang.module.LiceSdkVersion
 import java.io.File
 
 @JvmField val LICE_ICON = IconLoader.getIcon("/icons/lice.png")

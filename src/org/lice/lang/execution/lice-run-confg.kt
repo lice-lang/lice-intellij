@@ -5,6 +5,7 @@ import com.intellij.execution.Executor
 import com.intellij.execution.configurations.*
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.components.PathMacroManager
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
@@ -14,7 +15,8 @@ import org.lice.lang.module.LiceFacet
 
 class LiceRunConfiguration(
 		project: Project,
-		factory: ConfigurationFactory)
+		factory: ConfigurationFactory,
+		var targetFile: String = "")
 	: RunConfigurationBase(project, factory, LICE_NAME),
 		CommonJavaRunConfigurationParameters {
 	var jarLocation = ModuleManager
@@ -53,6 +55,7 @@ class LiceRunConfiguration(
 		JDOMExternalizer.write(element, "vmParams", vmParams)
 		JDOMExternalizer.write(element, "jarLocation", jarLocation)
 		JDOMExternalizer.write(element, "workingDir", workingDir)
+		JDOMExternalizer.write(element, "targetFile", targetFile)
 	}
 
 	override fun readExternal(element: Element) {
@@ -60,6 +63,14 @@ class LiceRunConfiguration(
 		JDOMExternalizer.readString(element, "vmParams")?.let { vmParams = it }
 		JDOMExternalizer.readString(element, "jarLocation")?.let { jarLocation = it }
 		JDOMExternalizer.readString(element, "workingDir")?.let { workingDir = it }
+		JDOMExternalizer.readString(element, "targetFile")?.let { targetFile = it }
 		PathMacroManager.getInstance(project).collapsePathsRecursively(element)
 	}
+
+	fun replaceNonJavaCommonStatesWith(configuration: LiceRunConfiguration) {
+		jarLocation = configuration.jarLocation
+		targetFile = configuration.targetFile
+	}
 }
+
+@JvmField val jarChooser = FileChooserDescriptor(false, false, true, false, false, false)
