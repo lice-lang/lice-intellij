@@ -10,27 +10,23 @@ import org.lice.lang.*
 class LiceCommandLineState(
 		private val configuration: LiceRunConfiguration,
 		env: ExecutionEnvironment) : CommandLineState(env) {
-	override fun startProcess(): OSProcessHandler {
-		val list = listOf(
-				JAVA_PATH,
-				"-classpath",
-				arrayOf(
-						configuration.jarLocation,
-						KOTLIN_RUNTIME_PATH,
-						KOTLIN_REFLECT_PATH
-				).joinToString(":"),
-				LICE_MAIN_DEFAULT,
-				configuration.targetFile
-		) + configuration
-				.vmParameters
-				.split(" ")
-				.filter(String::isNotBlank)
-		println(list.joinToString(" "))
-		return OSProcessHandler(GeneralCommandLine(list).apply {
-			setWorkDirectory(configuration.workingDirectory)
-		}).also {
-			ProcessTerminatedListener.attach(it)
-			it.startNotify()
-		}
+	override fun startProcess() = OSProcessHandler(GeneralCommandLine(listOf(
+			JAVA_PATH,
+			"-classpath",
+			arrayOf(
+					configuration.jarLocation,
+					KOTLIN_RUNTIME_PATH,
+					KOTLIN_REFLECT_PATH
+			).joinToString(":"),
+			LICE_MAIN_DEFAULT,
+			configuration.targetFile
+	) + configuration
+			.vmParameters
+			.split(" ")
+			.filter(String::isNotBlank)).apply {
+		setWorkDirectory(configuration.workingDirectory)
+	}).also {
+		ProcessTerminatedListener.attach(it)
+		it.startNotify()
 	}
 }
