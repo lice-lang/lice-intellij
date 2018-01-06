@@ -53,7 +53,11 @@ class LiceRunConfiguration(
 	override fun setWorkingDirectory(s: String?) = s.orEmpty().let { workingDir = it }
 	override fun setVMParameters(s: String?) = s.orEmpty().let { vmParams = it }
 	override fun getConfigurationEditor() = LiceRunConfigurationEditor(project, this)
-	override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? = null
+	override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? {
+		println("Trying to get state!")
+		return null
+	}
+
 	override fun writeExternal(element: Element) {
 		PathMacroManager.getInstance(project).expandPaths(element)
 		super.writeExternal(element)
@@ -88,9 +92,8 @@ class LiceRunConfigurationProducer : RunConfigurationProducer<LiceRunConfigurati
 
 	override fun setupConfigurationFromContext(
 			configuration: LiceRunConfiguration, context: ConfigurationContext, ref: Ref<PsiElement>?): Boolean {
-		val file = context.location?.virtualFile ?: return false
-		if (file.fileType != LiceFileType) return false
-		configuration.targetFile = file.path.trimMysteriousPath()
+		if (context.psiLocation?.containingFile !is LiceFile) return false
+		configuration.targetFile = context.location?.virtualFile?.path.orEmpty().trimMysteriousPath()
 		return true
 	}
 }

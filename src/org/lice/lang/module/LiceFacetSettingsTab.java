@@ -1,7 +1,7 @@
 package org.lice.lang.module;
 
 import com.intellij.facet.ui.FacetEditorTab;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +10,7 @@ import org.lice.lang.LiceModuleSettings;
 import javax.swing.*;
 
 import static org.lice.lang.Lice_constantsKt.*;
+import static org.lice.lang.execution.Lice_run_confgKt.jarChooser;
 
 /**
  * @author ice1000
@@ -26,10 +27,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 		this.settings = settings;
 		mainClassField.setText(settings.getMainClass());
 		mainClassField.addActionListener(actionEvent -> settings.setMainClass(mainClassField.getText()));
-		jarPathField.addBrowseFolderListener("Select Lice Jar",
-				"Selecting a Lice jar file",
-				null,
-				new FileChooserDescriptor(false, false, true, false, false, false));
+		jarPathField.addBrowseFolderListener("Select Lice Jar", "Selecting a Lice jar file", null, jarChooser);
 		jarPathField.setText(settings.getJarPath());
 		jarPathField.addActionListener(actionEvent -> settings.setJarPath(jarPathField.getText()));
 		resetToDefaultButton.addActionListener(actionEvent -> {
@@ -37,10 +35,8 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 			settings.setMainClass(LICE_MAIN_DEFAULT);
 		});
 		usePluginJarButton.addActionListener(actionEvent -> {
-			if (JOptionPane.showConfirmDialog(mainPanel,
-					"Are you sure to give up the old path?",
-					"Use Lice jar in the plugin",
-					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			String title = "Use Lice jar in the plugin", msg = "Are you sure to give up the old path?";
+			if (Messages.showYesNoDialog(msg, title, "Yes! Yes! Yes!", "No! No! No!", JOJO_ICON) == Messages.YES) {
 				jarPathField.setText(LICE_PATH);
 				settings.setJarPath(LICE_PATH);
 			}

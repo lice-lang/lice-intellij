@@ -15,6 +15,7 @@ import java.io.File
 @JvmField val LICE_AST_NODE_ICON = IconLoader.getIcon("/icons/ast_node.png")
 @JvmField val LICE_AST_NODE2_ICON = IconLoader.getIcon("/icons/ast_node_2.png")
 @JvmField val LICE_AST_NODE0_ICON = IconLoader.getIcon("/icons/ast_node_0.png")
+@JvmField val JOJO_ICON = IconLoader.getIcon("/icons/jojo.png")
 
 @NonNls const val LICE_EXTENSION = "lice"
 @NonNls const val LICE_NAME = "Lice"
