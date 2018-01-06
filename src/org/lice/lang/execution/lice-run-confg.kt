@@ -4,7 +4,8 @@ import com.intellij.execution.CommonJavaRunConfigurationParameters
 import com.intellij.execution.Executor
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.RunConfigurationProducer
-import com.intellij.execution.configurations.*
+import com.intellij.execution.configurations.ConfigurationFactory
+import com.intellij.execution.configurations.LocatableConfigurationBase
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.components.PathMacroManager
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
@@ -21,7 +22,7 @@ class LiceRunConfiguration(
 		project: Project,
 		factory: ConfigurationFactory,
 		var targetFile: String = "")
-	: RunConfigurationBase(project, factory, LICE_NAME),
+	: LocatableConfigurationBase(project, factory, LICE_NAME),
 		CommonJavaRunConfigurationParameters {
 	var jreLocation = JAVA_PATH
 	var jarLocation = ModuleManager
@@ -53,11 +54,7 @@ class LiceRunConfiguration(
 	override fun setWorkingDirectory(s: String?) = s.orEmpty().let { workingDir = it }
 	override fun setVMParameters(s: String?) = s.orEmpty().let { vmParams = it }
 	override fun getConfigurationEditor() = LiceRunConfigurationEditor(project, this)
-	override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? {
-		println("Trying to get state!")
-		return null
-	}
-
+	override fun getState(executor: Executor, environment: ExecutionEnvironment) = LiceCommandLineState(this, environment)
 	override fun writeExternal(element: Element) {
 		PathMacroManager.getInstance(project).expandPaths(element)
 		super.writeExternal(element)

@@ -8,6 +8,8 @@ package org.lice.lang
 import com.intellij.openapi.util.IconLoader
 import org.jetbrains.annotations.NonNls
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 
 @JvmField val LICE_ICON = IconLoader.getIcon("/icons/lice.png")
 @JvmField val LICE_BIG_ICON = IconLoader.getIcon("/icons/big_icon.png")
@@ -24,11 +26,9 @@ import java.io.File
 		.getProperties()
 		.getProperty("idea.plugins.path")}/lice-intellij/lib/lice.jar"
 
-@JvmField val is32Bit = File("../jre").exists()
-@JvmField val JAVA_PATH: String = File("../jre${if (is32Bit) "" else "64"}/bin/java.exe").absolutePath
+@JvmField val is64Bit = Files.exists(Paths.get("../jre64"))
+@JvmField val JAVA_PATH: String = File("../jre${if (!is64Bit) "" else "64"}/bin/java").absolutePath
 
-@JvmField @NonNls val JAVA_PATH_WRAPPED = """"$JAVA_PATH""""
-@JvmField @NonNls val LICE_PATH_WRAPPED = """"$LICE_PATH""""
 @JvmField @NonNls val KOTLIN_RUNTIME_PATH: String = File("../lib/kotlin-runtime.jar").absolutePath
 @JvmField @NonNls val KOTLIN_REFLECT_PATH: String = File("../lib/kotlin-reflect.jar").absolutePath
 

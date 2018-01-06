@@ -4,7 +4,8 @@ import com.intellij.facet.*
 import com.intellij.facet.ui.*
 import com.intellij.ide.util.frameworkSupport.FrameworkVersion
 import com.intellij.openapi.components.*
-import com.intellij.openapi.module.*
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.OrderRootType
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -28,7 +29,7 @@ class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<Lice
 object LiceFacetType : FacetType<LiceFacet, LiceFacetConfiguration>(LiceFacet.LICE_FACET_ID, LICE_NAME, LICE_NAME) {
 	override fun createDefaultConfiguration() = LiceFacetConfiguration()
 	override fun getIcon() = LICE_BIG_ICON
-	override fun isSuitableModuleType(type: ModuleType<*>?) = type is JavaModuleType || type?.id == "PLUGIN_MODULE"
+	override fun isSuitableModuleType(type: ModuleType<*>?) = true
 	override fun createFacet(module: Module, s: String?, configuration: LiceFacetConfiguration, facet: Facet<*>?) =
 			LiceFacet(this, module, configuration, facet)
 }
