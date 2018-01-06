@@ -2,6 +2,8 @@ package org.lice.lang.execution
 
 import com.intellij.execution.CommonJavaRunConfigurationParameters
 import com.intellij.execution.Executor
+import com.intellij.execution.actions.ConfigurationContext
+import com.intellij.execution.actions.RunConfigurationProducer
 import com.intellij.execution.configurations.*
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.components.PathMacroManager
@@ -9,9 +11,10 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
+import com.intellij.openapi.util.Ref
+import com.intellij.psi.PsiElement
 import org.jdom.Element
-import org.lice.lang.JAVA_PATH
-import org.lice.lang.LICE_NAME
+import org.lice.lang.*
 import org.lice.lang.module.LiceFacet
 
 class LiceRunConfiguration(
@@ -76,3 +79,18 @@ class LiceRunConfiguration(
 }
 
 @JvmField val jarChooser = FileChooserDescriptor(false, false, true, false, false, false)
+fun String.trimMysteriousPath() = trimEnd('/', '!', '"', ' ', '\n', '\t', '\r').trimStart(' ', '\n', '\t', '\r')
+
+class LiceRunConfigurationProducer : RunConfigurationProducer<LiceRunConfiguration>(LiceConfigurationType) {
+	override fun isConfigurationFromContext(
+			configuration: LiceRunConfiguration, context: ConfigurationContext) =
+			configuration.targetFile == context.location?.virtualFile?.path?.trimMysteriousPath()
+
+	override fun setupConfigurationFromContext(
+			configuration: LiceRunConfiguration, context: ConfigurationContext, ref: Ref<PsiElement>?): Boolean {
+		val file = context.location?.virtualFile ?: return false
+		if (file.fileType != LiceFileType) return false
+		configuration.targetFile = file.path.trimMysteriousPath()
+		return true
+	}
+}

@@ -6,6 +6,7 @@ import com.intellij.openapi.options.colors.*
 import com.intellij.openapi.project.Project
 import org.intellij.lang.annotations.Language
 import org.lice.lang.execution.LiceRunConfiguration
+import org.lice.lang.execution.trimMysteriousPath
 
 class LiceColorSettingsPage : ColorSettingsPage {
 	private companion object {
@@ -49,7 +50,7 @@ class LiceColorSettingsPage : ColorSettingsPage {
 """
 }
 
-class LiceConfigurationType : ConfigurationType {
+object LiceConfigurationType : ConfigurationType {
 	override fun getIcon() = LICE_BIG_ICON
 	override fun getDisplayName() = LICE_NAME
 	override fun getConfigurationTypeDescription() = "Lice run configuration type"
@@ -66,6 +67,6 @@ class LiceModuleSettings {
 	var jarPath = LICE_PATH
 	var mainClass = LICE_MAIN_DEFAULT
 		set(value) {
-			field = value.trimEnd('/', '!', '"', ' ', '\n', '\t', '\r').trimStart(' ', '\n', '\t', '\r')
+			field = value.trimMysteriousPath()
 		}
 }
