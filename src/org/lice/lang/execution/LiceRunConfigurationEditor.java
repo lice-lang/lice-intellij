@@ -13,6 +13,7 @@ import javax.swing.*;
 public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfiguration> {
 	private @NotNull JPanel mainPanel;
 	private @NotNull CommonJavaParametersPanel javaParamsPanel;
+	private JTextField textField1;
 	private @NotNull Project project;
 	private @NotNull LiceRunConfiguration settings;
 
@@ -33,7 +34,7 @@ public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfigurat
 		configuration.setJarLocation(settings.getJarLocation());
 	}
 
-	@NotNull @Override protected JPanel createEditor() {
+	@Override protected @NotNull JPanel createEditor() {
 		return mainPanel;
 	}
 }

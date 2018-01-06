@@ -22,11 +22,15 @@ class StarPlatinum {
 
 	@Test
 	fun generateStdlibStub() {
-		(SymbolList.preludeSymbols.map { //language=Lice
-			"(defexpr $it ()) ;; this is a stub, used for indexing" }
+		(SymbolList.preludeSymbols.map {
+			//language=Lice
+			"(defexpr $it ()) ;; this is a stub, used for indexing"
+		}
 				+
-				SymbolList.preludeVariables.map { //language=Lice
-					"(-> $it ()) ;; this is a stub, used for indexing" })
+				SymbolList.preludeVariables.map {
+					//language=Lice
+					"(-> $it ()) ;; this is a stub, used for indexing"
+				})
 				.sorted()
 				.joinToString("\n")
 				.let {

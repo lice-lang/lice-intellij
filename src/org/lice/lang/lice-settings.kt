@@ -50,8 +50,7 @@ class LiceConfigurationType : ConfigurationType {
 	override fun getConfigurationFactories() = arrayOf(LiceConfigurationFactory(this))
 }
 
-class LiceConfigurationFactory(
-		type: ConfigurationType) : ConfigurationFactory(type) {
+class LiceConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
 	override fun getName() = "Lice configuration factory"
 	override fun createTemplateConfiguration(project: Project) = LiceRunConfiguration(project, this)
 }

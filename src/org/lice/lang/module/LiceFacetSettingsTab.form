@@ -39,7 +39,7 @@
           </grid>
         </constraints>
         <properties>
-          <enabled value="false"/>
+          <enabled value="true"/>
           <hideActionText value="false"/>
           <horizontalAlignment value="0"/>
           <horizontalTextPosition value="4"/>

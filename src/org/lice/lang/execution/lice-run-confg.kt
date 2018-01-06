@@ -5,16 +5,30 @@ import com.intellij.execution.Executor
 import com.intellij.execution.configurations.*
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.components.PathMacroManager
+import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
 import org.jdom.Element
 import org.lice.lang.LICE_NAME
+import org.lice.lang.module.LiceFacet
 
 class LiceRunConfiguration(
 		project: Project,
 		factory: ConfigurationFactory)
 	: RunConfigurationBase(project, factory, LICE_NAME),
 		CommonJavaRunConfigurationParameters {
+	var jarLocation = ModuleManager
+			.getInstance(project)
+			.modules
+			.map(LiceFacet.Companion::getInstance)
+			.firstOrNull()
+			?.configuration
+			?.settings
+			?.jarPath
+			.orEmpty()
+
+	private var vmParams = ""
+	private var workingDir = ""
 	override fun setAlternativeJrePath(s: String?) = Unit
 	override fun setProgramParameters(s: String?) = Unit
 	override fun getEnvs(): MutableMap<String, String> = mutableMapOf()
@@ -29,18 +43,8 @@ class LiceRunConfiguration(
 	override fun setEnvs(map: MutableMap<String, String>) = Unit
 	override fun getProgramParameters() = null
 	override fun getAlternativeJrePath() = null
-	private var vmParams = ""
-	private var workingDir = ""
-	var jarLocation = ""
-
-	override fun setWorkingDirectory(s: String?) {
-		s?.let { workingDir = it }
-	}
-
-	override fun setVMParameters(s: String?) {
-		s?.let { vmParams = it }
-	}
-
+	override fun setWorkingDirectory(s: String?) = s.orEmpty().let { workingDir = it }
+	override fun setVMParameters(s: String?) = s.orEmpty().let { vmParams = it }
 	override fun getConfigurationEditor() = LiceRunConfigurationEditor(project, this)
 	override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? = null
 	override fun writeExternal(element: Element) {

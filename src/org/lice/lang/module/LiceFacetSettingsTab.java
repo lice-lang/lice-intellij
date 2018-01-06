@@ -32,8 +32,14 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 				new FileChooserDescriptor(false, false, true, false, false, false));
 		jarPathField.setText(settings.getJarPath());
 		jarPathField.addActionListener(actionEvent -> settings.setJarPath(jarPathField.getText()));
-		resetToDefaultButton.addActionListener(actionEvent -> mainClassField.setText(LICE_MAIN_DEFAULT));
-		usePluginJarButton.addActionListener(actionEvent -> jarPathField.setText(LICE_PATH));
+		resetToDefaultButton.addActionListener(actionEvent -> {
+			mainClassField.setText(LICE_MAIN_DEFAULT);
+			settings.setMainClass(LICE_MAIN_DEFAULT);
+		});
+		usePluginJarButton.addActionListener(actionEvent -> {
+			jarPathField.setText(LICE_PATH);
+			settings.setJarPath(LICE_PATH);
+		});
 	}
 
 	@Override public @NotNull JComponent createComponent() {
