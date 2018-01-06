@@ -9,7 +9,7 @@ import org.lice.lang.execution.LiceRunConfiguration
 
 class LiceColorSettingsPage : ColorSettingsPage {
 	private companion object {
-		val DESCRIPTORS = arrayOf(
+		private val DESCRIPTORS = arrayOf(
 				AttributesDescriptor("Symbols//Ordinary symbols", LiceSyntaxHighlighter.SYMBOL),
 				AttributesDescriptor("Symbols//Important symbols", LiceSyntaxHighlighter.IMPORTANT_SYMBOLS),
 				AttributesDescriptor("Bracket", LiceSyntaxHighlighter.BRACKET),
@@ -19,23 +19,30 @@ class LiceColorSettingsPage : ColorSettingsPage {
 				AttributesDescriptor("Definitions//Function definition", LiceSyntaxHighlighter.FUNCTION_DEFINITION),
 				AttributesDescriptor("Definitions//Variable definition", LiceSyntaxHighlighter.VARIABLE_DEFINITION),
 				AttributesDescriptor("Reference//Unresolved function", LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
+		private val MAPS = mapOf(
+				"unresolved" to LiceSyntaxHighlighter.UNRESOLVED_SYMBOL,
+				"reservedWord" to LiceSyntaxHighlighter.IMPORTANT_SYMBOLS,
+				"functionName" to LiceSyntaxHighlighter.FUNCTION_DEFINITION,
+				"variableName" to LiceSyntaxHighlighter.VARIABLE_DEFINITION
+		)
 	}
 
+	override fun getAdditionalHighlightingTagToDescriptorMap() = MAPS
 	override fun getHighlighter() = LiceSyntaxHighlighter()
 	override fun getIcon() = LICE_ICON
 	override fun getDisplayName() = LICE_NAME
-	override fun getAdditionalHighlightingTagToDescriptorMap() = null
 	override fun getAttributeDescriptors() = DESCRIPTORS
 	override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
 	@Language("Lice")
 	override fun getDemoText() = """
 ;; comments
-(def fib n
+(<reservedWord>def</reservedWord> <functionName>fib</functionName> n
 	(if (<= n 2)
 		1
 		(+ (fib (- n 1)) (fib (- n 2)))))
 
-(undef unresolved-reference)
+(undef <unresolved>unresolved-reference</unresolved>)
+(-> <variableName>someVar</variableName> 233)
 
 ;; command line output
 (print "String", "literals")

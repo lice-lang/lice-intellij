@@ -33,7 +33,7 @@ class LiceRunConfiguration(
 	private var workingDir = ""
 	override fun setAlternativeJrePath(s: String?) = Unit
 	override fun setProgramParameters(s: String?) = Unit
-	override fun getEnvs(): MutableMap<String, String> = mutableMapOf()
+	override fun getEnvs() = mutableMapOf<String, String>()
 	override fun isPassParentEnvs() = true
 	override fun isAlternativeJrePathEnabled() = false
 	override fun getPackage() = null
