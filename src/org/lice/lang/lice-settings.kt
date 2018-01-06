@@ -57,6 +57,9 @@ class LiceConfigurationFactory(
 }
 
 class LiceModuleSettings {
-	@JvmField var mainClass = LICE_MAIN_DEFAULT
-	@JvmField var jarPath = LICE_PATH
+	var jarPath = LICE_PATH
+	var mainClass = LICE_MAIN_DEFAULT
+		set(value) {
+			field = value.trimEnd('/', '!', '"', ' ', '\n', '\t', '\r').trimStart(' ', '\n', '\t', '\r')
+		}
 }

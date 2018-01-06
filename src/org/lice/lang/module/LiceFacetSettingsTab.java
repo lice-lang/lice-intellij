@@ -24,14 +24,14 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
 		this.settings = settings;
-		mainClassField.setText(settings.mainClass);
-		mainClassField.addActionListener(actionEvent -> settings.mainClass = mainClassField.getText());
+		mainClassField.setText(settings.getMainClass());
+		mainClassField.addActionListener(actionEvent -> settings.setMainClass(mainClassField.getText()));
 		jarPathField.addBrowseFolderListener("Select Lice Jar",
 				"Selecting a Lice jar file",
 				null,
 				new FileChooserDescriptor(false, false, true, false, false, false));
-		jarPathField.setText(settings.jarPath);
-		jarPathField.addActionListener(actionEvent -> settings.jarPath = jarPathField.getText());
+		jarPathField.setText(settings.getJarPath());
+		jarPathField.addActionListener(actionEvent -> settings.setJarPath(jarPathField.getText()));
 		resetToDefaultButton.addActionListener(actionEvent -> mainClassField.setText(LICE_MAIN_DEFAULT));
 		usePluginJarButton.addActionListener(actionEvent -> jarPathField.setText(LICE_PATH));
 	}
@@ -41,8 +41,8 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 	}
 
 	@Override public boolean isModified() {
-		return jarPathField.getText().trim().equals(settings.jarPath) &&
-				mainClassField.getText().trim().equals(settings.mainClass);
+		return jarPathField.getText().trim().equals(settings.getJarPath()) &&
+				mainClassField.getText().trim().equals(settings.getMainClass());
 	}
 
 	@Override public @Nls @NotNull String getDisplayName() {
