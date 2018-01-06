@@ -14,8 +14,10 @@ class LiceRunConfiguration(
 		project: Project,
 		factory: ConfigurationFactory)
 	: RunConfigurationBase(project, factory, LICE_NAME) {
-	@JvmField var vmParams = ""
-	@JvmField var jarLocation = ""
+	var vmParams = ""
+	var workingDir = ""
+	var programArgument = ""
+	var jarLocation = ""
 	override fun getConfigurationEditor() = LiceSettingsEditor(this, project)
 	override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? = null
 	override fun writeExternal(element: Element) {
@@ -36,7 +38,7 @@ class LiceRunConfiguration(
 class LiceSettingsEditor(
 		@JvmField internal var settings: LiceRunConfiguration,
 		@JvmField val project: Project) : SettingsEditor<LiceRunConfiguration>() {
-	override fun createEditor() = LiceRunConfigurationEditor().mainPanel
+	override fun createEditor() = LiceRunConfigurationEditor(project).createEditor()
 	override fun applyEditorTo(configuration: LiceRunConfiguration) {
 		configuration.vmParams = settings.vmParams
 		configuration.jarLocation = settings.jarLocation
@@ -47,3 +49,5 @@ class LiceSettingsEditor(
 		settings.jarLocation = configuration.jarLocation
 	}
 }
+
+class LiceRunConfigState
