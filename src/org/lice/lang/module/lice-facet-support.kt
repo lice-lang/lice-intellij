@@ -40,7 +40,7 @@ class LiceFacet(
 		underlyingFacet: Facet<*>?) : Facet<LiceFacetConfiguration>(facetType, module, LICE_NAME, configuration, underlyingFacet) {
 	constructor(module: Module) : this(FacetTypeRegistry.getInstance().findFacetType(LICE_FACET_ID), module, LiceFacetConfiguration(), null)
 
-	companion object {
+	companion object InstanceHolder {
 		@JvmField val LICE_FACET_ID = FacetTypeId<LiceFacet>(LICE_NAME)
 		fun getInstance(module: Module) = FacetManager.getInstance(module).getFacetByType(LICE_FACET_ID)
 	}

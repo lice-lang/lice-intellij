@@ -21,6 +21,7 @@ public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfigurat
 	private @NotNull CommonJavaParametersPanel javaParamsPanel;
 	private @NotNull TextFieldWithBrowseButton jarLocationField;
 	private @NotNull TextFieldWithBrowseButton targetFileField;
+	private JTextField jreLocationField;
 	private @NotNull Project project;
 	private @NotNull LiceRunConfiguration settings;
 
@@ -35,6 +36,8 @@ public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfigurat
 		targetFileField.addActionListener(actionEvent -> settings.setTargetFile(targetFileField.getText()));
 		targetFileField.addBrowseFolderListener(new TextBrowseFolderListener(FileChooserDescriptorFactory.createSingleFileDescriptor(
 				LiceFileType.INSTANCE)));
+		jreLocationField.setText(settings.getJreLocation());
+		jreLocationField.setToolTipText("Currently unsupported to change");
 		javaParamsPanel.getProgramParametersComponent().setEnabled(false);
 	}
 

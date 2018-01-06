@@ -10,6 +10,7 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
 import org.jdom.Element
+import org.lice.lang.JAVA_PATH
 import org.lice.lang.LICE_NAME
 import org.lice.lang.module.LiceFacet
 
@@ -19,10 +20,11 @@ class LiceRunConfiguration(
 		var targetFile: String = "")
 	: RunConfigurationBase(project, factory, LICE_NAME),
 		CommonJavaRunConfigurationParameters {
+	var jreLocation = JAVA_PATH
 	var jarLocation = ModuleManager
 			.getInstance(project)
 			.modules
-			.map(LiceFacet.Companion::getInstance)
+			.map(LiceFacet.InstanceHolder::getInstance)
 			.firstOrNull()
 			?.configuration
 			?.settings
