@@ -37,8 +37,13 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 			settings.setMainClass(LICE_MAIN_DEFAULT);
 		});
 		usePluginJarButton.addActionListener(actionEvent -> {
-			jarPathField.setText(LICE_PATH);
-			settings.setJarPath(LICE_PATH);
+			if (JOptionPane.showConfirmDialog(mainPanel,
+					"Are you sure to give up the old path?",
+					"Use Lice jar in the plugin",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				jarPathField.setText(LICE_PATH);
+				settings.setJarPath(LICE_PATH);
+			}
 		});
 	}
 
