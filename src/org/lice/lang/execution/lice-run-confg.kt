@@ -16,7 +16,6 @@ class LiceRunConfiguration(
 	: RunConfigurationBase(project, factory, LICE_NAME) {
 	@JvmField var vmParams = ""
 	@JvmField var jarLocation = ""
-
 	override fun getConfigurationEditor() = LiceSettingsEditor(this, project)
 	override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? = null
 	override fun writeExternal(element: Element) {
