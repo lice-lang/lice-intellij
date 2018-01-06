@@ -39,6 +39,7 @@ public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfigurat
 		jreLocationField.setText(settings.getJreLocation());
 		jreLocationField.setToolTipText("Currently unsupported to change");
 		javaParamsPanel.getProgramParametersComponent().setEnabled(false);
+		javaParamsPanel.reset(settings);
 	}
 
 	@Override protected void resetEditorFrom(@NotNull LiceRunConfiguration configuration) {
