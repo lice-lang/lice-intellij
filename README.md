@@ -25,7 +25,8 @@ For more screenshots please see [issue #1](https://github.com/lice-lang/lice-int
 + [X] Giving warnings to dangerous operations
 + [ ] Resolving reference
 + [ ] Completion
-+ [ ] Run configurations
++ [X] Run configurations
++ [X] SDK management
 + [ ] Renaming
 + [ ] Quick fixes
 + [ ] Structural editing
