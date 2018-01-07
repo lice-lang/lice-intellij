@@ -86,12 +86,17 @@ fun String.trimMysteriousPath() = trimEnd('/', '!', '"', ' ', '\n', '\t', '\r').
 class LiceRunConfigurationProducer : RunConfigurationProducer<LiceRunConfiguration>(LiceConfigurationType) {
 	override fun isConfigurationFromContext(
 			configuration: LiceRunConfiguration, context: ConfigurationContext) =
-			configuration.targetFile == context.location?.virtualFile?.path?.trimMysteriousPath()
+			configuration.targetFile == context
+					.location
+					?.virtualFile
+					?.path
+					?.trimMysteriousPath()
 
 	override fun setupConfigurationFromContext(
 			configuration: LiceRunConfiguration, context: ConfigurationContext, ref: Ref<PsiElement>?): Boolean {
 		if (context.psiLocation?.containingFile !is LiceFile) return false
 		configuration.targetFile = context.location?.virtualFile?.path.orEmpty().trimMysteriousPath()
+		configuration.workingDirectory = context.project.basePath.orEmpty()
 		return true
 	}
 }
