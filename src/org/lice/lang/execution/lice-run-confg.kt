@@ -17,6 +17,7 @@ import com.intellij.psi.PsiElement
 import org.jdom.Element
 import org.lice.lang.*
 import org.lice.lang.module.LiceFacet
+import java.util.jar.*
 
 class LiceRunConfiguration(
 		project: Project,
@@ -82,6 +83,15 @@ class LiceRunConfiguration(
 
 @JvmField val jarChooser = FileChooserDescriptor(false, false, true, false, false, false)
 fun String.trimMysteriousPath() = trimEnd('/', '!', '"', ' ', '\n', '\t', '\r').trimStart(' ', '\n', '\t', '\r')
+fun validateLice(path: String) = LICE_MAIN_DEFAULT == findMainClass(path)
+fun findMainClass(path: String) = try {
+	JarFile(path).use { jarFile ->
+		val inputStream = jarFile.getInputStream(jarFile.getJarEntry("META-INF/MANIFEST.MF"))
+		Manifest(inputStream).mainAttributes.getValue(Attributes.Name.MAIN_CLASS)
+	}
+} catch (e: Exception) {
+	null
+}
 
 class LiceRunConfigurationProducer : RunConfigurationProducer<LiceRunConfiguration>(LiceConfigurationType) {
 	override fun isConfigurationFromContext(

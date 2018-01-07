@@ -11,6 +11,7 @@ import javax.swing.*;
 
 import static org.lice.lang.Lice_constantsKt.*;
 import static org.lice.lang.execution.Lice_run_confgKt.jarChooser;
+import static org.lice.lang.execution.Lice_run_confgKt.validateLice;
 
 /**
  * @author ice1000
@@ -21,6 +22,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 	private @NotNull JTextField mainClassField;
 	private @NotNull JButton usePluginJarButton;
 	private @NotNull JButton resetToDefaultButton;
+	private JLabel validationInfo;
 	private @NotNull LiceModuleSettings settings;
 
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
@@ -29,7 +31,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 		mainClassField.addActionListener(actionEvent -> settings.setMainClass(mainClassField.getText()));
 		jarPathField.addBrowseFolderListener("Select Lice Jar", "Selecting a Lice jar file", null, jarChooser);
 		jarPathField.setText(settings.getJarPath());
-		jarPathField.addActionListener(actionEvent -> settings.setJarPath(jarPathField.getText()));
+		jarPathField.addActionListener(actionEvent -> validateJar(jarPathField.getText()));
 		resetToDefaultButton.addActionListener(actionEvent -> {
 			mainClassField.setText(LICE_MAIN_DEFAULT);
 			settings.setMainClass(LICE_MAIN_DEFAULT);
@@ -41,6 +43,13 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 				settings.setJarPath(LICE_PATH);
 			}
 		});
+	}
+
+	private void validateJar(String content) {
+		if (validateLice(content)) {
+			settings.setJarPath(content);
+			validationInfo.setVisible(false);
+		} else validationInfo.setVisible(true);
 	}
 
 	@Override public @NotNull JComponent createComponent() {
