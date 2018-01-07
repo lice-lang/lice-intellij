@@ -75,6 +75,7 @@ class LiceRunConfiguration(
 
 	fun replaceNonJavaCommonStatesWith(configuration: LiceRunConfiguration) {
 		jarLocation = configuration.jarLocation
+		jreLocation = configuration.jreLocation
 		targetFile = configuration.targetFile
 	}
 }
