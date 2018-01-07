@@ -29,7 +29,7 @@ class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<Lice
 object LiceFacetType : FacetType<LiceFacet, LiceFacetConfiguration>(LiceFacet.LICE_FACET_ID, LICE_NAME, LICE_NAME) {
 	override fun createDefaultConfiguration() = LiceFacetConfiguration()
 	override fun getIcon() = LICE_BIG_ICON
-	override fun isSuitableModuleType(type: ModuleType<*>?) = true
+	override fun isSuitableModuleType(type: ModuleType<*>?) = type != null
 	override fun createFacet(module: Module, s: String?, configuration: LiceFacetConfiguration, facet: Facet<*>?) =
 			LiceFacet(this, module, configuration, facet)
 }
