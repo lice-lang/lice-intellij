@@ -7,7 +7,7 @@ import org.lice.lang.*
 
 class LiceSdkVersion(version: String) : FrameworkVersion(
 		version,
-		"Lice v$version",
+		"Lice",
 		arrayOf(createJarDownloadInfo(version)))
 
 private fun makeLiceDownloadUrl(version: String) = "$URL_GITHUB/download/v$version/lice-$version-all.jar"

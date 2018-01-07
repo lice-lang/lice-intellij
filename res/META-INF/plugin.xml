@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.1</version>
+	<version>1.2</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -17,6 +17,14 @@ Functions provided:<br/><br/>
 ]]></description>
 
 	<change-notes><![CDATA[
+1.2<br/>
+<ul>
+  <li>Fixed no default working directory bug</li>
+  <li>Improved File IO</li>
+</ul>
+
+<br/>
+
 1.1<br/>
 
 <ul>
