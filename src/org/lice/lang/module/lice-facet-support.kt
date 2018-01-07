@@ -8,9 +8,11 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.OrderRootType
+import com.intellij.openapi.ui.Messages
 import com.intellij.util.xmlb.XmlSerializerUtil
 import org.jdom.Element
 import org.lice.lang.*
+import org.lice.lang.execution.validateLice
 
 @State(
 		name = "LiceFacetConfiguration",
@@ -52,7 +54,16 @@ class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvide
 	override fun getTitle() = LICE_NAME
 	override fun setupConfiguration(facet: LiceFacet, model: ModifiableRootModel, version: FrameworkVersion) {
 		val orderEntry = model.orderEntries.firstOrNull { it.presentableName.contains("lice", true) } ?: return
-		orderEntry.getFiles(OrderRootType.CLASSES).firstOrNull()?.let { facet.configuration.settings.jarPath = it.path }
+		orderEntry.getFiles(OrderRootType.CLASSES).firstOrNull()?.let {
+			val path = it.path
+			if (validateLice(path)) facet.configuration.settings.jarPath = path
+			else Messages.showDialog(
+					"The Lice jar you've selected is invalid.\nwill be replaced with the jar in the plugin.",
+					"Invalid jar Warning",
+					arrayOf("Yes! Yes! Yes!"),
+					0,
+					JOJO_ICON)
+		}
 	}
 }
 

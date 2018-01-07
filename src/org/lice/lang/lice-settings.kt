@@ -64,8 +64,8 @@ class LiceConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(t
 }
 
 class LiceModuleSettings {
-	var jarPath = LICE_PATH
 	var mainClass = LICE_MAIN_DEFAULT
+	var jarPath = LICE_PATH
 		set(value) {
 			field = value.trimMysteriousPath()
 		}
