@@ -2,12 +2,13 @@ package org.lice.lang.tool
 
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.treeStructure.Tree
+import com.intellij.util.io.readText
 import org.apache.commons.lang.StringUtils
 import org.lice.model.*
 import org.lice.parse.buildNode
 import org.lice.parse.mapAst
 import java.awt.Dimension
-import java.io.File
+import java.nio.file.Path
 import javax.swing.JComponent
 import javax.swing.JTextArea
 import javax.swing.tree.DefaultMutableTreeNode
@@ -30,10 +31,10 @@ object LiceSemanticTreeViewerFactory {
 		else -> DefaultMutableTreeNode("unknown node")
 	}
 
-	private fun createTreeRootFromFile(file: File) =
+	private fun createTreeRootFromFile(file: Path) =
 			mapAst(buildNode(file.readText())).let { ast -> Tree(mapAst2Display(ast, DefaultMutableTreeNode(ast))) }
 
-	fun create(file: File): JComponent = try {
+	fun create(file: Path): JComponent = try {
 		JBScrollPane(createTreeRootFromFile(file).apply {
 			preferredSize = Dimension(520, 520)
 		})
@@ -72,12 +73,12 @@ object LiceSyntaxTreeViewerFactory {
 		}
 	}
 
-	private fun createTreeRootFromFile(file: File): DefaultMutableTreeNode {
+	private fun createTreeRootFromFile(file: Path): DefaultMutableTreeNode {
 		val ast = buildNode(file.readText())
 		return mapAst2Display(ast, DefaultMutableTreeNode(ast))
 	}
 
-	fun create(file: File): JComponent = try {
+	fun create(file: Path): JComponent = try {
 		JBScrollPane(Tree(createTreeRootFromFile(file)))
 	} catch (e: Exception) {
 		JTextArea(e.message)

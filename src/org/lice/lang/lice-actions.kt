@@ -10,11 +10,10 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.*
-import org.intellij.lang.annotations.Language
 import org.lice.lang.tool.LiceSemanticTreeViewerFactory
 import org.lice.lang.tool.LiceSyntaxTreeViewerFactory
 import java.awt.Dimension
-import java.io.File
+import java.nio.file.Paths
 import java.time.LocalDate
 import javax.swing.Icon
 
@@ -78,7 +77,7 @@ class ShowLiceFileSyntaxTree : LiceFileActions(
 			FileDocumentManager
 					.getInstance()
 					.getDocument(file)?.let(FileDocumentManager.getInstance()::saveDocument)
-			val view = LiceSyntaxTreeViewerFactory.create(File(file.path))
+			val view = LiceSyntaxTreeViewerFactory.create(Paths.get(file.path))
 			val popup = JBPopupFactory.getInstance()
 					.createComponentPopupBuilder(view, view)
 					.createPopup()
@@ -98,7 +97,7 @@ class ShowLiceFileSemanticTree : LiceFileActions(
 					.getInstance()
 					.getDocument(file)
 					?.let(FileDocumentManager.getInstance()::saveDocument)
-			val view = LiceSemanticTreeViewerFactory.create(File(file.path))
+			val view = LiceSemanticTreeViewerFactory.create(Paths.get(file.path))
 			val popup = JBPopupFactory.getInstance()
 					.createComponentPopupBuilder(view, view)
 					.createPopup()
