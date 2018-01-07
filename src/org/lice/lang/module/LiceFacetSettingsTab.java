@@ -3,11 +3,13 @@ package org.lice.lang.module;
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.lice.lang.LiceModuleSettings;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 
 import static org.lice.lang.Lice_constantsKt.*;
 import static org.lice.lang.execution.Lice_run_confgKt.jarChooser;
@@ -28,10 +30,15 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
 		this.settings = settings;
 		mainClassField.setText(settings.getMainClass());
+		validationInfo.setVisible(false);
 		mainClassField.addActionListener(actionEvent -> settings.setMainClass(mainClassField.getText()));
 		jarPathField.addBrowseFolderListener("Select Lice Jar", "Selecting a Lice jar file", null, jarChooser);
 		jarPathField.setText(settings.getJarPath());
-		jarPathField.addActionListener(actionEvent -> validateJar(jarPathField.getText()));
+		jarPathField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
+			@Override protected void textChanged(DocumentEvent documentEvent) {
+				validateJar(jarPathField.getText());
+			}
+		});
 		resetToDefaultButton.addActionListener(actionEvent -> {
 			mainClassField.setText(LICE_MAIN_DEFAULT);
 			settings.setMainClass(LICE_MAIN_DEFAULT);
