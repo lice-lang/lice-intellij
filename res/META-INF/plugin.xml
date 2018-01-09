@@ -12,7 +12,9 @@ Functions provided:<br/><br/>
   <li>Semantics-based highlighting</li>
   <li>Error reporting</li>
   <li>Code completion</li>
-  <li>SDK configuration and code execution</li>
+  <li>Quick fixes</li>
+  <li>SDK configuration</li>
+  <li>Code execution</li>
 </ul>
 ]]></description>
 
@@ -21,6 +23,8 @@ Functions provided:<br/><br/>
 <ul>
   <li>Fixed no default working directory bug</li>
   <li>Improved File IO</li>
+  <li>Added some basic quick fixes</li>
+  <li>Improved SDK settings</li>
 </ul>
 
 <br/>

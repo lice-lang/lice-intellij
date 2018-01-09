@@ -13,8 +13,9 @@ object LiceSymbols {
 	@JvmField val defFamily = listOf("def", "deflazy", "defexpr")
 	@JvmField val setFamily = listOf("->", "<->")
 	@JvmField val closureFamily = listOf("lambda", "expr", "lazy")
+	@JvmField val miscFamily = listOf("thread|>", "force|>", "|>")
 
-	@JvmField val importantFamily = defFamily + setFamily + closureFamily
+	@JvmField val importantFamily = defFamily + setFamily + closureFamily + miscFamily
 	@JvmField val allSymbols = SymbolList.preludeSymbols + SymbolList.preludeVariables
 	@JvmField val allSymbolsForCompletion = SymbolList.preludeSymbols.map { "$it " } + SymbolList.preludeVariables
 }
