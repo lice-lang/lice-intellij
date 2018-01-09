@@ -38,7 +38,7 @@ class LiceAnnotator : Annotator {
 					val ls = element.elementList.filter { it is LiceElement }
 					if (ls.size <= 1)
 						holder.createWeakWarningAnnotation(element, """Empty |> nodes can be replaced with "null"s""")
-								.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null", "null"))
+								.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
 					else if (ls.size <= 2)
 						holder.createWarningAnnotation(element, "Can be unwrapped")
 								.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "inner node", ls[1].text))
@@ -74,7 +74,7 @@ class LiceAnnotator : Annotator {
 		}
 		if (element is LiceNull)
 			holder.createWeakWarningAnnotation(element, """Empty nodes can be replaced with "null"s""")
-					.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null", "null"))
+					.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
 	}
 
 	private fun LiceElement.getSafeSymbol(holder: AnnotationHolder, type: String) = symbol ?: run {
