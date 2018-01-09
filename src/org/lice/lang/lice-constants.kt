@@ -20,6 +20,7 @@ import java.nio.file.Paths
 
 @NonNls const val LICE_EXTENSION = "lice"
 @NonNls const val LICE_NAME = "Lice"
+@NonNls const val LICE_RUN_CONFIG_DECRIPTION = "Lice run configuration type"
 
 @JvmField @NonNls val LICE_PATH = "${System.getProperty("idea.plugins.path")}/lice-intellij/lib/lice.jar"
 

@@ -55,13 +55,12 @@ class LiceColorSettingsPage : ColorSettingsPage {
 object LiceConfigurationType : ConfigurationType {
 	override fun getIcon() = LICE_BIG_ICON
 	override fun getDisplayName() = LICE_NAME
-	override fun getConfigurationTypeDescription() = "Lice run configuration type"
+	override fun getConfigurationTypeDescription() = LICE_RUN_CONFIG_DECRIPTION
 	override fun getId() = LICE_RUN_CONFIG_ID
 	override fun getConfigurationFactories() = arrayOf(LiceConfigurationFactory(this))
 }
 
 class LiceConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
-	override fun getName() = "Lice configuration factory"
 	override fun createTemplateConfiguration(project: Project) = LiceRunConfiguration(project, this)
 }
 
