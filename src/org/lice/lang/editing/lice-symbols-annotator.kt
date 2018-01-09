@@ -41,7 +41,7 @@ class LiceAnnotator : Annotator {
 					if (element.elementList.size <= 2) missingBody(element, holder, "function body")
 				}
 				in LiceSymbols.setFamily -> {
-					val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return
+					val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return@let
 					checkName(varDefined, holder)
 					val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
 					holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
@@ -57,10 +57,14 @@ class LiceAnnotator : Annotator {
 				}
 			}
 		}
+		if (element is LiceNull)
+			holder.createWeakWarningAnnotation(element, """Empty nodes can be replaced with "null"s""")
+					.registerFix(LiceReplaceWithNullIntention(element))
 	}
 
 	private fun LiceElement.getSafeSymbol(holder: AnnotationHolder, type: String) = symbol ?: run {
-		holder.createErrorAnnotation(textRange, "$type name should be a symbol")
+		holder.createErrorAnnotation(this, "$type name should be a symbol")
+				.registerFix(LiceRemoveBlockIntention(this, "Remove current symbol"))
 		return@run null
 	}
 
@@ -71,7 +75,7 @@ class LiceAnnotator : Annotator {
 			(if (txt in LiceSymbols.importantFamily)
 				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
 			else holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name"))
-					.registerFix(CovRemoveBlockIntention(text, "Remove dangerous statement"))
+					.registerFix(LiceRemoveBlockIntention(text, "Remove dangerous statement"))
 		}
 	}
 
