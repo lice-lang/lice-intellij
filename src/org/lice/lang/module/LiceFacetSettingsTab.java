@@ -5,6 +5,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.lice.lang.LiceModuleSettings;
 
@@ -24,7 +25,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 	private @NotNull JTextField mainClassField;
 	private @NotNull JButton usePluginJarButton;
 	private @NotNull JButton resetToDefaultButton;
-	private JLabel validationInfo;
+	private @NotNull JLabel validationInfo;
 	private @NotNull LiceModuleSettings settings;
 
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
@@ -52,7 +53,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 		});
 	}
 
-	private void validateJar(String content) {
+	private void validateJar(@NotNull @NonNls String content) {
 		if (validateLice(content)) {
 			settings.setJarPath(content);
 			validationInfo.setVisible(false);

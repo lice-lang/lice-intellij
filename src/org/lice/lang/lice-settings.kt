@@ -19,12 +19,14 @@ class LiceColorSettingsPage : ColorSettingsPage {
 				AttributesDescriptor("Ignored character", LiceSyntaxHighlighter.COMMENT),
 				AttributesDescriptor("Definitions//Function definition", LiceSyntaxHighlighter.FUNCTION_DEFINITION),
 				AttributesDescriptor("Definitions//Variable definition", LiceSyntaxHighlighter.VARIABLE_DEFINITION),
+				AttributesDescriptor("Definitions//Parameter name", LiceSyntaxHighlighter.PARAMETER),
 				AttributesDescriptor("Reference//Unresolved function", LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
 		private val MAPS = mapOf(
 				"unresolved" to LiceSyntaxHighlighter.UNRESOLVED_SYMBOL,
 				"reservedWord" to LiceSyntaxHighlighter.IMPORTANT_SYMBOLS,
 				"functionName" to LiceSyntaxHighlighter.FUNCTION_DEFINITION,
-				"variableName" to LiceSyntaxHighlighter.VARIABLE_DEFINITION
+				"variableName" to LiceSyntaxHighlighter.VARIABLE_DEFINITION,
+				"parameterName" to LiceSyntaxHighlighter.PARAMETER
 		)
 	}
 
@@ -37,13 +39,13 @@ class LiceColorSettingsPage : ColorSettingsPage {
 	@Language("Lice")
 	override fun getDemoText() = """
 ;; comments
-(<reservedWord>def</reservedWord> <functionName>fib</functionName> n
+(<reservedWord>def</reservedWord> <functionName>fib</functionName> <parameterName>n</parameterName>
 	(if (<= n 2)
 		1
 		(+ (fib (- n 1)) (fib (- n 2)))))
 
 (undef <unresolved>unresolved-reference</unresolved>)
-(-> <variableName>someVar</variableName> 233)
+(-> <variableName>some-var</variableName> 233)
 
 ;; command line output
 (print "String", "literals")

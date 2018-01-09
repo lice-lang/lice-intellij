@@ -48,7 +48,7 @@ class LiceAnnotator : Annotator {
 					if (element.elementList.size <= 2) missingBody(element, holder, "variable value")
 				}
 				in LiceSymbols.closureFamily -> {
-					val elementList = element.elementList
+					val elementList: MutableList<LiceElement> = element.elementList
 					for (i in 1..elementList.size - 2) {
 						val param = elementList[i]
 						if (param !is LiceComment && checkParameter(param, holder)) break
@@ -68,9 +68,10 @@ class LiceAnnotator : Annotator {
 		if (text.text in SymbolList.preludeSymbols) {
 			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
 			val txt = text.text
-			if (txt in LiceSymbols.importantFamily)
+			(if (txt in LiceSymbols.importantFamily)
 				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
-			else holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name")
+			else holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name"))
+					.registerFix(CovRemoveBlockIntention(text, "Remove dangerous statement"))
 		}
 	}
 
