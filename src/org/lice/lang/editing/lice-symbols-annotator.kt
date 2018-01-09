@@ -41,7 +41,7 @@ class LiceAnnotator : Annotator {
 								.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
 					else if (ls.size <= 2)
 						holder.createWarningAnnotation(element, "Can be unwrapped")
-								.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "inner node", ls[1].text))
+								.registerFix(LiceReplaceWithAnotherElementIntention(element, "inner node", ls[1]))
 				}
 				in LiceSymbols.defFamily -> {
 					val funDefined = simplyCheckName(element, holder, callee, "function") ?: return@let

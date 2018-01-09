@@ -32,3 +32,15 @@ class LiceReplaceWithAnotherSymbolIntention(
 		element.replace(symbol)
 	}
 }
+
+class LiceReplaceWithAnotherElementIntention(
+		private val element: PsiElement,
+		private val anotherSymbolName: String,
+		private val anotherSymbolNode: PsiElement) : BaseIntentionAction() {
+	override fun getText() = """Replace with $anotherSymbolName"""
+	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
+	override fun getFamilyName() = LICE_NAME
+	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
+		element.replace(anotherSymbolNode)
+	}
+}

@@ -10,6 +10,12 @@ It provides syntax highlighting and some structural editing tools.
 
 ![image](https://user-images.githubusercontent.com/16398479/34474538-4034de86-efbb-11e7-82a1-aee82ae4fe78.png)
 
+Apart from syntax highlighting, there're also quick fixes:
+
+![image](https://user-images.githubusercontent.com/16398479/34701734-ca980ef4-f524-11e7-91b3-6a779e6ce33a.png)
+![image](https://user-images.githubusercontent.com/16398479/34701738-d19df2fe-f524-11e7-8480-22a717a3d450.png)
+![image](https://user-images.githubusercontent.com/16398479/34701741-d7a62b8a-f524-11e7-94c7-92fc05b4de3d.png)
+
 For more screenshots please see [issue #1](https://github.com/lice-lang/lice-intellij/issues/1).
 
 ## Progress
@@ -24,9 +30,9 @@ For more screenshots please see [issue #1](https://github.com/lice-lang/lice-int
 + [X] Highlighting
 + [X] Giving warnings to dangerous operations
 + [ ] Resolving reference
-+ [ ] Completion
++ [X] Completion
 + [X] Run configurations
 + [X] SDK management
 + [ ] Renaming
-+ [ ] Quick fixes
++ [X] Quick fixes
 + [ ] Structural editing
