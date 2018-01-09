@@ -22,8 +22,9 @@ object LiceSymbols {
 class LiceAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
 		if (element is LiceFunctionCall) element.liceCallee?.let { callee ->
-			if (callee.text in LiceSymbols.importantFamily) holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
-					.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
+			if (callee.text in LiceSymbols.importantFamily)
+				holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
+						.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 			when (callee.text) {
 				"undef" -> {
 					val funUndefined = simplyCheckName(element, holder, callee, "function") ?: return@let
@@ -33,19 +34,32 @@ class LiceAnnotator : Annotator {
 								"Trying to undef a standard function")
 					}
 				}
+				"|>" -> {
+					val ls = element.elementList.filter { it is LiceElement }
+					if (ls.size <= 1)
+						holder.createWeakWarningAnnotation(element, """Empty |> nodes can be replaced with "null"s""")
+								.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null", "null"))
+					else if (ls.size <= 2)
+						holder.createWarningAnnotation(element, "Can be unwrapped")
+								.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "inner node", ls[1].text))
+				}
 				in LiceSymbols.defFamily -> {
 					val funDefined = simplyCheckName(element, holder, callee, "function") ?: return@let
 					checkName(funDefined, holder)
 					val symbol = funDefined.getSafeSymbol(holder, "Function") ?: return@let
-					holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
-					if (element.elementList.size <= 2) missingBody(element, holder, "function body")
+					holder.createInfoAnnotation(symbol, null)
+							.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
+					if (element.elementList.size <= 2)
+						missingBody(element, holder, "function body")
 				}
 				in LiceSymbols.setFamily -> {
 					val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return@let
 					checkName(varDefined, holder)
 					val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
-					holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
-					if (element.elementList.size <= 2) missingBody(element, holder, "variable value")
+					holder.createInfoAnnotation(symbol, null)
+							.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
+					if (element.elementList.size <= 2)
+						missingBody(element, holder, "variable value")
 				}
 				in LiceSymbols.closureFamily -> {
 					val elementList: MutableList<LiceElement> = element.elementList
@@ -53,13 +67,14 @@ class LiceAnnotator : Annotator {
 						val param = elementList[i]
 						if (param !is LiceComment && checkParameter(param, holder)) break
 					}
-					if (elementList.size <= 1) missingBody(element, holder, "lambda body")
+					if (elementList.size <= 1)
+						missingBody(element, holder, "lambda body")
 				}
 			}
 		}
 		if (element is LiceNull)
 			holder.createWeakWarningAnnotation(element, """Empty nodes can be replaced with "null"s""")
-					.registerFix(LiceReplaceWithNullIntention(element))
+					.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null", "null"))
 	}
 
 	private fun LiceElement.getSafeSymbol(holder: AnnotationHolder, type: String) = symbol ?: run {

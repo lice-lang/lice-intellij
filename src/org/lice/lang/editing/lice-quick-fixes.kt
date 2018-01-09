@@ -16,16 +16,19 @@ class LiceRemoveBlockIntention(private val element: PsiElement, private val inte
 	}
 }
 
-class LiceReplaceWithNullIntention(private val element: PsiElement) : BaseIntentionAction() {
-	override fun getText() = """Replace with "null" literal"""
+class LiceReplaceWithAnotherSymbolIntention(
+		private val element: PsiElement,
+		private val anotherSymbolName: String,
+		private val anotherSymbolCode: String) : BaseIntentionAction() {
+	override fun getText() = """Replace with "$anotherSymbolName" literal"""
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LICE_NAME
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
-		val NULL = PsiFileFactory
+		val symbol = PsiFileFactory
 				.getInstance(project)
-				.createFileFromText(LiceLanguage, "null")
+				.createFileFromText(LiceLanguage, anotherSymbolCode)
 				.let { it as? LiceFile }
 				?.firstChild ?: return
-		element.replace(NULL)
+		element.replace(symbol)
 	}
 }
