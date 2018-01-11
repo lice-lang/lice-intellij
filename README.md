@@ -18,17 +18,16 @@ Apart from syntax highlighting, there're also quick fixes:
 
 Also, you can "Try evaluate" by <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>:
 
-![image](https://user-images.githubusercontent.com/16398479/34823392-2561912a-f705-11e7-993e-3b80f188f2c6.png)
+p![image](https://user-images.githubusercontent.com/16398479/34831948-76d5695a-f723-11e7-8563-2d350c7139ff.png)
+![image](https://user-images.githubusercontent.com/16398479/34831953-7d523de4-f723-11e7-82c9-1afe05d2eef5.png)
 ![image](https://user-images.githubusercontent.com/16398479/34823333-f7fa36ba-f704-11e7-9ca6-59670cc892e9.png)
-![image](https://user-images.githubusercontent.com/16398479/34823365-1233f0ac-f705-11e7-95e0-46a5b6c83f0b.png)
 
 For more screenshots please see [issue #1](https://github.com/lice-lang/lice-intellij/issues/1).
 
 ## Progress
 
 + [X] Live templates
-+ [X] Syntax viewer
-+ [X] Semantic viewer
++ [X] Ast viewer
 + [X] Commenter
 + [X] Create new file
 + [X] Parser and lexer
@@ -37,8 +36,9 @@ For more screenshots please see [issue #1](https://github.com/lice-lang/lice-int
 + [X] Giving warnings to dangerous operations
 + [ ] Resolving reference
 + [X] Completion
++ [X] Try evaluate (features!)
 + [X] Run configurations
 + [X] SDK management
 + [ ] Renaming
-+ [X] Quick fixes
++ [X] Quick fixes (will be continuously added)
 + [ ] Structural editing
