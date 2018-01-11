@@ -91,9 +91,9 @@ Functions provided:<br/><br/>
 		</action>
 		<action
 				id="Lice.TryEvaluate"
-				class="org.lice.lang.TryEvaluateLiceExpressionAction"
-				keymap="Alt E">
-			<add-to-group group-id="EditorActions" anchor="last"/>
+				class="org.lice.lang.TryEvaluateLiceExpressionAction">
+			<keyboard-shortcut keymap="$default" first-keystroke="ctrl shift e"/>
+			<add-to-group group-id="EditorPopupMenu1" anchor="first"/>
 		</action>
 		<group id="Lice.Group" text="Lice">
 			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTreeAction"/>

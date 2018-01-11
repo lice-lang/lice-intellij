@@ -123,8 +123,9 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 					.eval()}", editor,
 					0x1FEEDE, 0x000CA1)
 		} catch (e: UseOfBannedFuncException) {
-			showPopupWindow("Use of banned function ${e.name} is not allowed in \"Try evaluate\"", editor,
-					0x9FAD5B, 0xAD7A00)
+			showPopupWindow("""Use of banned function "${e.name}"
+				|is unsupported""".trimMargin(), editor,
+					0x5F7D1B, 0xAD7A00)
 		} catch (e: Exception) {
 			showPopupWindow("Oops! Something was wrong:\n${e.message}", editor,
 					0xB6AC4A, 0xC20022)
@@ -144,6 +145,6 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 	}
 
 	override fun update(event: AnActionEvent) {
-		event.presentation.isEnabledAndVisible = event.getData(CommonDataKeys.VIRTUAL_FILE)?.fileType is LiceFileType
+		event.presentation.isEnabledAndVisible = true // event.getData(CommonDataKeys.VIRTUAL_FILE)?.fileType is LiceFileType
 	}
 }
