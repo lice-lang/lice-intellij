@@ -13,7 +13,7 @@ object LiceSymbols {
 	@JvmField val defFamily = listOf("def", "deflazy", "defexpr")
 	@JvmField val setFamily = listOf("->", "<->")
 	@JvmField val closureFamily = listOf("lambda", "expr", "lazy")
-	@JvmField val miscFamily = listOf("thread|>", "force|>", "|>")
+	@JvmField val miscFamily = listOf("thread|>", "force|>", "|>", "null", "true", "false")
 
 	@JvmField val importantFamily = defFamily + setFamily + closureFamily + miscFamily
 	@JvmField val allSymbols = SymbolList.preludeSymbols + SymbolList.preludeVariables
@@ -92,7 +92,7 @@ class LiceAnnotator : Annotator {
 	private fun LiceElement.getSafeSymbol(holder: AnnotationHolder, type: String) = symbol ?: run {
 		holder.createErrorAnnotation(this, "$type name should be a symbol")
 				.registerFix(LiceRemoveBlockIntention(this, "Remove current symbol"))
-		return@run null
+		null
 	}
 
 	private fun checkName(text: LiceElement, holder: AnnotationHolder) {
@@ -143,7 +143,7 @@ class LiceAnnotator : Annotator {
 
 	private fun dealWithEscape(element: PsiElement, index: Int, char: Char, holder: AnnotationHolder) {
 		val range = TextRange(element.textRange.startOffset + index - 1, element.textRange.startOffset + index + 1)
-		if (char !in "abfnrtv0\\\"'") holder.createErrorAnnotation(range, "Illegal escape character")
+		if (char !in "bfnrt0\\\"'") holder.createErrorAnnotation(range, "Illegal escape character")
 		else holder.createInfoAnnotation(range, null).textAttributes = LiceSyntaxHighlighter.STRING_ESCAPE
 	}
 }

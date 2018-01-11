@@ -18,9 +18,11 @@ import com.intellij.psi.*
 import com.intellij.ui.JBColor
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.util.ui.JBUI
+import org.intellij.lang.annotations.Language
 import org.lice.core.SymbolList
 import org.lice.lang.tool.LiceSemanticTreeViewerFactory
 import org.lice.parse.*
+import org.lice.util.className
 import java.awt.Dimension
 import java.nio.file.Paths
 import java.time.LocalDate
@@ -36,6 +38,7 @@ class NewLiceFileAction : CreateFileAction(CAPTION, "", LICE_ICON), DumbAware {
 	override fun getErrorTitle(): String = CommonBundle.getErrorTitle()
 	override fun getDefaultExtension() = LICE_EXTENSION
 
+	@Language("Lice")
 	override fun create(name: String, directory: PsiDirectory) =
 			arrayOf(directory.add(PsiFileFactory
 					.getInstance(directory.project)
@@ -97,7 +100,9 @@ class ShowLiceFileSemanticTreeAction : LiceFileAction(
 }
 
 class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_ICON), DumbAware {
+	private class UseOfBannedFuncException(val name: String) : Throwable()
 	private companion object SymbolListHolder {
+		private const val WORD_LIMIT = 360
 		private fun SymbolList.ban(name: String) = provideFunction(name) { throw UseOfBannedFuncException(name) }
 		private val symbolList
 			get() = SymbolList().apply {
@@ -111,13 +116,9 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 				ban("print")
 				ban("println")
 				ban("exit")
-				ban("eval")
-				ban("load-file")
 				ban("extern")
 			}
 	}
-
-	private class UseOfBannedFuncException(val name: String) : Throwable()
 
 	override fun actionPerformed(event: AnActionEvent) {
 		val editor = event.getData(CommonDataKeys.EDITOR) ?: return
@@ -128,17 +129,19 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 						.parseTokenStream(Lexer(selectedText))
 						.accept(Sema(symbolList))
 						.eval()
-			}, 2L, TimeUnit.SECONDS, true)
-			showPopupWindow("Result:\n$result", editor,
+			}, 1500L, TimeUnit.MILLISECONDS, true)
+			showPopupWindow("""Result:
+				|$result: ${result.className()}""".trimMargin(), editor,
 					0x0013F9, 0x000CA1)
-		} catch (e: UseOfBannedFuncException) {
-			showPopupWindow("""Use of function "${e.name}"
-				|is unsupported""".trimMargin(), editor,
-					0xEDC209, 0xC26500)
 		} catch (e: UncheckedTimeoutException) {
-			showPopupWindow("Execution timeout", editor, 0xEDC209, 0xF08800)
+			showPopupWindow("Execution timeout", editor, 0xEDC209, 0xC26500)
 		} catch (e: Throwable) {
-			showPopupWindow("""Oops! A ${e.javaClass.simpleName} is thrown:
+			val cause = e as? UseOfBannedFuncException ?: e.cause as? UseOfBannedFuncException
+			if (cause != null)
+				showPopupWindow("""Use of function "${cause.name}"
+				|is unsupported""".trimMargin(), editor,
+						0xEDC209, 0xC26500)
+			else showPopupWindow("""Oops! A ${e.javaClass.simpleName} is thrown:
 				|${e.message}""".trimMargin(), editor,
 					0xE20911, 0xC20022)
 		}
@@ -150,7 +153,7 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 			color: Int,
 			colorDark: Int) {
 		val relativePoint = JBPopupFactory.getInstance().guessBestPopupLocation(editor)
-		if (result.length < 200)
+		if (result.length < WORD_LIMIT)
 			ApplicationManager.getApplication().invokeLater {
 				JBPopupFactory.getInstance()
 						.createHtmlTextBalloonBuilder(result, LICE_BIG_ICON, JBColor(color, colorDark), null)
@@ -162,7 +165,7 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 		else
 			ApplicationManager.getApplication().invokeLater {
 				val textField = JTextArea(result).also {
-					it.toolTipText = "Evaluation output longer than 200 characters"
+					it.toolTipText = "Evaluation output longer than $WORD_LIMIT characters"
 					it.lineWrap = true
 					it.wrapStyleWord = true
 					it.isEditable = false
@@ -177,6 +180,7 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 								}, null)
 						.setRequestFocus(true)
 						.setResizable(true)
+						.setMovable(true)
 						.setCancelOnClickOutside(true)
 						.createPopup()
 						.show(relativePoint)
