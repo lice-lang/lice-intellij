@@ -11,7 +11,6 @@ import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.*
 import org.lice.lang.tool.LiceSemanticTreeViewerFactory
-import org.lice.lang.tool.LiceSyntaxTreeViewerFactory
 import java.awt.Dimension
 import java.nio.file.Paths
 import java.time.LocalDate
@@ -64,25 +63,6 @@ abstract class LiceFileActions(text: String, description: String, icon: Icon) : 
 	override fun update(e: AnActionEvent) {
 		e.presentation.isEnabledAndVisible = compatibleFiles(e).run {
 			isNotEmpty() and all { LICE_EXTENSION == it.extension }
-		}
-	}
-}
-
-class ShowLiceFileSyntaxTree : LiceFileActions(
-		"View Lice Syntax Tree",
-		"View Lice file syntax tree in a window",
-		LICE_AST_NODE_ICON) {
-	override fun actionPerformed(e: AnActionEvent) {
-		compatibleFiles(e).forEach { file ->
-			FileDocumentManager
-					.getInstance()
-					.getDocument(file)?.let(FileDocumentManager.getInstance()::saveDocument)
-			val view = LiceSyntaxTreeViewerFactory.create(Paths.get(file.path))
-			val popup = JBPopupFactory.getInstance()
-					.createComponentPopupBuilder(view, view)
-					.createPopup()
-			popup.size = Dimension(520, 520)
-			ApplicationManager.getApplication().invokeLater(popup::showInFocusCenter)
 		}
 	}
 }

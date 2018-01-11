@@ -5,8 +5,7 @@ import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.io.readText
 import org.apache.commons.lang.StringUtils
 import org.lice.model.*
-import org.lice.parse.buildNode
-import org.lice.parse.mapAst
+import org.lice.parse.*
 import java.awt.Dimension
 import java.nio.file.Path
 import javax.swing.JComponent
@@ -32,54 +31,12 @@ object LiceSemanticTreeViewerFactory {
 	}
 
 	private fun createTreeRootFromFile(file: Path) =
-			mapAst(buildNode(file.readText())).let { ast -> Tree(mapAst2Display(ast, DefaultMutableTreeNode(ast))) }
+			Parser.parseTokenStream(Lexer(file.readText())).accept(Sema()).let { ast -> Tree(mapAst2Display(ast, DefaultMutableTreeNode(ast))) }
 
 	fun create(file: Path): JComponent = try {
 		JBScrollPane(createTreeRootFromFile(file).apply {
 			preferredSize = Dimension(520, 520)
 		})
-	} catch (e: Exception) {
-		JTextArea(e.message)
-	}
-}
-
-object LiceSyntaxTreeViewerFactory {
-	/**
-	 * map the ast
-	 */
-	private fun mapAst2Display(node: StringNode, viewRoot: DefaultMutableTreeNode): DefaultMutableTreeNode = when (node) {
-		is StringLeafNode -> DefaultMutableTreeNode(node)
-		is StringMiddleNode -> viewRoot.apply { node.list.forEach { add(mapAst2Display(it, DefaultMutableTreeNode(it))) } }
-		else -> DefaultMutableTreeNode("null")
-	}
-
-	/**
-	 * map the ast
-	 */
-	private fun mapDisplay2Ast(node: DefaultMutableTreeNode, gen: StringBuilder, numOfIndents: Int = 0) {
-		if (numOfIndents == 0) gen.append("\n")
-		when {
-			node.isLeaf -> gen.append(" ").append(node.userObject.toString()).append("")
-			else -> {
-				gen.append("\n")
-						.append(StringUtils.repeat("  ", numOfIndents))
-						.append("(")
-						.append(node.userObject.toString())
-				node.children().toList().forEach {
-					mapDisplay2Ast(it as DefaultMutableTreeNode, gen, numOfIndents + 1)
-				}
-				gen.append(")")
-			}
-		}
-	}
-
-	private fun createTreeRootFromFile(file: Path): DefaultMutableTreeNode {
-		val ast = buildNode(file.readText())
-		return mapAst2Display(ast, DefaultMutableTreeNode(ast))
-	}
-
-	fun create(file: Path): JComponent = try {
-		JBScrollPane(Tree(createTreeRootFromFile(file)))
 	} catch (e: Exception) {
 		JTextArea(e.message)
 	}

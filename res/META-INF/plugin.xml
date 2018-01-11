@@ -90,8 +90,6 @@ Functions provided:<br/><br/>
 					relative-to-action="NewFile"/>
 		</action>
 		<group id="Lice.Group" text="Lice">
-			<!--<action id="Lice.RunFile" class="org.lice.lang.RunLiceFile"/>-->
-			<action id="Lice.ShowSyntaxTree" class="org.lice.lang.ShowLiceFileSyntaxTree"/>
 			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTree"/>
 			<add-to-group
 					group-id="ProjectViewPopupMenuRunGroup"
