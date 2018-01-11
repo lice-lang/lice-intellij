@@ -14,7 +14,9 @@ class LiceColorSettingsPage : ColorSettingsPage {
 				AttributesDescriptor("Symbols//Ordinary symbols", LiceSyntaxHighlighter.SYMBOL),
 				AttributesDescriptor("Symbols//Important symbols", LiceSyntaxHighlighter.IMPORTANT_SYMBOLS),
 				AttributesDescriptor("Bracket", LiceSyntaxHighlighter.BRACKET),
-				AttributesDescriptor("String", LiceSyntaxHighlighter.STRING),
+				AttributesDescriptor("Strings//String literals", LiceSyntaxHighlighter.STRING),
+				AttributesDescriptor("Strings//Escape characters", LiceSyntaxHighlighter.STRING_ESCAPE),
+				AttributesDescriptor("Strings//Invalid escape characters", LiceSyntaxHighlighter.STRING_ESCAPE_INVALID),
 				AttributesDescriptor("Number", LiceSyntaxHighlighter.NUMBER),
 				AttributesDescriptor("Ignored character", LiceSyntaxHighlighter.COMMENT),
 				AttributesDescriptor("Definitions//Function definition", LiceSyntaxHighlighter.FUNCTION_DEFINITION),
@@ -26,7 +28,9 @@ class LiceColorSettingsPage : ColorSettingsPage {
 				"reservedWord" to LiceSyntaxHighlighter.IMPORTANT_SYMBOLS,
 				"functionName" to LiceSyntaxHighlighter.FUNCTION_DEFINITION,
 				"variableName" to LiceSyntaxHighlighter.VARIABLE_DEFINITION,
-				"parameterName" to LiceSyntaxHighlighter.PARAMETER
+				"parameterName" to LiceSyntaxHighlighter.PARAMETER,
+				"strEscape" to LiceSyntaxHighlighter.STRING_ESCAPE,
+				"strEscapeInvalid" to LiceSyntaxHighlighter.STRING_ESCAPE_INVALID
 		)
 	}
 
@@ -48,7 +52,7 @@ class LiceColorSettingsPage : ColorSettingsPage {
 (-> <variableName>some-var</variableName> 233)
 
 ;; command line output
-(print "String", "literals")
+(print "Strin<strEscapeInvalid>\g</strEscapeInvalid>", "literals<strEscape>\n</strEscape>")
 """
 }
 

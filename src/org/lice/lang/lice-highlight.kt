@@ -17,6 +17,8 @@ class LiceSyntaxHighlighter : SyntaxHighlighter {
 		@JvmField val NUMBER = TextAttributesKey.createTextAttributesKey("LICE_NUMBER", DefaultLanguageHighlighterColors.NUMBER)
 		@JvmField val COMMENT = TextAttributesKey.createTextAttributesKey("LICE_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
 		@JvmField val STRING = TextAttributesKey.createTextAttributesKey("LICE_STRING", DefaultLanguageHighlighterColors.STRING)
+		@JvmField val STRING_ESCAPE = TextAttributesKey.createTextAttributesKey("LICE_STRING_ESCAPE", DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE)
+		@JvmField val STRING_ESCAPE_INVALID = TextAttributesKey.createTextAttributesKey("LICE_STRING_ESCAPE_INVALID", DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE)
 		@JvmField val BRACKET = TextAttributesKey.createTextAttributesKey("LICE_BRACKET", DefaultLanguageHighlighterColors.BRACKETS)
 		@JvmField val FUNCTION_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_FUNCTION_DEF", DefaultLanguageHighlighterColors.STATIC_METHOD)
 		@JvmField val VARIABLE_DEFINITION = TextAttributesKey.createTextAttributesKey("LICE_VARIABLE_DEF", DefaultLanguageHighlighterColors.STATIC_FIELD)

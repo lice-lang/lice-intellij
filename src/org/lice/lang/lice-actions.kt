@@ -108,6 +108,7 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 				ban("exit")
 				ban("eval")
 				ban("load-file")
+				ban("extern")
 			}
 	}
 
@@ -123,10 +124,10 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 					.eval()}", editor,
 					0x1FEEDE, 0x000CA1)
 		} catch (e: UseOfBannedFuncException) {
-			showPopupWindow("""Use of banned function "${e.name}"
+			showPopupWindow("""Use of function "${e.name}"
 				|is unsupported""".trimMargin(), editor,
 					0x5F7D1B, 0xAD7A00)
-		} catch (e: Exception) {
+		} catch (e: Throwable) {
 			showPopupWindow("Oops! Something was wrong:\n${e.message}", editor,
 					0xB6AC4A, 0xC20022)
 		}
@@ -135,9 +136,8 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 	private fun showPopupWindow(result: String, editor: Editor, color: Int, colorDark: Int) {
 		ApplicationManager.getApplication().invokeLater {
 			JBPopupFactory.getInstance()
-					.createHtmlTextBalloonBuilder(result, LICE_BIG_ICON,
-							JBColor(color, colorDark), null)
-					.setFadeoutTime(5000)
+					.createHtmlTextBalloonBuilder(result, LICE_BIG_ICON, JBColor(color, colorDark), null)
+					.setFadeoutTime(8000)
 					.setHideOnAction(true)
 					.createBalloon()
 					.show(JBPopupFactory.getInstance().guessBestPopupLocation(editor), Balloon.Position.below)

@@ -16,7 +16,7 @@ Apart from syntax highlighting, there're also quick fixes:
 ![image](https://user-images.githubusercontent.com/16398479/34701738-d19df2fe-f524-11e7-8480-22a717a3d450.png)
 ![image](https://user-images.githubusercontent.com/16398479/34701741-d7a62b8a-f524-11e7-94c7-92fc05b4de3d.png)
 
-Also, you can "Try evaluate":
+Also, you can "Try evaluate" by <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>:
 
 ![image](https://user-images.githubusercontent.com/16398479/34823392-2561912a-f705-11e7-993e-3b80f188f2c6.png)
 ![image](https://user-images.githubusercontent.com/16398479/34823333-f7fa36ba-f704-11e7-9ca6-59670cc892e9.png)
