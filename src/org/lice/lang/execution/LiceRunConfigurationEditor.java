@@ -22,12 +22,10 @@ public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfigurat
 	private @NotNull TextFieldWithBrowseButton jarLocationField;
 	private @NotNull TextFieldWithBrowseButton targetFileField;
 	private JTextField jreLocationField;
-	private @NotNull Project project;
 	private @NotNull LiceRunConfiguration settings;
 
 	public LiceRunConfigurationEditor(
-			@NotNull Project project, @NotNull LiceRunConfiguration settings) {
-		this.project = project;
+			@NotNull LiceRunConfiguration settings) {
 		this.settings = settings;
 		jarLocationField.setText(settings.getJarLocation());
 		targetFileField.setText(settings.getTargetFile());

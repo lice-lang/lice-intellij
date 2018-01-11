@@ -54,7 +54,7 @@ class LiceRunConfiguration(
 	override fun getAlternativeJrePath() = null
 	override fun setWorkingDirectory(s: String?) = s.orEmpty().let { workingDir = it }
 	override fun setVMParameters(s: String?) = s.orEmpty().let { vmParams = it }
-	override fun getConfigurationEditor() = LiceRunConfigurationEditor(project, this)
+	override fun getConfigurationEditor() = LiceRunConfigurationEditor(this)
 	override fun getState(executor: Executor, environment: ExecutionEnvironment) = LiceCommandLineState(this, environment)
 	override fun writeExternal(element: Element) {
 		PathMacroManager.getInstance(project).expandPaths(element)

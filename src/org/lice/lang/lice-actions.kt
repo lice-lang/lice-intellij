@@ -25,20 +25,18 @@ class NewLiceFile : CreateFileAction(CAPTION, "", LICE_ICON) {
 	override fun getErrorTitle(): String = CommonBundle.getErrorTitle()
 	override fun getDefaultExtension() = LICE_EXTENSION
 
-	override fun create(name: String, directory: PsiDirectory): Array<PsiElement> {
-		val fixedExtension = when (FileUtilRt.getExtension(name)) {
-			LICE_EXTENSION -> name
-			else -> "$name.$LICE_EXTENSION"
-		}
-		return arrayOf(directory.add(PsiFileFactory
-				.getInstance(directory.project)
-				.createFileFromText(fixedExtension, LiceFileType, """;;
+	override fun create(name: String, directory: PsiDirectory) =
+			arrayOf(directory.add(PsiFileFactory
+					.getInstance(directory.project)
+					.createFileFromText(when (FileUtilRt.getExtension(name)) {
+						LICE_EXTENSION -> name
+						else -> "$name.$LICE_EXTENSION"
+					}, LiceFileType, """;;
 ;; Created by ${System.getenv("USER")} on ${LocalDate.now()}
 ;;
 
 (|>)
 """)))
-	}
 
 	override fun invokeDialog(project: Project, directory: PsiDirectory): Array<PsiElement> {
 		val validator = MyInputValidator(project, directory)
@@ -81,7 +79,7 @@ class ShowLiceFileSemanticTree : LiceFileActions(
 			val popup = JBPopupFactory.getInstance()
 					.createComponentPopupBuilder(view, view)
 					.createPopup()
-			popup.size = Dimension(520, 520)
+			popup.size = Dimension(600, 600)
 			ApplicationManager.getApplication().invokeLater(popup::showInFocusCenter)
 		}
 	}

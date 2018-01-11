@@ -3,7 +3,6 @@ package org.lice.lang.tool
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.io.readText
-import org.apache.commons.lang.StringUtils
 import org.lice.model.*
 import org.lice.parse.*
 import java.awt.Dimension
