@@ -11,7 +11,6 @@ class LiceRemoveBlockIntention(private val element: PsiElement, private val inte
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LICE_NAME
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
-		// val file = psiFile?.let { PsiManager.getInstance(project).findFile(it.virtualFile) as? CovFile } ?: return
 		element.delete()
 	}
 }
@@ -20,7 +19,7 @@ class LiceReplaceWithAnotherSymbolIntention(
 		private val element: PsiElement,
 		private val anotherSymbolName: String,
 		private val anotherSymbolCode: String) : BaseIntentionAction() {
-	override fun getText() = """Replace with $anotherSymbolName"""
+	override fun getText() = "Replace with $anotherSymbolName"
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LICE_NAME
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
@@ -37,7 +36,7 @@ class LiceReplaceWithAnotherElementIntention(
 		private val element: PsiElement,
 		private val anotherSymbolName: String,
 		private val anotherSymbolNode: PsiElement) : BaseIntentionAction() {
-	override fun getText() = """Replace with $anotherSymbolName"""
+	override fun getText() = "Replace with $anotherSymbolName"
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LICE_NAME
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {

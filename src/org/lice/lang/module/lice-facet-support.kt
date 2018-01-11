@@ -22,7 +22,10 @@ class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<Lice
 	@Suppress("OverridingDeprecatedMember") override fun writeExternal(p0: Element?) = Unit
 	val settings = LiceModuleSettings()
 	override fun getState() = settings
-	override fun createEditorTabs(context: FacetEditorContext?, manager: FacetValidatorsManager?) = arrayOf(LiceFacetSettingsTab(settings))
+	override fun createEditorTabs(
+			context: FacetEditorContext?,
+			manager: FacetValidatorsManager?) = arrayOf(LiceFacetSettingsTab(settings))
+
 	override fun loadState(moduleSettings: LiceModuleSettings?) {
 		if (moduleSettings != null) XmlSerializerUtil.copyBean(moduleSettings, settings)
 	}
@@ -40,7 +43,8 @@ class LiceFacet(
 		facetType: FacetType<LiceFacet, LiceFacetConfiguration>,
 		module: Module,
 		configuration: LiceFacetConfiguration,
-		underlyingFacet: Facet<*>?) : Facet<LiceFacetConfiguration>(facetType, module, LICE_NAME, configuration, underlyingFacet) {
+		underlyingFacet: Facet<*>?) :
+		Facet<LiceFacetConfiguration>(facetType, module, LICE_NAME, configuration, underlyingFacet) {
 	constructor(module: Module) : this(FacetTypeRegistry.getInstance().findFacetType(LICE_FACET_ID), module, LiceFacetConfiguration(), null)
 
 	companion object InstanceHolder {

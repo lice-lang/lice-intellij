@@ -29,8 +29,10 @@ object LiceSemanticTreeViewerFactory {
 		else -> DefaultMutableTreeNode("unknown node")
 	}
 
-	private fun createTreeRootFromFile(file: Path) =
-			Parser.parseTokenStream(Lexer(file.readText())).accept(Sema()).let { ast -> Tree(mapAst2Display(ast, DefaultMutableTreeNode(ast))) }
+	private fun createTreeRootFromFile(file: Path) = Parser
+			.parseTokenStream(Lexer(file.readText()))
+			.accept(Sema())
+			.let { ast -> Tree(mapAst2Display(ast, DefaultMutableTreeNode(ast))) }
 
 	fun create(file: Path): JComponent = try {
 		JBScrollPane(createTreeRootFromFile(file).apply {

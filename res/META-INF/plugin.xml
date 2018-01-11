@@ -81,7 +81,7 @@ Functions provided:<br/><br/>
 	<actions>
 		<action
 				id="Lice.NewLiceFile"
-				class="org.lice.lang.NewLiceFile"
+				class="org.lice.lang.NewLiceFileAction"
 				text="Lice File"
 				description="Create a lice script file">
 			<add-to-group
@@ -89,8 +89,14 @@ Functions provided:<br/><br/>
 					anchor="after"
 					relative-to-action="NewFile"/>
 		</action>
+		<action
+				id="Lice.TryEvaluate"
+				class="org.lice.lang.TryEvaluateLiceExpressionAction"
+				keymap="Alt E">
+			<add-to-group group-id="EditorActions" anchor="last"/>
+		</action>
 		<group id="Lice.Group" text="Lice">
-			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTree"/>
+			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTreeAction"/>
 			<add-to-group
 					group-id="ProjectViewPopupMenuRunGroup"
 					anchor="last"/>
