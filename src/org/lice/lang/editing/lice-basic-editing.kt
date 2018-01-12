@@ -8,16 +8,21 @@ package org.lice.lang.editing
 import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.*
+import com.intellij.lang.refactoring.NamesValidator
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.highlighter.HighlighterIterator
+import com.intellij.openapi.project.Project
+import com.intellij.patterns.*
+import com.intellij.pom.PomTargetPsiElement
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
+import com.intellij.refactoring.rename.RenameInputValidator
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
 import com.intellij.spellchecker.tokenizer.Tokenizer
 import com.intellij.ui.breadcrumbs.BreadcrumbsProvider
-import org.lice.lang.LiceLanguage
-import org.lice.lang.LiceTokenType
+import com.intellij.util.ProcessingContext
+import org.lice.lang.*
 import org.lice.lang.psi.*
 
 class LiceCommenter : Commenter {
@@ -52,6 +57,21 @@ class LiceSpellCheckingStrategy : SpellcheckingStrategy() {
 		is LiceComment, is LiceSymbol -> super.getTokenizer(element)
 		is LiceString -> super.getTokenizer(element).takeIf { it != EMPTY_TOKENIZER } ?: TEXT_TOKENIZER
 		else -> EMPTY_TOKENIZER
+	}
+}
+
+class LiceNamesValidator : NamesValidator, RenameInputValidator {
+	override fun isKeyword(s: String, project: Project?) = s in LiceSymbols.importantFamily
+	override fun isInputValid(s: String, o: PsiElement, c: ProcessingContext) = isIdentifier(s, o.project)
+	override fun getPattern(): ElementPattern<out PsiElement> = PlatformPatterns.psiElement().with(object :
+			PatternCondition<PsiElement>("") {
+		override fun accepts(element: PsiElement, context: ProcessingContext?) =
+				(element as? PomTargetPsiElement)?.navigationElement is LiceSymbol
+	})
+
+	override fun isIdentifier(name: String, project: Project?) = with(LiceLexerAdapter()) {
+		start(name)
+		tokenType == LiceTypes.SYM && tokenEnd == name.length
 	}
 }
 
