@@ -26,20 +26,21 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 	private companion object SymbolListHolder {
 		private const val WORD_LIMIT = 360
 		private fun SymbolList.ban(name: String) = provideFunction(name) { throw UseOfBannedFuncException(name) }
-		private val symbolList
-			get() = SymbolList().apply {
-				ban("getBigDecs")
-				ban("getBigInts")
-				ban("getDoubles")
-				ban("getFloats")
-				ban("getInts")
-				ban("getLines")
-				ban("getTokens")
-				ban("print")
-				ban("println")
-				ban("exit")
-				ban("extern")
-			}
+	}
+
+	private val stdout = StringBuilder()
+	private val symbolList = SymbolList().apply {
+		ban("getBigDecs")
+		ban("getBigInts")
+		ban("getDoubles")
+		ban("getFloats")
+		ban("getInts")
+		ban("getLines")
+		ban("getTokens")
+		ban("exit")
+		ban("extern")
+		provideFunction("print") { it.forEach { stdout.append(it) } }
+		provideFunction("println") { it.forEach { stdout.appendln(it) } }
 	}
 
 	override fun actionPerformed(event: AnActionEvent) {
@@ -53,10 +54,14 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 						.eval()
 			}, 1500L, TimeUnit.MILLISECONDS, true)
 			showPopupWindow("""Result:
-				|$result: ${result.className()}""".trimMargin(), editor,
+				|$result: ${result.className()}
+				|Output:
+				|$stdout""".trimMargin(), editor,
 					0x0013F9, 0x000CA1)
 		} catch (e: UncheckedTimeoutException) {
-			showPopupWindow("Execution timeout", editor, 0xEDC209, 0xC26500)
+			showPopupWindow("""Execution timeout.
+				|Output:
+				|$stdout""".trimMargin(), editor, 0xEDC209, 0xC26500)
 		} catch (e: Throwable) {
 			val cause = e as? UseOfBannedFuncException ?: e.cause as? UseOfBannedFuncException
 			if (cause != null)
@@ -64,7 +69,9 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 				|is unsupported""".trimMargin(), editor,
 						0xEDC209, 0xC26500)
 			else showPopupWindow("""Oops! A ${e.javaClass.simpleName} is thrown:
-				|${e.message}""".trimMargin(), editor,
+				|${e.message}
+				|Output:
+				|$stdout""".trimMargin(), editor,
 					0xE20911, 0xC20022)
 		}
 	}
@@ -86,16 +93,15 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 			}
 		else
 			ApplicationManager.getApplication().invokeLater {
-				val textField = JTextArea(result).also {
-					it.toolTipText = "Evaluation output longer than ${WORD_LIMIT} characters"
-					it.lineWrap = true
-					it.wrapStyleWord = true
-					it.isEditable = false
-				}
 				JBPopupFactory.getInstance()
 						.createComponentPopupBuilder(JBUI.Panels.simplePanel()
 								.addToTop(JLabel(LICE_BIG_ICON))
-								.addToCenter(ScrollPaneFactory.createScrollPane(textField))
+								.addToCenter(ScrollPaneFactory.createScrollPane(JTextArea(result).also {
+									it.toolTipText = "Evaluation output longer than $WORD_LIMIT characters"
+									it.lineWrap = true
+									it.wrapStyleWord = true
+									it.isEditable = false
+								}))
 								.apply {
 									preferredSize = Dimension(500, 500)
 									border = JBUI.Borders.empty(10, 5, 5, 5)
