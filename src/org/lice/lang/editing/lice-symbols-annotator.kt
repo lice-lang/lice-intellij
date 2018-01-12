@@ -46,7 +46,7 @@ class LiceAnnotator : Annotator {
 						}
 					}
 					"|>" -> {
-						val ls = element.elementList.filter { it is LiceElement }
+						val ls = element.nonCommentElements
 						if (ls.size <= 1)
 							holder.createWeakWarningAnnotation(element, """Empty |> nodes can be replaced with "null"s""")
 									.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
@@ -60,7 +60,7 @@ class LiceAnnotator : Annotator {
 						val symbol = funDefined.getSafeSymbol(holder, "Function") ?: return@let
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
-						if (element.elementList.size <= 2)
+						if (element.nonCommentElements.size <= 2)
 							missingBody(element, holder, "function body")
 					}
 					in LiceSymbols.setFamily -> {
@@ -69,15 +69,12 @@ class LiceAnnotator : Annotator {
 						val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
-						if (element.elementList.size <= 2)
+						if (element.nonCommentElements.size <= 2)
 							missingBody(element, holder, "variable value")
 					}
 					in LiceSymbols.closureFamily -> {
-						val elementList: MutableList<LiceElement> = element.elementList
-						for (i in 1..elementList.size - 2) {
-							val param = elementList[i]
-							if (param !is LiceComment && checkParameter(param, holder)) break
-						}
+						val elementList = element.nonCommentElements
+						(1..elementList.size - 2).firstOrNull { checkParameter(elementList[it], holder) }
 						if (elementList.size <= 1)
 							missingBody(element, holder, "lambda body")
 					}
@@ -120,7 +117,7 @@ class LiceAnnotator : Annotator {
 			holder: AnnotationHolder,
 			callee: ASTNode,
 			type: String): LiceElement? {
-		val elementList: MutableList<LiceElement> = element.elementList
+		val elementList: MutableList<LiceElement> = element.nonCommentElements
 		val elementCount = elementList.size
 		if (elementCount <= 1) {
 			holder.createWarningAnnotation(
@@ -128,10 +125,8 @@ class LiceAnnotator : Annotator {
 					"Missing $type name")
 			return null
 		}
-		for (i in 2..elementCount - 2) {
-			val param = elementList[i]
-			if (param !is LiceComment && checkParameter(param, holder)) break
-		}
+		(2..elementCount - 2)
+				.firstOrNull { checkParameter(elementList[it], holder) }
 		return elementList[1]
 	}
 

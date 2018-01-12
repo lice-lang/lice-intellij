@@ -17,7 +17,7 @@ element ::= string | number | symbol | comment | null | functionCall
 null ::= LEFT_BRACKET RIGHT_BRACKET
 
 functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
-	methods=[getLiceCallee]
+	methods=[getLiceCallee getNonCommentElements]
 }
 
 number ::= NUM
