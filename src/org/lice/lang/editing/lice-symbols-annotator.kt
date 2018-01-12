@@ -138,7 +138,7 @@ class LiceAnnotator : Annotator {
 
 	private fun dealWithEscape(element: PsiElement, index: Int, char: Char, holder: AnnotationHolder) {
 		val range = TextRange(element.textRange.startOffset + index - 1, element.textRange.startOffset + index + 1)
-		if (char !in "bfnrt0\\\"'") holder.createErrorAnnotation(range, "Illegal escape character")
+		if (char !in "bfnrt\\\"'") holder.createErrorAnnotation(range, "Illegal escape character")
 		else holder.createInfoAnnotation(range, null).textAttributes = LiceSyntaxHighlighter.STRING_ESCAPE
 	}
 }

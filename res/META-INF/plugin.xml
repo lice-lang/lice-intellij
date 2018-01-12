@@ -21,8 +21,9 @@ Functions provided:<br/><br/>
 	<change-notes><![CDATA[
 1.4<br/>
 <ul>
-  <li>Improved comment handling</li>
-  <li>Fix capability bug on Windows</li>
+  <li>Parser and action bug fixes</li>
+  <li>Added bread crumb and spell checker</li>
+  <li>Support Lice v3.3.1</li>
 </ul>
 
 <br/>
