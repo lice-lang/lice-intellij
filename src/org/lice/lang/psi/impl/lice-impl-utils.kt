@@ -12,7 +12,7 @@ val LiceFunctionCall.liceCallee: ASTNode?
 	get() = node.findChildByType(LiceTypes.ELEMENT)
 
 val LiceFunctionCall.nonCommentElements: List<LiceElement>
-	get() = elementList.filter { it is LiceElement && it !is LiceComment }
+	get() = elementList.filter { it is LiceElement && it.comment == null }
 
 interface LiceInjectionElement : PsiLanguageInjectionHost
 

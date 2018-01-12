@@ -2,9 +2,59 @@
 ;; Created by ice1000 on 2018-01-12
 ;;
 
+;; Let's take a look at Lice's IntelliJ IDEA plugin
+;; To know how easy it can be to use Lice
+
 (|>
   (print "Hello World\n")
   (print "Bye world\n"))
+
+;; These are some quick fixes
+
+;; This is "Try evaluate"
+;; You can use it to figure out how to use Lice's functions properly
+
+;; What is this?
+;; Oh, 3 args are needed
+;; Do you understand now? :D
+;; Let's print them!
+(for-each i (.. 2 12) (println i))
+;; Oh, unsupported!
+;; Let's do "execution" instead of "Try evaluate"!
+
+;; See?
+
+;; Let's try to make a `fold` function
+
+(def fold list init-value op
+  (for-each i list (-> init-value (op init-value i))))
+
+;; What's 1+2+3+...+100?
+;; Here's the answer :D
+(fold (.. 1 100) 0 +)
+
+;; Long output will be displayed in a TextArea
+;; Selection and copying is allowed
+
+;; What will happen if we do time-consuming operations?
+;; Oh
+;; Oh..
+(while true (println "Oh no"))
+;; 1500ms is the time limit
+;; So please do "execution" if timeout :D
+
+;; :D
+
+;; Bye
+
+
+
+
+
+
+
+
+
 
 
 
