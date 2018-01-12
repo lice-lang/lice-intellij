@@ -1,34 +1,23 @@
 package org.lice.lang.actions
 
-import com.google.common.util.concurrent.SimpleTimeLimiter
-import com.google.common.util.concurrent.UncheckedTimeoutException
 import com.intellij.CommonBundle
 import com.intellij.ide.actions.CreateFileAction
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.*
-import com.intellij.ui.JBColor
-import com.intellij.ui.ScrollPaneFactory
-import com.intellij.util.ui.JBUI
 import org.intellij.lang.annotations.Language
-import org.lice.core.SymbolList
 import org.lice.lang.*
 import org.lice.lang.tool.LiceSemanticTreeViewerFactory
-import org.lice.parse.*
-import org.lice.util.className
 import java.awt.Dimension
 import java.nio.file.Paths
 import java.time.LocalDate
-import java.util.concurrent.TimeUnit
-import javax.swing.*
+import javax.swing.Icon
 
 class NewLiceFileAction : CreateFileAction(CAPTION, "", LICE_ICON), DumbAware {
 	private companion object Caption {
@@ -45,9 +34,9 @@ class NewLiceFileAction : CreateFileAction(CAPTION, "", LICE_ICON), DumbAware {
 					.getInstance(directory.project)
 					.createFileFromText(when (FileUtilRt.getExtension(name)) {
 						LICE_EXTENSION -> name
-						else -> "$name.${LICE_EXTENSION}"
+						else -> "$name.$LICE_EXTENSION"
 					}, LiceFileType, """;;
-;; Created by ${System.getenv("USER")} on ${LocalDate.now()}
+;; Created by ${System.getProperty("user.name")} on ${LocalDate.now()}
 ;;
 
 (|>)

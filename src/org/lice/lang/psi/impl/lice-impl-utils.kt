@@ -6,6 +6,7 @@ package org.lice.lang.psi.impl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.impl.source.tree.injected.StringLiteralEscaper
+import com.intellij.psi.tree.IElementType
 import org.lice.lang.psi.*
 
 val LiceFunctionCall.liceCallee: ASTNode?
@@ -13,6 +14,9 @@ val LiceFunctionCall.liceCallee: ASTNode?
 
 val LiceFunctionCall.nonCommentElements: List<LiceElement>
 	get() = elementList.filter { it is LiceElement && it.comment == null }
+
+val LiceComment.tokenType: IElementType
+	get() = LiceTypes.COMMENT
 
 interface LiceInjectionElement : PsiLanguageInjectionHost
 

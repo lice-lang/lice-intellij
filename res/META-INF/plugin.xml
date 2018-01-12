@@ -22,6 +22,7 @@ Functions provided:<br/><br/>
 1.4<br/>
 <ul>
   <li>Improved comment handling</li>
+  <li>Fix capability bug on Windows</li>
 </ul>
 
 <br/>
@@ -57,27 +58,35 @@ Functions provided:<br/><br/>
 	<depends>com.intellij.modules.lang</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<additionalTextAttributes scheme="Darcula" file="/colorSchemes/LiceDefault.xml"/>
+		<additionalTextAttributes scheme="Default" file="/colorSchemes/LiceDefault.xml"/>
 		<fileTypeFactory implementation="org.lice.lang.LiceFileTypeFactory"/>
+		<configurationType implementation="org.lice.lang.LiceConfigurationType"/>
+		<runConfigurationProducer implementation="org.lice.lang.execution.LiceRunConfigurationProducer"/>
+		<frameworkSupport implementation="org.lice.lang.module.LiceFacetBasedFrameworkSupportProvider"/>
+		<facetType implementation="org.lice.lang.module.LiceFacetType"/>
+		<colorSettingsPage implementation="org.lice.lang.LiceColorSettingsPage"/>
+		<defaultLiveTemplatesProvider implementation="org.lice.lang.editing.LiceLiveTemplateProvider"/>
+		<liveTemplateContext implementation="org.lice.lang.LiceContext"/>
+		<breadcrumbsInfoProvider implementation="org.lice.lang.editing.LiceBreadCrumbProvider"/>
+		<spellchecker.support
+				language="Lice"
+				implementationClass="org.lice.lang.editing.LiceSpellCheckingStrategy"/>
+		<quoteHandler
+				fileType="Lice"
+				className="org.lice.lang.editing.LiceQuoteHandler"/>
 		<lang.commenter
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceCommenter"/>
 		<lang.braceMatcher
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceBraceMatcher"/>
-		<defaultLiveTemplatesProvider
-				implementation="org.lice.lang.editing.LiceLiveTemplateProvider"/>
-		<liveTemplateContext
-				implementation="org.lice.lang.LiceContext"/>
 		<lang.parserDefinition
 				language="Lice"
 				implementationClass="org.lice.lang.LiceParserDefinition"/>
 		<lang.syntaxHighlighterFactory
 				language="Lice"
 				implementationClass="org.lice.lang.LiceSyntaxHighlighterFactory"/>
-		<colorSettingsPage
-				implementation="org.lice.lang.LiceColorSettingsPage"/>
-		<additionalTextAttributes scheme="Darcula" file="/colorSchemes/LiceDefault.xml"/>
-		<additionalTextAttributes scheme="Default" file="/colorSchemes/LiceDefault.xml"/>
 		<annotator
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceAnnotator"/>
@@ -87,10 +96,6 @@ Functions provided:<br/><br/>
 		<completion.contributor
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceBuiltinSymbolsCompletionContributor"/>
-		<configurationType implementation="org.lice.lang.LiceConfigurationType"/>
-		<runConfigurationProducer implementation="org.lice.lang.execution.LiceRunConfigurationProducer"/>
-		<frameworkSupport implementation="org.lice.lang.module.LiceFacetBasedFrameworkSupportProvider"/>
-		<facetType implementation="org.lice.lang.module.LiceFacetType"/>
 	</extensions>
 
 	<actions>
@@ -101,13 +106,13 @@ Functions provided:<br/><br/>
 				description="Create a lice script file">
 			<add-to-group
 					group-id="NewGroup"
-					anchor="after"
+					anchor="before"
 					relative-to-action="NewFile"/>
 		</action>
 		<action
 				id="Lice.TryEvaluate"
 				class="org.lice.lang.actions.TryEvaluateLiceExpressionAction">
-			<keyboard-shortcut keymap="$default" first-keystroke="ctrl shift e"/>
+			<keyboard-shortcut keymap="$default" first-keystroke="ctrl shift e" second-keystroke="alt e"/>
 			<add-to-group group-id="EditorPopupMenu1" anchor="first"/>
 		</action>
 		<group id="Lice.Group" text="Lice">
@@ -116,5 +121,9 @@ Functions provided:<br/><br/>
 					group-id="ProjectViewPopupMenuRunGroup"
 					anchor="last"/>
 		</group>
+		<!-- disables the conflicted action -->
+		<action
+				id="RecentChangedFiles"
+				class="com.intellij.ide.actions.ShowRecentlyEditedFilesAction"/>
 	</actions>
 </idea-plugin>
