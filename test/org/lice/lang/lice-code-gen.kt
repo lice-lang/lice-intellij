@@ -1,5 +1,6 @@
 package org.lice.lang
 
+import org.intellij.lang.annotations.Language
 import org.junit.Test
 import org.lice.Lice
 import org.lice.core.SymbolList
@@ -39,5 +40,11 @@ class StarPlatinum {
 					if (!Files.exists(destination)) Files.createFile(destination)
 					Files.write(destination, it.toByteArray())
 				}
+	}
+
+	@Test
+	fun codesShownToMikecovlee() {
+		@Language("Lice")
+		val liceCode = "(+ 1 1)"
 	}
 }

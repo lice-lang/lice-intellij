@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.3</version>
+	<version>1.4</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -89,7 +89,7 @@ Functions provided:<br/><br/>
 	<actions>
 		<action
 				id="Lice.NewLiceFile"
-				class="org.lice.lang.NewLiceFileAction"
+				class="org.lice.lang.actions.NewLiceFileAction"
 				text="Lice File"
 				description="Create a lice script file">
 			<add-to-group
@@ -99,12 +99,12 @@ Functions provided:<br/><br/>
 		</action>
 		<action
 				id="Lice.TryEvaluate"
-				class="org.lice.lang.TryEvaluateLiceExpressionAction">
+				class="org.lice.lang.actions.TryEvaluateLiceExpressionAction">
 			<keyboard-shortcut keymap="$default" first-keystroke="ctrl shift e"/>
 			<add-to-group group-id="EditorPopupMenu1" anchor="first"/>
 		</action>
 		<group id="Lice.Group" text="Lice">
-			<action id="Lice.ShowSemanticTree" class="org.lice.lang.ShowLiceFileSemanticTreeAction"/>
+			<action id="Lice.ShowSemanticTree" class="org.lice.lang.actions.ShowLiceFileSemanticTreeAction"/>
 			<add-to-group
 					group-id="ProjectViewPopupMenuRunGroup"
 					anchor="last"/>

@@ -4,7 +4,6 @@
 		1
 		(+ (fib (- n 1)) (fib (- n 2)))))
 
-
 ;; travel through a range
 (for-each i (.. 1 10) (print i "
 "))
@@ -15,7 +14,7 @@
 		(-> init (op init index-var))))
 
 ; invoke the function defined above
-(fold (.. 1 4) 0 +)
+(fold (.. 1 5) 0 +)
 
 ; passing a call-by-value lambda to a call-by-value lambda
 ((lambda op (op 3 4))

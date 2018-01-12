@@ -19,7 +19,7 @@ import org.lice.lang.psi.LiceTypes;
 %eof{ return;
 %eof}
 
-COMMENT=,|(;[^\n]*)
+COMMENT=,|;[^\n]*
 WHITE_SPACE=[ \n\r\t]
 LBRACKET=\(
 RBRACKET=\)
@@ -39,6 +39,8 @@ NUMBER={BIN_NUM}|{OCT_NUM}|{DEC_NUM}|{HEX_NUM}|{FLOAT}
 SYMBOL_CHAR=[a-zA-Z!@$\^&_:=<|>?.\\+\-~*/%\[\]#{}]
 SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 
+UNKNOWN_CHARACTER=[^a-zA-Z!@$\^&_:=<|>?.\\+\-~*/%\[\]#{}0-9\"\(\);]
+
 %state AFTER_NUM
 
 %%
@@ -46,11 +48,17 @@ SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 <AFTER_NUM> {SYMBOL}
 	{ yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
 
+{NUMBER}
+	{ yybegin(AFTER_NUM); return LiceTypes.NUM; }
+
 {COMMENT}
 	{ yybegin(YYINITIAL); return LiceTypes.LINE_COMMENT; }
 
 {LBRACKET}
 	{ yybegin(YYINITIAL); return LiceTypes.LEFT_BRACKET; }
+
+{INCOMPLETE_STRING}
+	{ yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
 
 {STRING_LITERAL}
 	{ yybegin(YYINITIAL); return LiceTypes.STR; }
@@ -61,11 +69,9 @@ SYMBOL={SYMBOL_CHAR}({SYMBOL_CHAR}|{DIGIT})*
 {RBRACKET}
 	{ yybegin(YYINITIAL); return LiceTypes.RIGHT_BRACKET; }
 
-{NUMBER}
-	{ yybegin(AFTER_NUM); return LiceTypes.NUM; }
-
 {WHITE_SPACE}+
 	{ yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
-{INCOMPLETE_STRING}
+{UNKNOWN_CHARACTER}
 	{ yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
+

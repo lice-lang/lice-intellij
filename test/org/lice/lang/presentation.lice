@@ -1,0 +1,23 @@
+;;
+;; Created by ice1000 on 2018-01-12
+;;
+
+(|>
+  (print "Hello World\n")
+  (print "Bye world\n"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
