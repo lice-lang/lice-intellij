@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.lice.lang.module.LiceFacetSettingsTab">
-  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="6" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="12" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="674" height="192"/>
+      <xy x="20" y="20" width="718" height="350"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -64,7 +64,7 @@
       </component>
       <vspacer id="b81b7">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="11" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
       <component id="a0c4f" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="jarPathField">
@@ -84,6 +84,68 @@
           <icon value="ide/error.png"/>
           <text value="This is not a valid lice jar."/>
         </properties>
+      </component>
+      <component id="d6f4a" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="2" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="1abb9" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Try evaluate settings"/>
+        </properties>
+      </component>
+      <component id="fc8d6" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Time limit:"/>
+        </properties>
+      </component>
+      <component id="121b0" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Output limit:"/>
+        </properties>
+      </component>
+      <component id="def92" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="8" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="If timeout, &quot;try evalute&quot; will stop and give error."/>
+        </properties>
+      </component>
+      <component id="2038c" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="10" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="If overflowed, the output will be displayed in a JTextArea."/>
+        </properties>
+      </component>
+      <component id="d48f3" class="javax.swing.JFormattedTextField" binding="textLimitField">
+        <constraints>
+          <grid row="9" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="280ee" class="javax.swing.JFormattedTextField" binding="timeLimitField">
+        <constraints>
+          <grid row="7" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>

@@ -11,6 +11,9 @@ import org.lice.lang.LiceModuleSettings;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
 
 import static org.lice.lang.Lice_constantsKt.*;
 import static org.lice.lang.execution.Lice_run_confgKt.jarChooser;
@@ -26,15 +29,20 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 	private @NotNull JButton usePluginJarButton;
 	private @NotNull JButton resetToDefaultButton;
 	private @NotNull JLabel validationInfo;
+	private @NotNull JFormattedTextField timeLimitField;
+	private @NotNull JFormattedTextField textLimitField;
 	private @NotNull LiceModuleSettings settings;
 
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
 		this.settings = settings;
 		mainClassField.setText(settings.getMainClass());
-		validationInfo.setVisible(false);
 		mainClassField.addActionListener(actionEvent -> settings.setMainClass(mainClassField.getText()));
-		jarPathField.addBrowseFolderListener("Select Lice Jar", "Selecting a Lice jar file", null, jarChooser);
+		timeLimitField.setText(Long.toString(settings.getTryEvaluateTimeLimit()));
+		timeLimitField.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(NumberFormat.getIntegerInstance())));
+		textLimitField.setText(Integer.toString(settings.getTryEvaluateTextLimit()));
+		textLimitField.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(NumberFormat.getIntegerInstance())));
 		jarPathField.setText(settings.getJarPath());
+		jarPathField.addBrowseFolderListener("Select Lice Jar", "Selecting a Lice jar file", null, jarChooser);
 		jarPathField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
 			@Override protected void textChanged(DocumentEvent documentEvent) {
 				validateJar(jarPathField.getText());
@@ -51,6 +59,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 				settings.setJarPath(LICE_PATH);
 			}
 		});
+		validationInfo.setVisible(false);
 	}
 
 	private void validateJar(@NotNull @NonNls String content) {
@@ -66,7 +75,9 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 
 	@Override public boolean isModified() {
 		return jarPathField.getText().trim().equals(settings.getJarPath()) &&
-				mainClassField.getText().trim().equals(settings.getMainClass());
+				mainClassField.getText().trim().equals(settings.getMainClass()) &&
+				textLimitField.getText().trim().equals(Integer.toString(settings.getTryEvaluateTextLimit())) &&
+				timeLimitField.getText().trim().equals(Long.toString(settings.getTryEvaluateTimeLimit()));
 	}
 
 	@Override public @Nls @NotNull String getDisplayName() {

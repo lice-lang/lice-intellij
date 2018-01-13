@@ -84,7 +84,7 @@ class LiceNamesValidator : NamesValidator, RenameInputValidator {
 
 const val SHORT_TEXT_MAX = 8
 const val LONG_TEXT_MAX = 16
-private fun cutText(it: String) = if (it.length <= SHORT_TEXT_MAX) it else "${it.take(SHORT_TEXT_MAX)}…"
+private fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.take(textMax)}…"
 
 class LiceBreadCrumbProvider : BreadcrumbsProvider {
 	override fun getLanguages() = arrayOf(LiceLanguage)
@@ -96,7 +96,7 @@ class LiceBreadCrumbProvider : BreadcrumbsProvider {
 				in LiceSymbols.closureFamily -> "λ"
 				in LiceSymbols.importantFamily -> "[$it]"
 				null -> LICE_PLACEHOLDER
-				else -> cutText(it)
+				else -> cutText(it, LONG_TEXT_MAX)
 			}
 		}
 		else -> "???"
@@ -160,7 +160,7 @@ class LiceStructureViewFactory : PsiStructureViewFactory {
 				is LiceString -> "String: ${o.text}"
 				else -> "??"
 			}
-		})
+		}, LONG_TEXT_MAX)
 
 		override fun getLocationString() = ""
 		override fun getLocationPrefix() = ""
