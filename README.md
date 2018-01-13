@@ -47,4 +47,8 @@ For more screenshots please see [issue #1](https://github.com/lice-lang/lice-int
 + [X] SDK management
 + [ ] Renaming
 + [X] Quick fixes (will be continuously added)
++ [X] Structure view
++ [X] Code folding
++ [X] Bread crumbs
++ [X] Spell checking support
 + [ ] Structural editing

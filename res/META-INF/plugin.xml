@@ -13,8 +13,8 @@ Functions provided:<br/><br/>
   <li>Error reporting</li>
   <li>Code completion</li>
   <li>Quick fixes</li>
-  <li>SDK configuration</li>
-  <li>Code execution</li>
+  <li>SDK configuration and code execution</li>
+  <li>Bread crumb, code folding, spell checking, structure view</li>
 </ul>
 ]]></description>
 
@@ -22,7 +22,7 @@ Functions provided:<br/><br/>
 1.4<br/>
 <ul>
   <li>Parser and action bug fixes</li>
-  <li>Added bread crumb, code folding and spell checker</li>
+  <li>Added bread crumb, code folding, structure view and spell checker</li>
   <li>Support Lice v3.3.1</li>
 </ul>
 
