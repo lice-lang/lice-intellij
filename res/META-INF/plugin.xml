@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.4</version>
+	<version>1.5</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -19,11 +19,17 @@ Functions provided:<br/><br/>
 ]]></description>
 
 	<change-notes><![CDATA[
+1.5<br/>
+<ul>
+  <li>Support Lice v3.3.1</li>
+</ul>
+
+<br/>
+
 1.4<br/>
 <ul>
   <li>Parser and action bug fixes</li>
   <li>Added bread crumb, code folding, structure view and spell checker</li>
-  <li>Support Lice v3.3.1</li>
 </ul>
 
 <br/>
@@ -122,7 +128,7 @@ Functions provided:<br/><br/>
 		<action
 				id="Lice.TryEvaluate"
 				class="org.lice.lang.actions.TryEvaluateLiceExpressionAction">
-			<keyboard-shortcut keymap="$default" first-keystroke="ctrl shift e" second-keystroke="alt e"/>
+			<keyboard-shortcut keymap="$default" first-keystroke="ctrl shift e"/>
 			<add-to-group group-id="EditorPopupMenu1" anchor="first"/>
 		</action>
 		<group id="Lice.Group" text="Lice">
