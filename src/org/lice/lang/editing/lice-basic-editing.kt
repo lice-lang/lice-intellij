@@ -107,7 +107,7 @@ class LiceFoldingBuilder : FoldingBuilderEx() {
 			.filter {
 				it.textRange.let { r ->
 					document.getLineNumber(r.endOffset) - document.getLineNumber(r.startOffset) >= 1 ||
-							r.startOffset - r.endOffset > LONG_TEXT_MAX
+							r.length >= LONG_TEXT_MAX
 				}
 			}
 			.transform { FoldingDescriptor(it, it.textRange) }.toList().toTypedArray()
