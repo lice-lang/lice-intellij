@@ -70,6 +70,9 @@ Functions provided:<br/><br/>
 		<defaultLiveTemplatesProvider implementation="org.lice.lang.editing.LiceLiveTemplateProvider"/>
 		<liveTemplateContext implementation="org.lice.lang.LiceContext"/>
 		<breadcrumbsInfoProvider implementation="org.lice.lang.editing.LiceBreadCrumbProvider"/>
+		<lang.psiStructureViewFactory
+				language="Lice"
+				implementationClass="org.lice.lang.editing.LiceStructureViewFactory"/>
 		<lang.foldingBuilder
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceFoldingBuilder"/>

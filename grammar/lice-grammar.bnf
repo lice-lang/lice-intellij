@@ -13,8 +13,9 @@
 }
 
 file ::= element*
-element ::= string | number | symbol | comment | null | functionCall
-null ::= LEFT_BRACKET RIGHT_BRACKET
+element ::= string | number | symbol | comment | null | functionCall {
+	methods=[getNonCommentElements]
+}
 
 functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 	methods=[getLiceCallee getNonCommentElements]
@@ -22,6 +23,7 @@ functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 
 number ::= NUM
 symbol ::= SYM
+null ::= LEFT_BRACKET RIGHT_BRACKET
 
 string ::= STR {
 	methods=[isValidHost updateText createLiteralTextEscaper]

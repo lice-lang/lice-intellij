@@ -7,10 +7,15 @@ package org.lice.lang.editing
 
 import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
+import com.intellij.ide.structureView.*
+import com.intellij.ide.structureView.impl.common.PsiTreeElementBase
+import com.intellij.ide.util.treeView.smartTree.SortableTreeElement
 import com.intellij.lang.*
 import com.intellij.lang.folding.FoldingBuilderEx
 import com.intellij.lang.folding.FoldingDescriptor
+import com.intellij.lang.parser.GeneratedParserUtilBase
 import com.intellij.lang.refactoring.NamesValidator
+import com.intellij.navigation.LocationPresentation
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.highlighter.HighlighterIterator
@@ -79,6 +84,7 @@ class LiceNamesValidator : NamesValidator, RenameInputValidator {
 
 const val SHORT_TEXT_MAX = 8
 const val LONG_TEXT_MAX = 16
+private fun cutText(it: String) = if (it.length <= SHORT_TEXT_MAX) it else "${it.take(SHORT_TEXT_MAX)}…"
 
 class LiceBreadCrumbProvider : BreadcrumbsProvider {
 	override fun getLanguages() = arrayOf(LiceLanguage)
@@ -90,7 +96,7 @@ class LiceBreadCrumbProvider : BreadcrumbsProvider {
 				in LiceSymbols.closureFamily -> "λ"
 				in LiceSymbols.importantFamily -> "[$it]"
 				null -> LICE_PLACEHOLDER
-				else -> if (it.length <= SHORT_TEXT_MAX) it else "${it.take(SHORT_TEXT_MAX)}…"
+				else -> cutText(it)
 			}
 		}
 		else -> "???"
@@ -102,6 +108,7 @@ class LiceFoldingBuilder : FoldingBuilderEx() {
 	override fun isCollapsedByDefault(node: ASTNode) = false
 	override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean) = SyntaxTraverser
 			.psiTraverser(root)
+			.forceDisregardTypes { it == GeneratedParserUtilBase.DUMMY_BLOCK }
 			.traverse()
 			.filter { it is LiceFunctionCall || it is LiceNull }
 			.filter {
@@ -111,4 +118,61 @@ class LiceFoldingBuilder : FoldingBuilderEx() {
 				}
 			}
 			.transform { FoldingDescriptor(it, it.textRange) }.toList().toTypedArray()
+}
+
+class LiceStructureViewFactory : PsiStructureViewFactory {
+	override fun getStructureViewBuilder(psiFile: PsiFile) = object : TreeBasedStructureViewBuilder() {
+		override fun createStructureViewModel(editor: Editor?) = LiceModel(psiFile, editor)
+		override fun isRootNodeShown() = true
+	}
+
+	private class LiceModel(file: PsiFile, editor: Editor?) :
+			StructureViewModelBase(file, editor, LiceStructureElement(file)), StructureViewModel.ElementInfoProvider {
+		init {
+			withSuitableClasses(LiceFunctionCall::class.java, LiceSymbol::class.java)
+		}
+
+		override fun isAlwaysShowsPlus(o: StructureViewTreeElement) = false
+		override fun isAlwaysLeaf(o: StructureViewTreeElement) = false
+		override fun shouldEnterElement(o: Any?) = true
+		override fun isSuitable(o: PsiElement?) = if (o is PsiFile) true else o is LiceFunctionCall
+	}
+
+	private class LiceStructureElement(o: PsiElement) : PsiTreeElementBase<PsiElement>(o), SortableTreeElement,
+			LocationPresentation {
+		override fun getIcon(open: Boolean) = element.let { o ->
+			when (o) {
+				is LiceFile -> LICE_ICON
+				is LiceFunctionCall -> LICE_AST_NODE_ICON
+				is LiceNull -> LICE_AST_NODE0_ICON
+				else -> LICE_AST_LEAF_ICON
+			}
+		}
+
+		override fun getAlphaSortKey() = presentableText
+		override fun getPresentableText() = cutText(element.let { o ->
+			when (o) {
+				is LiceFile -> "Lice file"
+				is LiceFunctionCall -> o.liceCallee?.text ?: "??"
+				is LiceSymbol -> o.text ?: "??"
+				is LiceNull -> "()"
+				is LiceNumber -> "Number: ${o.text}"
+				is LiceString -> "String: ${o.text}"
+				else -> "??"
+			}
+		})
+
+		override fun getLocationString() = ""
+		override fun getLocationPrefix() = ""
+		override fun getLocationSuffix() = ""
+		override fun getChildrenBase(): List<LiceStructureElement> = element.let { o ->
+			@Suppress("UNCHECKED_CAST") when (o) {
+				is LiceFile -> o
+						.children.mapNotNull { (it as? LiceElement)?.nonCommentElements }
+				is LiceFunctionCall -> o
+						.children.drop(1).mapNotNull { (it as? LiceElement)?.nonCommentElements }
+				else -> emptyList()
+			}.map(::LiceStructureElement)
+		}
+	}
 }

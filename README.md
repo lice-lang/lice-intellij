@@ -18,9 +18,15 @@ Apart from syntax highlighting, there're also quick fixes:
 
 Also, you can "Try evaluate" by <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>:
 
-p![image](https://user-images.githubusercontent.com/16398479/34831948-76d5695a-f723-11e7-8563-2d350c7139ff.png)
-![image](https://user-images.githubusercontent.com/16398479/34831953-7d523de4-f723-11e7-82c9-1afe05d2eef5.png)
+![image](https://user-images.githubusercontent.com/16398479/34831948-76d5695a-f723-11e7-8563-2d350c7139ff.png)
+![image](https://user-images.githubusercontent.com/16398479/34902934-4caad036-f861-11e7-9abe-9fa1c7da0c62.png)
 ![image](https://user-images.githubusercontent.com/16398479/34823333-f7fa36ba-f704-11e7-9ca6-59670cc892e9.png)
+![image](https://user-images.githubusercontent.com/16398479/34902946-964a622e-f861-11e7-8474-e753539d7bb1.png)
+
+Code folding and bread crumbs are also supported:
+
+![image](https://user-images.githubusercontent.com/16398479/34902990-4ee9f7a4-f862-11e7-8f1c-9876b29494bd.png)
+![image](https://user-images.githubusercontent.com/16398479/34902932-391f5d20-f861-11e7-8167-c5bf3b3bbd35.png)
 
 For more screenshots please see [issue #1](https://github.com/lice-lang/lice-intellij/issues/1).
 
