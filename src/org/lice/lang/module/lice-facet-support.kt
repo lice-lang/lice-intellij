@@ -27,7 +27,7 @@ class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<Lice
 			manager: FacetValidatorsManager?) = arrayOf(LiceFacetSettingsTab(settings))
 
 	override fun loadState(moduleSettings: LiceModuleSettings?) {
-		if (moduleSettings != null) XmlSerializerUtil.copyBean(moduleSettings, settings)
+		moduleSettings?.let { XmlSerializerUtil.copyBean(it, settings) }
 	}
 }
 
@@ -62,7 +62,8 @@ class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvide
 			val path = it.path
 			if (validateLice(path)) facet.configuration.settings.jarPath = path
 			else Messages.showDialog(
-					"The Lice jar you've selected is invalid.\nwill be replaced with the jar in the plugin.",
+					"""The Lice jar you've selected is invalid.
+will be replaced with the jar in the plugin.""",
 					"Invalid jar Warning",
 					arrayOf("Yes! Yes! Yes!"),
 					0,

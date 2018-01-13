@@ -28,22 +28,25 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 		private fun SymbolList.ban(name: String) = provideFunction(name) { throw UseOfBannedFuncException(name) }
 	}
 
-	private val stdout = StringBuilder()
-	private val symbolList = SymbolList().apply {
-		ban("getBigDecs")
-		ban("getBigInts")
-		ban("getDoubles")
-		ban("getFloats")
-		ban("getInts")
-		ban("getLines")
-		ban("getTokens")
-		ban("exit")
-		ban("extern")
-		provideFunction("print") { it.forEach { stdout.append(it) } }
-		provideFunction("println") { it.forEach { stdout.appendln(it) } }
-	}
+	private var builder = StringBuilder()
+	private val symbolList
+		get() = SymbolList().apply {
+			ban("getBigDecs")
+			ban("getBigInts")
+			ban("getDoubles")
+			ban("getFloats")
+			ban("getInts")
+			ban("getLines")
+			ban("getTokens")
+			ban("exit")
+			ban("extern")
+			provideFunction("print") { it.forEach { builder.append(it) } }
+			provideFunction("println") { it.forEach { builder.appendln(it) } }
+		}
 
+	private fun StringBuilder.insertOutputIfNonBlank() = insert(0, if (isNotBlank()) "\nOutput:\n" else "")
 	override fun actionPerformed(event: AnActionEvent) {
+		if (builder.isNotBlank()) builder = StringBuilder()
 		val editor = event.getData(CommonDataKeys.EDITOR) ?: return
 		val selectedText = editor.selectionModel.selectedText ?: return
 		try {
@@ -53,26 +56,23 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 						.accept(Sema(symbolList))
 						.eval()
 			}, 1500L, TimeUnit.MILLISECONDS, true)
-			showPopupWindow("""Result:
-				|$result: ${result.className()}
-				|Output:
-				|$stdout""".trimMargin(), editor,
-					0x0013F9, 0x000CA1)
+			builder.insertOutputIfNonBlank()
+			builder.insert(0, "Result:\n$result: ${result.className()}")
+			showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
 		} catch (e: UncheckedTimeoutException) {
-			showPopupWindow("""Execution timeout.
-				|Output:
-				|$stdout""".trimMargin(), editor, 0xEDC209, 0xC26500)
+			builder.insertOutputIfNonBlank()
+			builder.insert(0, "Execution timeout.")
+			showPopupWindow(builder.toString(), editor, 0xEDC209, 0xC26500)
 		} catch (e: Throwable) {
 			val cause = e as? UseOfBannedFuncException ?: e.cause as? UseOfBannedFuncException
-			if (cause != null)
-				showPopupWindow("""Use of function "${cause.name}"
-				|is unsupported""".trimMargin(), editor,
-						0xEDC209, 0xC26500)
-			else showPopupWindow("""Oops! A ${e.javaClass.simpleName} is thrown:
-				|${e.message}
-				|Output:
-				|$stdout""".trimMargin(), editor,
-					0xE20911, 0xC20022)
+			builder.insertOutputIfNonBlank()
+			if (cause != null) {
+				builder.insert(0, "Use of function \"${cause.name}\"\nis unsupported.")
+				showPopupWindow(builder.toString(), editor, 0xEDC209, 0xC26500)
+			} else {
+				builder.insert(0, "Oops! A ${e.javaClass.simpleName} is thrown:\n${e.message}")
+				showPopupWindow(builder.toString(), editor, 0xE20911, 0xC20022)
+			}
 		}
 	}
 

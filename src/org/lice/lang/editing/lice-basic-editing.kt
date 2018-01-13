@@ -8,14 +8,16 @@ package org.lice.lang.editing
 import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.lang.*
+import com.intellij.lang.folding.FoldingBuilderEx
+import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.lang.refactoring.NamesValidator
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.highlighter.HighlighterIterator
 import com.intellij.openapi.project.Project
 import com.intellij.patterns.*
 import com.intellij.pom.PomTargetPsiElement
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
+import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
 import com.intellij.refactoring.rename.RenameInputValidator
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
@@ -75,11 +77,10 @@ class LiceNamesValidator : NamesValidator, RenameInputValidator {
 	}
 }
 
-class LiceBreadCrumbProvider : BreadcrumbsProvider {
-	companion object Constants {
-		const val TEXT_MAX = 8
-	}
+const val SHORT_TEXT_MAX = 8
+const val LONG_TEXT_MAX = 16
 
+class LiceBreadCrumbProvider : BreadcrumbsProvider {
 	override fun getLanguages() = arrayOf(LiceLanguage)
 	override fun acceptElement(o: PsiElement) = o is LiceFunctionCall
 	override fun getElementTooltip(o: PsiElement) = (o as? LiceFunctionCall)?.let { "function: <${it.text}>" }
@@ -88,10 +89,26 @@ class LiceBreadCrumbProvider : BreadcrumbsProvider {
 			when (it) {
 				in LiceSymbols.closureFamily -> "λ"
 				in LiceSymbols.importantFamily -> "[$it]"
-				null -> "(…)"
-				else -> if (it.length <= TEXT_MAX) it else "${it.take(TEXT_MAX)}…"
+				null -> LICE_PLACEHOLDER
+				else -> if (it.length <= SHORT_TEXT_MAX) it else "${it.take(SHORT_TEXT_MAX)}…"
 			}
 		}
 		else -> "???"
 	}
+}
+
+class LiceFoldingBuilder : FoldingBuilderEx() {
+	override fun getPlaceholderText(node: ASTNode): String = LICE_PLACEHOLDER
+	override fun isCollapsedByDefault(node: ASTNode) = false
+	override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean) = SyntaxTraverser
+			.psiTraverser(root)
+			.traverse()
+			.filter { it is LiceFunctionCall || it is LiceNull }
+			.filter {
+				it.textRange.let { r ->
+					document.getLineNumber(r.endOffset) - document.getLineNumber(r.startOffset) >= 1 ||
+							r.startOffset - r.endOffset > LONG_TEXT_MAX
+				}
+			}
+			.transform { FoldingDescriptor(it, it.textRange) }.toList().toTypedArray()
 }

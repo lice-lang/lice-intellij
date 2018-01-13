@@ -22,7 +22,7 @@ Functions provided:<br/><br/>
 1.4<br/>
 <ul>
   <li>Parser and action bug fixes</li>
-  <li>Added bread crumb and spell checker</li>
+  <li>Added bread crumb, code folding and spell checker</li>
   <li>Support Lice v3.3.1</li>
 </ul>
 
@@ -70,6 +70,9 @@ Functions provided:<br/><br/>
 		<defaultLiveTemplatesProvider implementation="org.lice.lang.editing.LiceLiveTemplateProvider"/>
 		<liveTemplateContext implementation="org.lice.lang.LiceContext"/>
 		<breadcrumbsInfoProvider implementation="org.lice.lang.editing.LiceBreadCrumbProvider"/>
+		<lang.foldingBuilder
+				language="Lice"
+				implementationClass="org.lice.lang.editing.LiceFoldingBuilder"/>
 		<lang.namesValidator
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceNamesValidator"/>
