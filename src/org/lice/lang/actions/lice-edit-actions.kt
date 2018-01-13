@@ -14,6 +14,7 @@ import com.intellij.util.ui.JBUI
 import org.lice.core.SymbolList
 import org.lice.lang.LICE_BIG_ICON
 import org.lice.lang.LiceFileType
+import org.lice.lang.module.moduleSettings
 import org.lice.parse.*
 import org.lice.util.className
 import java.awt.Dimension
@@ -24,10 +25,11 @@ import javax.swing.JTextArea
 class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_ICON), DumbAware {
 	private class UseOfBannedFuncException(val name: String) : Throwable()
 	private companion object SymbolListHolder {
-		private const val WORD_LIMIT = 360
 		private fun SymbolList.ban(name: String) = provideFunction(name) { throw UseOfBannedFuncException(name) }
 	}
 
+	private var textLimit = 360
+	private var timeLimit = 1500L
 	private var builder = StringBuilder()
 	private val symbolList
 		get() = SymbolList().apply {
@@ -48,6 +50,10 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 	override fun actionPerformed(event: AnActionEvent) {
 		if (builder.isNotBlank()) builder = StringBuilder()
 		val editor = event.getData(CommonDataKeys.EDITOR) ?: return
+		event.getData(CommonDataKeys.PROJECT)?.moduleSettings?.let {
+			timeLimit = it.tryEvaluateTimeLimit
+			textLimit = it.tryEvaluateTextLimit
+		}
 		val selectedText = editor.selectionModel.selectedText ?: return
 		try {
 			val result = SimpleTimeLimiter().callWithTimeout({
@@ -55,7 +61,7 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 						.parseTokenStream(Lexer(selectedText))
 						.accept(Sema(symbolList))
 						.eval()
-			}, 1500L, TimeUnit.MILLISECONDS, true)
+			}, timeLimit, TimeUnit.MILLISECONDS, true)
 			builder.insertOutputIfNonBlank()
 			builder.insert(0, "Result:\n$result: ${result.className()}")
 			showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
@@ -82,7 +88,7 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 			color: Int,
 			colorDark: Int) {
 		val relativePoint = JBPopupFactory.getInstance().guessBestPopupLocation(editor)
-		if (result.length < WORD_LIMIT)
+		if (result.length < textLimit)
 			ApplicationManager.getApplication().invokeLater {
 				JBPopupFactory.getInstance()
 						.createHtmlTextBalloonBuilder(result, LICE_BIG_ICON, JBColor(color, colorDark), null)
@@ -97,7 +103,7 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 						.createComponentPopupBuilder(JBUI.Panels.simplePanel()
 								.addToTop(JLabel(LICE_BIG_ICON))
 								.addToCenter(ScrollPaneFactory.createScrollPane(JTextArea(result).also {
-									it.toolTipText = "Evaluation output longer than $WORD_LIMIT characters"
+									it.toolTipText = "Evaluation output longer than $textLimit characters"
 									it.lineWrap = true
 									it.wrapStyleWord = true
 									it.isEditable = false

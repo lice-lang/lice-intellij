@@ -1,11 +1,11 @@
 package org.lice.lang.module;
 
 import com.intellij.facet.ui.FacetEditorTab;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.lice.lang.LiceModuleSettings;
 
@@ -35,17 +35,19 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 
 	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
 		this.settings = settings;
+		NumberFormat format = NumberFormat.getIntegerInstance();
+		format.setGroupingUsed(false);
+		DefaultFormatterFactory factory = new DefaultFormatterFactory(new NumberFormatter(format));
 		mainClassField.setText(settings.getMainClass());
-		mainClassField.addActionListener(actionEvent -> settings.setMainClass(mainClassField.getText()));
-		timeLimitField.setText(Long.toString(settings.getTryEvaluateTimeLimit()));
-		timeLimitField.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(NumberFormat.getIntegerInstance())));
-		textLimitField.setText(Integer.toString(settings.getTryEvaluateTextLimit()));
-		textLimitField.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(NumberFormat.getIntegerInstance())));
+		timeLimitField.setValue(settings.getTryEvaluateTimeLimit());
+		timeLimitField.setFormatterFactory(factory);
+		textLimitField.setValue(settings.getTryEvaluateTextLimit());
+		textLimitField.setFormatterFactory(factory);
 		jarPathField.setText(settings.getJarPath());
 		jarPathField.addBrowseFolderListener("Select Lice Jar", "Selecting a Lice jar file", null, jarChooser);
 		jarPathField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
 			@Override protected void textChanged(DocumentEvent documentEvent) {
-				validateJar(jarPathField.getText());
+				validationInfo.setVisible(!validateLice(jarPathField.getText()));
 			}
 		});
 		resetToDefaultButton.addActionListener(actionEvent -> {
@@ -62,11 +64,13 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 		validationInfo.setVisible(false);
 	}
 
-	private void validateJar(@NotNull @NonNls String content) {
-		if (validateLice(content)) {
-			settings.setJarPath(content);
-			validationInfo.setVisible(false);
-		} else validationInfo.setVisible(true);
+	@Override public void apply() throws ConfigurationException {
+		settings.setMainClass(mainClassField.getText());
+		settings.setTryEvaluateTextLimit(Integer.parseInt(textLimitField.getValue().toString()));
+		settings.setTryEvaluateTimeLimit(Long.parseLong(timeLimitField.getValue().toString()));
+		settings.setJarPath(jarPathField.getText());
+		if (validationInfo.isVisible()) throw new ConfigurationException("Invalid Lice jar");
+		super.apply();
 	}
 
 	@Override public @NotNull JComponent createComponent() {
@@ -74,10 +78,10 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 	}
 
 	@Override public boolean isModified() {
-		return jarPathField.getText().trim().equals(settings.getJarPath()) &&
-				mainClassField.getText().trim().equals(settings.getMainClass()) &&
-				textLimitField.getText().trim().equals(Integer.toString(settings.getTryEvaluateTextLimit())) &&
-				timeLimitField.getText().trim().equals(Long.toString(settings.getTryEvaluateTimeLimit()));
+		return !jarPathField.getText().trim().equals(settings.getJarPath()) ||
+				!mainClassField.getText().trim().equals(settings.getMainClass()) ||
+				!textLimitField.getText().trim().equals(Integer.toString(settings.getTryEvaluateTextLimit())) ||
+				!timeLimitField.getText().trim().equals(Long.toString(settings.getTryEvaluateTimeLimit()));
 	}
 
 	@Override public @Nls @NotNull String getDisplayName() {

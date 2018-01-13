@@ -2,6 +2,8 @@ package org.lice.lang.module
 
 import com.intellij.facet.ui.libraries.LibraryInfo
 import com.intellij.ide.util.frameworkSupport.FrameworkVersion
+import com.intellij.openapi.module.ModuleManager
+import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.NonNls
 import org.lice.lang.LICE_MAIN_DEFAULT
 import org.lice.lang.URL_GITHUB
@@ -16,3 +18,11 @@ fun createJarDownloadInfo(@NonNls versionNullable: String) =
 		versionNullable.let { version ->
 			LibraryInfo("lice-$version-all.jar", makeLiceDownloadUrl(version), URL_GITHUB, null, LICE_MAIN_DEFAULT)
 		}
+
+val Project.moduleSettings get() = ModuleManager
+		.getInstance(this)
+		.modules
+		.map(LiceFacet.InstanceHolder::getInstance)
+		.firstOrNull()
+		?.configuration
+		?.settings

@@ -9,14 +9,13 @@ import com.intellij.execution.configurations.LocatableConfigurationBase
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.components.PathMacroManager
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
-import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
 import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
 import org.jdom.Element
 import org.lice.lang.*
-import org.lice.lang.module.LiceFacet
+import org.lice.lang.module.moduleSettings
 import java.util.jar.*
 
 class LiceRunConfiguration(
@@ -26,15 +25,7 @@ class LiceRunConfiguration(
 	: LocatableConfigurationBase(project, factory, LICE_NAME),
 		CommonJavaRunConfigurationParameters {
 	var jreLocation = JAVA_PATH
-	var jarLocation = ModuleManager
-			.getInstance(project)
-			.modules
-			.map(LiceFacet.InstanceHolder::getInstance)
-			.firstOrNull()
-			?.configuration
-			?.settings
-			?.jarPath
-			.orEmpty()
+	var jarLocation = project.moduleSettings?.jarPath.orEmpty()
 
 	private var vmParams = ""
 	private var workingDir = ""
@@ -107,6 +98,7 @@ class LiceRunConfigurationProducer : RunConfigurationProducer<LiceRunConfigurati
 		if (context.psiLocation?.containingFile !is LiceFile) return false
 		configuration.targetFile = context.location?.virtualFile?.path.orEmpty().trimMysteriousPath()
 		configuration.workingDirectory = context.project.basePath.orEmpty()
+		configuration.jarLocation = context.project.moduleSettings?.jarPath.orEmpty()
 		return true
 	}
 }

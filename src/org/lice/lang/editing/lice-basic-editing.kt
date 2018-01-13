@@ -96,7 +96,7 @@ class LiceBreadCrumbProvider : BreadcrumbsProvider {
 				in LiceSymbols.closureFamily -> "λ"
 				in LiceSymbols.importantFamily -> "[$it]"
 				null -> LICE_PLACEHOLDER
-				else -> cutText(it, LONG_TEXT_MAX)
+				else -> cutText(it, SHORT_TEXT_MAX)
 			}
 		}
 		else -> "???"
