@@ -25,12 +25,8 @@ number ::= NUM
 symbol ::= SYM
 null ::= LEFT_BRACKET RIGHT_BRACKET
 
-string ::= STR {
-	methods=[isValidHost updateText createLiteralTextEscaper]
-	implements=['org.lice.lang.psi.impl.LiceInjectionElement']
-}
-
+string ::= STR
 comment ::= LINE_COMMENT {
 	methods=[isValidHost updateText createLiteralTextEscaper getTokenType]
-	implements=['org.lice.lang.psi.impl.LiceInjectionElement' 'com.intellij.psi.PsiComment']
+	implements=['com.intellij.psi.PsiLanguageInjectionHost' 'com.intellij.psi.PsiComment']
 }
