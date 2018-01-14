@@ -82,8 +82,8 @@ class LiceNamesValidator : NamesValidator, RenameInputValidator {
 	}
 }
 
-const val SHORT_TEXT_MAX = 8
-const val LONG_TEXT_MAX = 16
+const val SHORT_TEXT_MAX = 12
+const val LONG_TEXT_MAX = 24
 private fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.take(textMax)}…"
 
 class LiceBreadCrumbProvider : BreadcrumbsProvider {
@@ -117,7 +117,9 @@ class LiceFoldingBuilder : FoldingBuilderEx() {
 							r.length >= LONG_TEXT_MAX
 				}
 			}
-			.transform { FoldingDescriptor(it, it.textRange) }.toList().toTypedArray()
+			.transform { FoldingDescriptor(it, it.textRange) }
+			.toList()
+			.toTypedArray()
 }
 
 class LiceStructureViewFactory : PsiStructureViewFactory {
@@ -129,13 +131,12 @@ class LiceStructureViewFactory : PsiStructureViewFactory {
 	private class LiceModel(file: PsiFile, editor: Editor?) :
 			StructureViewModelBase(file, editor, LiceStructureElement(file)), StructureViewModel.ElementInfoProvider {
 		init {
-			withSuitableClasses(LiceFunctionCall::class.java, LiceSymbol::class.java)
+			withSuitableClasses(LiceFunctionCall::class.java, PsiFile::class.java)
 		}
 
 		override fun isAlwaysShowsPlus(o: StructureViewTreeElement) = false
 		override fun isAlwaysLeaf(o: StructureViewTreeElement) = false
 		override fun shouldEnterElement(o: Any?) = true
-		override fun isSuitable(o: PsiElement?) = if (o is PsiFile) true else o is LiceFunctionCall
 	}
 
 	private class LiceStructureElement(o: PsiElement) : PsiTreeElementBase<PsiElement>(o), SortableTreeElement,
