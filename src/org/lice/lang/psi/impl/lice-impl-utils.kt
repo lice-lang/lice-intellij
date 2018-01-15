@@ -16,6 +16,27 @@ import java.lang.StringBuilder
 
 val LiceFunctionCall.liceCallee get() = elementList.firstOrNull { it.comment == null }
 val LiceFunctionCall.nonCommentElements: List<LiceElement> get() = elementList.filter { it.comment == null }
+val LiceFunctionCall.nameIdentifier
+	get() = if (liceCallee?.text !in LiceSymbols.nameIntroducingFamily) null else
+		nonCommentElements.getOrNull(1)
+
+val LiceFunctionCall.references get() = ReferenceProvidersRegistry.getReferencesFromProviders(this)
+val LiceFunctionCall.name get() = nameIdentifier?.text
+fun LiceFunctionCall.setName(newName: String): PsiElement {
+	val liceSymbol = nameIdentifier
+	if (newName.all { it in LiceSymbols.validChars } &&
+			liceSymbol != null &&
+			liceCallee?.text in LiceSymbols.nameIntroducingFamily) {
+		val newChild = PsiFileFactory
+				.getInstance(liceSymbol.project)
+				.createFileFromText(LiceLanguage, newName)
+				.takeIf { it is LiceFile }
+				?.firstChild
+				?: throw IncorrectOperationException("Unable to rename ${liceSymbol.text} to $newName")
+		liceSymbol.replace(newChild)
+		return this
+	} else throw IncorrectOperationException("Unable to rename to $newName")
+}
 
 val LiceComment.tokenType: IElementType get() = LiceTypes.COMMENT
 val LiceComment.isValidHost get() = true
@@ -32,31 +53,6 @@ fun LiceComment.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceCom
 }
 
 val LiceElement.nonCommentElements: PsiElement? get() = functionCall ?: `null` ?: symbol ?: number ?: string
-
-val LiceSymbol.nameIdentifier
-	get() = (parent.parent as? LiceFunctionCall)?.let {
-		if (it.liceCallee?.text !in LiceSymbols.nameIntroducingFamily) null
-		else it.nonCommentElements.getOrNull(1)?.takeIf(::equals)
-	}
-
-val LiceSymbol.references get() = ReferenceProvidersRegistry.getReferencesFromProviders(this)
-val LiceSymbol.name get() = nameIdentifier?.text
-fun LiceSymbol.setName(newName: String): PsiElement {
-	val liceSymbol = nameIdentifier
-	val functionCall = parent.parent as? LiceFunctionCall
-	if (newName.all { it in LiceSymbols.validChars } &&
-			liceSymbol != null &&
-			functionCall?.liceCallee?.text in LiceSymbols.nameIntroducingFamily) {
-		val newChild = PsiFileFactory
-				.getInstance(liceSymbol.project)
-				.createFileFromText(LiceLanguage, newName)
-				.takeIf { it is LiceFile }
-				?.firstChild
-				?: throw IncorrectOperationException("Unable to rename ${liceSymbol.text} to $newName")
-		liceSymbol.replace(newChild)
-		return this
-	} else throw IncorrectOperationException("Unable to rename to $newName")
-}
 
 // val LiceString.isValidHost get() = true
 // fun LiceString.updateText(string: String): LiceString = ElementManipulators.handleContentChange(this, string)
