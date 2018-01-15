@@ -18,9 +18,10 @@ val LiceFunctionCall.liceCallee get() = elementList.firstOrNull { it.comment == 
 val LiceFunctionCall.nonCommentElements: List<LiceElement> get() = elementList.filter { it.comment == null }
 val LiceFunctionCall.nameIdentifier
 	get() = if (liceCallee?.text !in LiceSymbols.nameIntroducingFamily) null else
-		nonCommentElements.getOrNull(1)
+		nonCommentElements.getOrNull(1)?.symbol
 
-val LiceFunctionCall.references get() = ReferenceProvidersRegistry.getReferencesFromProviders(this)
+val LiceFunctionCall.references: Array<PsiReference> get() = ReferenceProvidersRegistry.getReferencesFromProviders(this)
+val LiceFunctionCall.reference get() = references.firstOrNull()
 val LiceFunctionCall.name get() = nameIdentifier?.text
 fun LiceFunctionCall.setName(newName: String): PsiElement {
 	val liceSymbol = nameIdentifier
