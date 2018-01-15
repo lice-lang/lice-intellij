@@ -5,8 +5,7 @@
 		(+ (fib (- n 1)) (fib (- n 2)))))
 
 ;; travel through a range
-(for-each i (.. 1 10) (print i "
-"))
+(for-each i (.. 1 10) (print i " "))
 
 ; define a call-by-name function
 (defexpr fold ls init op

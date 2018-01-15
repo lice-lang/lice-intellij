@@ -22,8 +22,28 @@ functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 }
 
 number ::= NUM
-symbol ::= SYM
 null ::= LEFT_BRACKET RIGHT_BRACKET
+symbol ::= SYM {
+	methods=[
+			getCanonicalText
+			getElement
+			isSoft
+			getRangeInElement
+			isReferenceTo
+			handleElementRename
+			getVariants
+			resolve
+			bindToElement
+			multiResolve
+			setName
+			getNameIdentifier
+	]
+	implements=[
+			'com.intellij.psi.PsiElement'
+			'com.intellij.psi.PsiPolyVariantReference'
+			'com.intellij.psi.PsiNameIdentifierOwner'
+	]
+}
 
 string ::= STR
 comment ::= LINE_COMMENT {

@@ -68,7 +68,7 @@ class LiceSpellCheckingStrategy : SpellcheckingStrategy() {
 }
 
 class LiceNamesValidator : NamesValidator, RenameInputValidator {
-	override fun isKeyword(s: String, project: Project?) = s in LiceSymbols.importantFamily
+	override fun isKeyword(s: String, project: Project?) = s in LiceSymbolsHelper.importantFamily
 	override fun isInputValid(s: String, o: PsiElement, c: ProcessingContext) = isIdentifier(s, o.project)
 	override fun getPattern(): ElementPattern<out PsiElement> = PlatformPatterns.psiElement().with(object :
 			PatternCondition<PsiElement>("") {
@@ -93,8 +93,8 @@ class LiceBreadCrumbProvider : BreadcrumbsProvider {
 	override fun getElementInfo(o: PsiElement): String = when (o) {
 		is LiceFunctionCall -> o.liceCallee?.text.let {
 			when (it) {
-				in LiceSymbols.closureFamily -> "λ"
-				in LiceSymbols.importantFamily -> "[$it]"
+				in LiceSymbolsHelper.closureFamily -> "λ"
+				in LiceSymbolsHelper.importantFamily -> "[$it]"
 				null -> LICE_PLACEHOLDER
 				else -> cutText(it, SHORT_TEXT_MAX)
 			}

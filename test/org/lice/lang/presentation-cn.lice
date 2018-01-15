@@ -1,0 +1,19 @@
+;;
+;; Created by ice1000 on 2018-01-14
+;;
+
+(println "Hello world")
+
+(exit 0)
+(.. 1 1000)
+
+
+
+
+
+
+
+
+
+
+

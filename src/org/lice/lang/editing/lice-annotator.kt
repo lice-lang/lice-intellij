@@ -1,6 +1,5 @@
 package org.lice.lang.editing
 
-import com.intellij.lang.ASTNode
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.openapi.util.TextRange
@@ -9,12 +8,14 @@ import org.lice.core.SymbolList
 import org.lice.lang.LiceSyntaxHighlighter
 import org.lice.lang.psi.*
 
-object LiceSymbols {
+object LiceSymbolsHelper {
 	@JvmField val defFamily = listOf("def", "deflazy", "defexpr")
 	@JvmField val setFamily = listOf("->", "<->")
 	@JvmField val closureFamily = listOf("lambda", "expr", "lazy")
 	@JvmField val miscFamily = listOf("thread|>", "force|>", "|>", "null", "true", "false")
+	@JvmField val validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@\$^&_:=<|>?.+\\-~*/%[]#{}"
 
+	@JvmField val nameIntroducingFamily = defFamily + setFamily
 	@JvmField val importantFamily = defFamily + setFamily + closureFamily + miscFamily
 	@JvmField val allSymbols = SymbolList.preludeSymbols + SymbolList.preludeVariables
 	@JvmField val allSymbolsForCompletion = SymbolList.preludeSymbols.map { "$it " } + SymbolList.preludeVariables
@@ -33,13 +34,13 @@ class LiceAnnotator : Annotator {
 				}
 			}
 			is LiceFunctionCall -> element.liceCallee?.let { callee ->
-				if (callee.text in LiceSymbols.importantFamily)
+				if (callee.text in LiceSymbolsHelper.importantFamily)
 					holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
 							.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 				when (callee.text) {
 					"undef" -> {
 						val funUndefined = simplyCheckName(element, holder, callee, "function") ?: return@let
-						if (funUndefined.text in LiceSymbols.allSymbols) {
+						if (funUndefined.text in LiceSymbolsHelper.allSymbols) {
 							holder.createWeakWarningAnnotation(
 									TextRange(funUndefined.textRange.startOffset, funUndefined.textRange.endOffset),
 									"Trying to undef a standard function")
@@ -54,7 +55,7 @@ class LiceAnnotator : Annotator {
 							holder.createWarningAnnotation(element, "Can be unwrapped")
 									.registerFix(LiceReplaceWithAnotherElementIntention(element, "inner node", ls[1]))
 					}
-					in LiceSymbols.defFamily -> {
+					in LiceSymbolsHelper.defFamily -> {
 						val funDefined = simplyCheckName(element, holder, callee, "function") ?: return@let
 						checkName(funDefined, holder)
 						val symbol = funDefined.getSafeSymbol(holder, "Function") ?: return@let
@@ -63,7 +64,7 @@ class LiceAnnotator : Annotator {
 						if (element.nonCommentElements.size <= 2)
 							missingBody(element, holder, "function body")
 					}
-					in LiceSymbols.setFamily -> {
+					in LiceSymbolsHelper.setFamily -> {
 						val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return@let
 						checkName(varDefined, holder)
 						val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
@@ -72,7 +73,7 @@ class LiceAnnotator : Annotator {
 						if (element.nonCommentElements.size <= 2)
 							missingBody(element, holder, "variable value")
 					}
-					in LiceSymbols.closureFamily -> {
+					in LiceSymbolsHelper.closureFamily -> {
 						val elementList = element.nonCommentElements
 						(1..elementList.size - 2).firstOrNull { checkParameter(elementList[it], holder) }
 						if (elementList.size <= 1)
@@ -96,7 +97,7 @@ class LiceAnnotator : Annotator {
 		if (text.text in SymbolList.preludeSymbols) {
 			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
 			val txt = text.text
-			(if (txt in LiceSymbols.importantFamily)
+			(if (txt in LiceSymbolsHelper.importantFamily)
 				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
 			else holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name"))
 					.registerFix(LiceRemoveBlockIntention(text, "Remove dangerous statement"))
@@ -115,7 +116,7 @@ class LiceAnnotator : Annotator {
 	private fun simplyCheckName(
 			element: LiceFunctionCall,
 			holder: AnnotationHolder,
-			callee: ASTNode,
+			callee: PsiElement,
 			type: String): LiceElement? {
 		val elementList: MutableList<LiceElement> = element.nonCommentElements
 		val elementCount = elementList.size
