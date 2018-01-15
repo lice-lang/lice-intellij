@@ -18,33 +18,19 @@ element ::= string | number | symbol | comment | null | functionCall {
 }
 
 functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
-	methods=[getLiceCallee getNonCommentElements]
+	methods=[
+			getLiceCallee
+			getNonCommentElements
+			setName
+			getName
+			getNameIdentifier
+	]
+	implements=['com.intellij.psi.PsiNameIdentifierOwner']
 }
 
 number ::= NUM
 null ::= LEFT_BRACKET RIGHT_BRACKET
-symbol ::= SYM {
-	methods=[
-			getCanonicalText
-			getElement
-			isSoft
-			getRangeInElement
-			isReferenceTo
-			handleElementRename
-			getVariants
-			resolve
-			bindToElement
-			multiResolve
-			setName
-			getNameIdentifier
-	]
-	implements=[
-			'com.intellij.psi.PsiElement'
-			'com.intellij.psi.PsiPolyVariantReference'
-			'com.intellij.psi.PsiNameIdentifierOwner'
-	]
-}
-
+symbol ::= SYM
 string ::= STR
 comment ::= LINE_COMMENT {
 	methods=[isValidHost updateText createLiteralTextEscaper getTokenType]

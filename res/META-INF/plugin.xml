@@ -76,6 +76,9 @@ Functions provided:<br/><br/>
 		<defaultLiveTemplatesProvider implementation="org.lice.lang.editing.LiceLiveTemplateProvider"/>
 		<liveTemplateContext implementation="org.lice.lang.LiceContext"/>
 		<breadcrumbsInfoProvider implementation="org.lice.lang.editing.LiceBreadCrumbProvider"/>
+		<psi.referenceContributor
+				language="Lice"
+				implementation="org.lice.lang.psi.LiceReferenceContributor"/>
 		<lang.psiStructureViewFactory
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceStructureViewFactory"/>
