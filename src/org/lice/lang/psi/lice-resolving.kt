@@ -10,7 +10,7 @@ import org.lice.lang.LiceLanguage
 import org.lice.lang.editing.LiceSymbols
 import org.lice.util.className
 
-class LiceSymbolReference(private val symbol: PsiElement, private val definition: PsiElement) : PsiReference {
+class LiceSymbolReference(private val symbol: LiceSymbol, private val definition: LiceFunctionCall) : PsiReference {
 	private val range = 0.let { TextRange(it, it + symbol.textLength) }
 	override fun equals(other: Any?) = (other as? LiceSymbolReference)?.symbol == symbol
 	override fun toString() = "${symbol.text}: ${symbol.className()}"
@@ -41,7 +41,10 @@ class LiceReferenceContributor : PsiReferenceContributor() {
 			return SyntaxTraverser.psiTraverser(element.parent.parent)
 					.mapNotNull { it as? LiceSymbol }
 					.filter { it != innerName && it.text == innerName.text }
-					.map { symbol -> LiceSymbolReference(symbol, element) }
+					.map { symbol ->
+						symbol.isResolved = true
+						LiceSymbolReference(symbol, element)
+					}
 					.toTypedArray()
 		}
 	}

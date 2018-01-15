@@ -28,7 +28,6 @@ class LiceTokenType(debugName: String) : IElementType(debugName, LiceLanguage) {
 	companion object {
 		@JvmField val COMMENTS = TokenSet.create(LiceTypes.COMMENT)
 		@JvmField val STRINGS = TokenSet.create(LiceTypes.STR)
-		@JvmField val LITERALS = TokenSet.create(LiceTypes.STR, LiceTypes.NUM)
 	}
 }
 

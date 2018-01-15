@@ -57,8 +57,8 @@ class LiceAnnotator : Annotator {
 					}
 					in LiceSymbols.defFamily -> {
 						val funDefined = simplyCheckName(element, holder, callee, "function") ?: return@let
-						checkName(funDefined, holder)
 						val symbol = funDefined.getSafeSymbol(holder, "Function") ?: return@let
+						checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
 						if (element.nonCommentElements.size <= 2)
@@ -66,8 +66,8 @@ class LiceAnnotator : Annotator {
 					}
 					in LiceSymbols.setFamily -> {
 						val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return@let
-						checkName(varDefined, holder)
 						val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
+						checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
 						if (element.nonCommentElements.size <= 2)
@@ -81,10 +81,12 @@ class LiceAnnotator : Annotator {
 					}
 				}
 			}
-		}
-		if (element is LiceNull)
-			holder.createWeakWarningAnnotation(element, """Empty nodes can be replaced with "null"s""")
+			is LiceSymbol -> if (!element.isResolved && element.text !in LiceSymbols.allSymbols)
+				holder.createInfoAnnotation(element, "Unresolved reference ${element.text}")
+						.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
+			is LiceNull -> holder.createWeakWarningAnnotation(element, """Empty nodes can be replaced with "null"s""")
 					.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
+		}
 	}
 
 	private fun LiceElement.getSafeSymbol(holder: AnnotationHolder, type: String) = symbol ?: run {
@@ -93,14 +95,20 @@ class LiceAnnotator : Annotator {
 		null
 	}
 
-	private fun checkName(text: LiceElement, holder: AnnotationHolder) {
-		if (text.text in SymbolList.preludeSymbols) {
-			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
-			val txt = text.text
-			(if (txt in LiceSymbols.importantFamily)
-				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
-			else holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name"))
-					.registerFix(LiceRemoveBlockIntention(text, "Remove dangerous statement"))
+	private fun checkName(text: LiceSymbol, holder: AnnotationHolder) {
+		text.isResolved = true
+		val range = text.textRange
+		val txt = text.text
+		val namingMessage = "Use Lice style identifiers"
+		when {
+			txt.startsWith("is-", true) -> holder.createWeakWarningAnnotation(text, namingMessage)
+					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", "${txt.substring(3)}?"))
+			txt.contains("-to-", true) -> holder.createWeakWarningAnnotation(text, namingMessage)
+					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", txt.replace("-to-", "->")))
+			txt.contains("to-", true) -> holder.createWeakWarningAnnotation(text, namingMessage)
+					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", txt.replace("to-", "->")))
+			txt in LiceSymbols.importantFamily -> holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
+			txt in LiceSymbols.allSymbols -> holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name")
 		}
 	}
 
@@ -133,6 +141,7 @@ class LiceAnnotator : Annotator {
 
 	private fun checkParameter(el: LiceElement, holder: AnnotationHolder): Boolean {
 		val symbol = el.getSafeSymbol(holder, "Parameter") ?: return true
+		symbol.isResolved = true
 		holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.PARAMETER
 		return false
 	}

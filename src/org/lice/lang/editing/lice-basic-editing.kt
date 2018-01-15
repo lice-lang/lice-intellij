@@ -35,8 +35,8 @@ import org.lice.lang.psi.*
 class LiceCommenter : Commenter {
 	override fun getCommentedBlockCommentPrefix() = blockCommentPrefix
 	override fun getCommentedBlockCommentSuffix() = blockCommentSuffix
-	override fun getBlockCommentPrefix() = null
-	override fun getBlockCommentSuffix() = null
+	override fun getBlockCommentPrefix(): String? = null
+	override fun getBlockCommentSuffix(): String? = null
 	override fun getLineCommentPrefix() = "; "
 }
 
