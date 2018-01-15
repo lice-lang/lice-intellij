@@ -8,7 +8,7 @@ import org.lice.core.SymbolList
 import org.lice.lang.LiceSyntaxHighlighter
 import org.lice.lang.psi.*
 
-object LiceSymbolsHelper {
+object LiceSymbols {
 	@JvmField val defFamily = listOf("def", "deflazy", "defexpr")
 	@JvmField val setFamily = listOf("->", "<->")
 	@JvmField val closureFamily = listOf("lambda", "expr", "lazy")
@@ -34,13 +34,13 @@ class LiceAnnotator : Annotator {
 				}
 			}
 			is LiceFunctionCall -> element.liceCallee?.let { callee ->
-				if (callee.text in LiceSymbolsHelper.importantFamily)
+				if (callee.text in LiceSymbols.importantFamily)
 					holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
 							.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 				when (callee.text) {
 					"undef" -> {
 						val funUndefined = simplyCheckName(element, holder, callee, "function") ?: return@let
-						if (funUndefined.text in LiceSymbolsHelper.allSymbols) {
+						if (funUndefined.text in LiceSymbols.allSymbols) {
 							holder.createWeakWarningAnnotation(
 									TextRange(funUndefined.textRange.startOffset, funUndefined.textRange.endOffset),
 									"Trying to undef a standard function")
@@ -55,7 +55,7 @@ class LiceAnnotator : Annotator {
 							holder.createWarningAnnotation(element, "Can be unwrapped")
 									.registerFix(LiceReplaceWithAnotherElementIntention(element, "inner node", ls[1]))
 					}
-					in LiceSymbolsHelper.defFamily -> {
+					in LiceSymbols.defFamily -> {
 						val funDefined = simplyCheckName(element, holder, callee, "function") ?: return@let
 						checkName(funDefined, holder)
 						val symbol = funDefined.getSafeSymbol(holder, "Function") ?: return@let
@@ -64,7 +64,7 @@ class LiceAnnotator : Annotator {
 						if (element.nonCommentElements.size <= 2)
 							missingBody(element, holder, "function body")
 					}
-					in LiceSymbolsHelper.setFamily -> {
+					in LiceSymbols.setFamily -> {
 						val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return@let
 						checkName(varDefined, holder)
 						val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
@@ -73,7 +73,7 @@ class LiceAnnotator : Annotator {
 						if (element.nonCommentElements.size <= 2)
 							missingBody(element, holder, "variable value")
 					}
-					in LiceSymbolsHelper.closureFamily -> {
+					in LiceSymbols.closureFamily -> {
 						val elementList = element.nonCommentElements
 						(1..elementList.size - 2).firstOrNull { checkParameter(elementList[it], holder) }
 						if (elementList.size <= 1)
@@ -97,7 +97,7 @@ class LiceAnnotator : Annotator {
 		if (text.text in SymbolList.preludeSymbols) {
 			val range = TextRange(text.textRange.startOffset, text.textRange.endOffset)
 			val txt = text.text
-			(if (txt in LiceSymbolsHelper.importantFamily)
+			(if (txt in LiceSymbols.importantFamily)
 				holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
 			else holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name"))
 					.registerFix(LiceRemoveBlockIntention(text, "Remove dangerous statement"))

@@ -21,16 +21,21 @@ functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 	methods=[
 			getLiceCallee
 			getNonCommentElements
-			setName
-			getName
-			getNameIdentifier
 	]
-	implements=['com.intellij.psi.PsiNameIdentifierOwner']
 }
 
 number ::= NUM
 null ::= LEFT_BRACKET RIGHT_BRACKET
-symbol ::= SYM
+symbol ::= SYM {
+	methods=[
+			setName
+			getName
+			getNameIdentifier
+			getReferences
+	]
+	implements=['com.intellij.psi.PsiNameIdentifierOwner']
+}
+
 string ::= STR
 comment ::= LINE_COMMENT {
 	methods=[isValidHost updateText createLiteralTextEscaper getTokenType]

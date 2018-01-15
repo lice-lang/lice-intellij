@@ -140,9 +140,5 @@ Functions provided:<br/><br/>
 					group-id="ProjectViewPopupMenuRunGroup"
 					anchor="last"/>
 		</group>
-		<!-- disables the conflicted action -->
-		<action
-				id="RecentChangedFiles"
-				class="com.intellij.ide.actions.ShowRecentlyEditedFilesAction"/>
 	</actions>
 </idea-plugin>

@@ -13,7 +13,7 @@ class LiceBuiltinSymbolsCompletionContributor : CompletionContributor() {
 				PlatformPatterns.psiElement(LiceTypes.SYM).afterLeaf("("),
 				object : CompletionProvider<CompletionParameters>() {
 					override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext?, resultSet: CompletionResultSet) {
-						resultSet.addAllElements(LiceSymbolsHelper.allSymbolsForCompletion.map(LookupElementBuilder::create))
+						resultSet.addAllElements(LiceSymbols.allSymbolsForCompletion.map(LookupElementBuilder::create))
 					}
 				})
 	}
