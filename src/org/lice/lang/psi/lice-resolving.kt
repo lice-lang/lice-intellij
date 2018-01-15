@@ -1,12 +1,14 @@
 package org.lice.lang.psi
 
+import com.intellij.lang.cacheBuilder.DefaultWordsScanner
+import com.intellij.lang.findUsages.FindUsagesProvider
 import com.intellij.lang.refactoring.RefactoringSupportProvider
 import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
+import com.intellij.psi.tree.TokenSet
 import com.intellij.util.ProcessingContext
-import org.lice.lang.LiceFile
-import org.lice.lang.LiceLanguage
+import org.lice.lang.*
 import org.lice.lang.editing.LiceSymbols
 import org.lice.util.className
 

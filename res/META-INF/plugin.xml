@@ -12,7 +12,7 @@ Functions provided:<br/><br/>
   <li>Semantics-based highlighting</li>
   <li>Error reporting</li>
   <li>Code completion</li>
-  <li>Quick fixes</li>
+  <li>Inspections and quick fixes</li>
   <li>SDK configuration and code execution</li>
   <li>Bread crumb, code folding, spell checking, structure view</li>
 </ul>
@@ -21,6 +21,7 @@ Functions provided:<br/><br/>
 	<change-notes><![CDATA[
 1.5<br/>
 <ul>
+  <li>Basic reference resolving</li>
   <li>Support Lice v3.3.1</li>
 </ul>
 
