@@ -32,7 +32,10 @@ functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 
 number ::= NUM
 null ::= LEFT_BRACKET RIGHT_BRACKET
-symbol ::= SYM
+symbol ::= SYM {
+	methods=[getReference getReferences]
+}
+
 string ::= STR
 comment ::= LINE_COMMENT {
 	methods=[isValidHost updateText createLiteralTextEscaper getTokenType]

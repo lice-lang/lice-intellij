@@ -1,28 +1,33 @@
 package org.lice.lang.psi
 
 import com.intellij.lang.refactoring.RefactoringSupportProvider
+import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
+import org.lice.lang.LiceFile
+import org.lice.lang.LiceLanguage
 import org.lice.lang.editing.LiceSymbols
+import org.lice.util.className
 
-class LiceSymbolReference(symbol: LiceSymbol, private val definition: LiceFunctionCall) :
-		PsiReferenceBase<LiceSymbol>(symbol, symbol.textRange, true) {
-
-	override fun equals(other: Any?): Boolean = (other as? LiceSymbolReference)?.myElement == myElement ?: false
-	override fun hashCode() = myElement.hashCode()
+class LiceSymbolReference(private val symbol: LiceSymbol, private val definition: LiceFunctionCall) : PsiReference {
+	private val range = 0.let { TextRange(it, it + symbol.textLength) }
+	override fun equals(other: Any?) = (other as? LiceSymbolReference)?.symbol == symbol
+	override fun toString() = "${symbol.text}: ${symbol.className()}"
+	override fun hashCode() = symbol.hashCode()
 	override fun isReferenceTo(element: PsiElement) = element == definition
-	override fun resolve(): LiceFunctionCall {
-		println("resolve called.")
-		return definition
-	}
-	override fun getVariants() = (LiceSymbols.allSymbols + (myElement.containingFile
-			?.children ?: emptyArray())
-			.filterIsInstance<LiceElement>()
-			.mapNotNull(LiceElement::getFunctionCall)
-			.filter { it.nonCommentElements.let { it.size >= 2 && it[0].text in LiceSymbols.nameIntroducingFamily } }
-			.map { it.nonCommentElements[1] })
-			.toTypedArray()
+	override fun bindToElement(element: PsiElement) = element
+	override fun isSoft() = false
+	override fun getElement() = symbol
+	override fun getRangeInElement(): TextRange = range
+	override fun getCanonicalText(): String = symbol.text
+	override fun resolve() = definition
+	override fun getVariants() = emptyArray<Any>()
+	override fun handleElementRename(newElementName: String) = PsiFileFactory
+			.getInstance(symbol.project)
+			.createFileFromText(LiceLanguage, newElementName)
+			.let { it as? LiceFile }
+			?.firstChild
 }
 
 class LiceReferenceContributor : PsiReferenceContributor() {
