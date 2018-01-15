@@ -2,12 +2,25 @@ package org.lice.lang.psi
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
+import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
+import com.intellij.util.ProcessingContext
 import org.intellij.lang.annotations.Language
 import org.lice.core.SymbolList
 import org.lice.lang.LiceSyntaxHighlighter
 import java.util.regex.Pattern
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.PsiManager
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.FileTypeIndex
+import com.intellij.util.indexing.FileBasedIndex
+import java.util.ArrayList
+
+
+
 
 class LiceSymbolsExtractingAnnotator : Annotator {
 	companion object RegExes {
