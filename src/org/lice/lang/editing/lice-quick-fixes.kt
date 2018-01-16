@@ -38,13 +38,14 @@ class LiceReplaceWithAnotherSymbolIntention(
 }
 
 class LiceTryReplaceEvaluatedResultIntention(
-		private val element: LiceFunctionCall) : BaseIntentionAction() {
+		private var element: LiceFunctionCall) : BaseIntentionAction() {
 	override fun getText() = "Try replacing with evaluated result"
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LICE_NAME
 	override operator fun invoke(project: Project, editor: Editor, psiFile: PsiFile?) {
 		val eval = TryEvaluate()
-		val result = (eval.tryEval(editor, editor.selectionModel.selectedText ?: element.text, project, false)
+		val selectedText = editor.selectionModel.selectedText
+		val result = (eval.tryEval(editor, selectedText ?: element.text, project, false)
 				?: run {
 					element.isPossibleEval = false
 					return
@@ -64,18 +65,31 @@ class LiceTryReplaceEvaluatedResultIntention(
 			element.isPossibleEval = false
 			return
 		}
-		element.replace(symbol)
+		if (selectedText != null && selectedText.indexOf(element.text) < 0) {
+			val sub = element
+					.children
+					.sortedByDescending { it.textLength }
+					.firstOrNull { it.textOffset >= editor.selectionModel.selectionStart && it.textLength <= selectedText.length }
+			(sub ?: element).replace(symbol)
+		} else element.replace(symbol)
 	}
 
 	private fun convert(result: Any?, isOuterPair: Boolean = false): String = when (result) {
-		is String -> """"$result""""
+		is String -> """"${result
+				.replace("\n", "\\n")
+				.replace("\r", "\\r")
+				.replace("\u000C", "\\f")
+				.replace("\t", "\\t")}""""
 		is BigInteger -> "${result}N"
 		is BigDecimal -> "${result.toPlainString()}M"
 		is List<*> -> "(list ${result.joinToString(" ") { convert(it) }})"
+		is Array<*> -> "(array ${result.joinToString(" ") { convert(it) }})"
 		is Pair<*, *> ->
 			if (isOuterPair) "${convert(result.first)} ${convert(result, true)}"
 			else "([|] ${convert(result.first)} ${convert(result.second, true)})"
 		is Long -> "${result}L"
+		is Short -> "${result}S"
+		is Byte -> "${result}B"
 		is Double -> "${result}D"
 		is Float -> "${result}F"
 		is Number -> "$result"

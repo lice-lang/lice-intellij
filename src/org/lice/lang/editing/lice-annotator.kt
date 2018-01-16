@@ -157,12 +157,10 @@ class LiceAnnotator : Annotator {
 		val elementCount = elementList.size
 		if (elementCount <= 1) {
 			holder.createWarningAnnotation(
-					TextRange(callee.textRange.endOffset, element.textRange.endOffset),
-					"Missing $type name")
+					TextRange(callee.textRange.endOffset, element.textRange.endOffset), "Missing $type name")
 			return null
 		}
-		(2..elementCount - 2)
-				.firstOrNull { checkParameter(elementList[it], holder) }
+		(2..elementCount - 2).firstOrNull { checkParameter(elementList[it], holder) }
 		return elementList[1]
 	}
 

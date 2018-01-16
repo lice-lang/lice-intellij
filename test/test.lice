@@ -1,6 +1,6 @@
 ;; comments
 (def fib n
-	(if (in (list 1 2) n)
+	(if (in? (list 1 2) n)
 		1
 		(+ (fib (- n 1)) (fib (- n 2)))))
 

@@ -33,7 +33,6 @@ import java.nio.file.Paths
 @JvmField @NonNls val KOTLIN_REFLECT_PATH: String = Paths.get("../lib/kotlin-reflect.jar").toAbsolutePath().toString()
 
 @NonNls const val LICE_RUN_CONFIG_ID = "LICE_RUN_CONFIGURATION"
-@NonNls const val LICE_TRY_EVAL_ACTION_ID = "Lice.TryEvaluate"
 @NonNls const val LICE_MAIN_DEFAULT = "org.lice.repl.Main"
 @NonNls const val URL_GITHUB = "https://github.com/lice-lang/lice/releases"
 
