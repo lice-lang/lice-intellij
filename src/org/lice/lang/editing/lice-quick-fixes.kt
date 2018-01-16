@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import org.lice.lang.*
 import org.lice.lang.actions.TryEvaluate
+import org.lice.lang.psi.LiceFunctionCall
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -37,17 +38,21 @@ class LiceReplaceWithAnotherSymbolIntention(
 }
 
 class LiceTryReplaceEvaluatedResultIntention(
-		private val element: PsiElement) : BaseIntentionAction() {
+		private val element: LiceFunctionCall) : BaseIntentionAction() {
 	override fun getText() = "Try replacing with evaluated result"
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LICE_NAME
 	override operator fun invoke(project: Project, editor: Editor, psiFile: PsiFile?) {
 		val eval = TryEvaluate()
 		val result = (eval.tryEval(editor, editor.selectionModel.selectedText ?: element.text, project, false)
-				?: return).get()
+				?: run {
+					element.isPossibleEval = false
+					return
+				}).get()
 		val code = try {
 			convert(result)
 		} catch (e: UnsupportedOperationException) {
+			element.isPossibleEval = false
 			eval.showPopupWindow(e.message.orEmpty(), editor, 0xEDC209, 0xC26500)
 			return
 		}
@@ -55,7 +60,10 @@ class LiceTryReplaceEvaluatedResultIntention(
 				.getInstance(project)
 				.createFileFromText(LiceLanguage, code)
 				.let { it as? LiceFile }
-				?.firstChild ?: return
+				?.firstChild ?: run {
+			element.isPossibleEval = false
+			return
+		}
 		element.replace(symbol)
 	}
 

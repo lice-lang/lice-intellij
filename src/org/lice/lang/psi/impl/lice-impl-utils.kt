@@ -29,7 +29,7 @@ val LiceFunctionCall.nameIdentifierAndParams
 		else -> emptyList()
 	}
 
-val LiceFunctionCall.references: Array<PsiReference>
+val LiceFunctionCall.references: Array<LiceSymbolReference>
 	get() {
 		val innerNames = nameIdentifierAndParams.mapNotNull(LiceElement::getSymbol)
 		val innerNameTexts = innerNames.map(LiceSymbol::getText)
@@ -38,11 +38,11 @@ val LiceFunctionCall.references: Array<PsiReference>
 				.filter { it !in innerNames && it.text in innerNameTexts }
 				.map { symbol -> LiceSymbolReference(symbol, this) }
 				.toTypedArray()
-		val name = innerNames.firstOrNull() ?: return PsiReference.EMPTY_ARRAY
+		val name = innerNames.firstOrNull() ?: return emptyArray()
 		val nameText = name.text
 		val params = innerNames.drop(1)
 		val paramTexts = params.map(LiceSymbol::getText)
-		if (this.liceCallee?.text !in LiceSymbols.nameIntroducingFamily) return PsiReference.EMPTY_ARRAY
+		if (this.liceCallee?.text !in LiceSymbols.nameIntroducingFamily) return emptyArray()
 		val list1 = SyntaxTraverser.psiTraverser(parent.parent)
 				.mapNotNull { it as? LiceSymbol }
 				.filter { it != name && it.text == nameText }

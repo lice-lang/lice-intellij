@@ -8,10 +8,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lice.lang.psi.LiceElement;
-import org.lice.lang.psi.LiceFunctionCall;
-import org.lice.lang.psi.LiceSymbol;
-import org.lice.lang.psi.LiceVisitor;
+import org.lice.lang.psi.*;
 
 import java.util.List;
 
@@ -21,7 +18,8 @@ import java.util.List;
  * @author ice1000
  */
 public class LiceFunctionCallImpl extends ASTWrapperPsiElement implements LiceFunctionCall {
-	private PsiReference[] references;
+	private LiceSymbolReference[] references = null;
+	private boolean possibleEval = true;
 
 	public LiceFunctionCallImpl(ASTNode node) {
 		super(node);
@@ -66,11 +64,21 @@ public class LiceFunctionCallImpl extends ASTWrapperPsiElement implements LiceFu
 
 	public @NotNull PsiReference[] getReferences() {
 		if (references == null) references = LicePsiImplUtils.getReferences(this);
+		for (LiceSymbolReference reference : references) reference.getSymbol().setResolved(true);
 		return references;
 	}
 
 	@Override public void subtreeChanged() {
 		references = null;
+		possibleEval = true;
 		super.subtreeChanged();
+	}
+
+	@Override public boolean isPossibleEval() {
+		return possibleEval;
+	}
+
+	@Override public void setPossibleEval(boolean possibleEval) {
+		this.possibleEval = possibleEval;
 	}
 }

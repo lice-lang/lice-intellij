@@ -11,6 +11,7 @@ import org.lice.lang.psi.LiceVisitor;
 
 /**
  * Human edited, so move to git repop
+ *
  * @author ice1000
  */
 public class LiceSymbolImpl extends ASTWrapperPsiElement implements LiceSymbol {
@@ -45,6 +46,7 @@ public class LiceSymbolImpl extends ASTWrapperPsiElement implements LiceSymbol {
 
 	@Override public void subtreeChanged() {
 		reference = null;
+		resolved = false;
 		super.subtreeChanged();
 	}
 

@@ -46,9 +46,9 @@ object LiceSymbols {
 			txt in LiceSymbols.importantFamily -> holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
 			txt in LiceSymbols.allSymbols -> holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name")
 		}
-		if (text is LiceSymbol && fix != null && annotation != null) {
+		if (text is LiceSymbol) {
 			text.isResolved = true
-			annotation.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", fix))
+			if (fix != null && annotation != null) annotation.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", fix))
 		}
 	}
 }
@@ -86,6 +86,7 @@ class LiceAnnotator : Annotator {
 						else if (ls.size <= 2)
 							holder.createWarningAnnotation(element, "Can be unwrapped")
 									.registerFix(LiceReplaceWithAnotherElementIntention(element, "inner node", ls[1]))
+						checkForTryEval(element, holder)
 					}
 					in LiceSymbols.defFamily -> {
 						val funDefined = simplyCheckName(element, holder, callee, "function") ?: return@let
@@ -102,8 +103,7 @@ class LiceAnnotator : Annotator {
 						LiceSymbols.checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
-						if (element.nonCommentElements.size <= 2)
-							missingBody(element, holder, "variable value")
+						if (element.nonCommentElements.size <= 2) missingBody(element, holder, "variable value")
 					}
 					in LiceSymbols.closureFamily -> {
 						val elementList = element.nonCommentElements
@@ -111,16 +111,26 @@ class LiceAnnotator : Annotator {
 						if (elementList.size <= 1)
 							missingBody(element, holder, "lambda body")
 					}
-					else -> holder.createInfoAnnotation(element, "Can be evaluated")
-							.registerFix(LiceTryReplaceEvaluatedResultIntention(element))
+					else -> checkForTryEval(element, holder)
 				}
 			}
-			is LiceSymbol -> if (!element.isResolved && element.text !in LiceSymbols.allSymbols)
-				holder.createInfoAnnotation(element, "Unresolved reference: ${element.text}")
-						.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
+			is LiceSymbol -> if (!element.isResolved) {
+				if (element.text in LiceSymbols.allSymbols) element.isResolved = true
+				else holder.createInfoAnnotation(element, "Unresolved reference: ${element.text}").run {
+					textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
+					setNeedsUpdateOnTyping(true)
+				}
+			}
 			is LiceNull -> holder.createWeakWarningAnnotation(element, """Empty nodes can be replaced with "null"s""")
 					.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
 		}
+	}
+
+	private fun checkForTryEval(
+			element: LiceFunctionCall,
+			holder: AnnotationHolder) {
+		if (element.isPossibleEval) holder.createInfoAnnotation(element, "Can be evaluated")
+				.registerFix(LiceTryReplaceEvaluatedResultIntention(element))
 	}
 
 	private fun LiceElement.getSafeSymbol(holder: AnnotationHolder, type: String) = symbol ?: run {

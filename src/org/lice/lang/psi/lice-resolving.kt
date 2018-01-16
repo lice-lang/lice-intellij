@@ -7,7 +7,7 @@ import org.lice.lang.LiceFile
 import org.lice.lang.LiceLanguage
 import org.lice.util.className
 
-class LiceSymbolReference(private val symbol: LiceSymbol, definition: LiceFunctionCall? = null) : PsiReference {
+class LiceSymbolReference(val symbol: LiceSymbol, definition: LiceFunctionCall? = null) : PsiReference {
 	init {
 		symbol.isResolved = true
 	}
