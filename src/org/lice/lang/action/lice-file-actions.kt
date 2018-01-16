@@ -1,4 +1,4 @@
-package org.lice.lang.actions
+package org.lice.lang.action
 
 import com.intellij.CommonBundle
 import com.intellij.ide.actions.CreateFileAction

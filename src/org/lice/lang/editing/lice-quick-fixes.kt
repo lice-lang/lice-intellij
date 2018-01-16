@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import org.lice.lang.*
-import org.lice.lang.actions.TryEvaluate
+import org.lice.lang.action.TryEvaluate
 import org.lice.lang.psi.LiceElement
 import org.lice.lang.psi.LiceFunctionCall
 import java.math.BigDecimal

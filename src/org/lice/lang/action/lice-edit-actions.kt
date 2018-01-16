@@ -1,4 +1,4 @@
-package org.lice.lang.actions
+package org.lice.lang.action
 
 import com.google.common.util.concurrent.SimpleTimeLimiter
 import com.google.common.util.concurrent.UncheckedTimeoutException

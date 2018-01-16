@@ -120,7 +120,7 @@ Functions provided:<br/><br/>
 	<actions>
 		<action
 				id="Lice.NewLiceFile"
-				class="org.lice.lang.actions.NewLiceFileAction"
+				class="org.lice.lang.action.NewLiceFileAction"
 				text="Lice File"
 				description="Create a lice script file">
 			<add-to-group
@@ -130,12 +130,12 @@ Functions provided:<br/><br/>
 		</action>
 		<action
 				id="Lice.TryEvaluate"
-				class="org.lice.lang.actions.TryEvaluateLiceExpressionAction">
+				class="org.lice.lang.action.TryEvaluateLiceExpressionAction">
 			<keyboard-shortcut keymap="$default" first-keystroke="ctrl shift e"/>
 			<add-to-group group-id="EditorPopupMenu1" anchor="first"/>
 		</action>
 		<group id="Lice.Group" text="Lice">
-			<action id="Lice.ShowSemanticTree" class="org.lice.lang.actions.ShowLiceFileSemanticTreeAction"/>
+			<action id="Lice.ShowSemanticTree" class="org.lice.lang.action.ShowLiceFileSemanticTreeAction"/>
 			<add-to-group
 					group-id="ProjectViewPopupMenuRunGroup"
 					anchor="last"/>
