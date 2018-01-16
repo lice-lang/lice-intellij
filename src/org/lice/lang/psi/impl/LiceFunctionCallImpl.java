@@ -46,7 +46,7 @@ public class LiceFunctionCallImpl extends ASTWrapperPsiElement implements LiceFu
 		return LicePsiImplUtils.getNonCommentElements(this);
 	}
 
-	public @NotNull PsiElement setName(String newName) {
+	public @NotNull PsiElement setName(@NotNull String newName) {
 		return LicePsiImplUtils.setName(this, newName);
 	}
 
