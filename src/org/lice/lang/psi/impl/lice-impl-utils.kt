@@ -5,7 +5,6 @@ package org.lice.lang.psi.impl
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
 import com.intellij.psi.tree.IElementType
 import com.intellij.util.IncorrectOperationException
 import org.lice.lang.LiceFile
@@ -17,14 +16,53 @@ import java.lang.StringBuilder
 val LiceFunctionCall.liceCallee get() = elementList.firstOrNull { it.comment == null }
 val LiceFunctionCall.nonCommentElements: List<LiceElement> get() = elementList.filter { it.comment == null }
 val LiceFunctionCall.nameIdentifier
-	get() = if (liceCallee?.text !in LiceSymbols.nameIntroducingFamily) null else
-		nonCommentElements.getOrNull(1)?.symbol
+	get() = when (liceCallee?.text) {
+		in LiceSymbols.closureFamily -> nonCommentElements.firstOrNull()?.symbol
+		!in LiceSymbols.nameIntroducingFamily -> null
+		else -> nonCommentElements.getOrNull(1)?.symbol
+	}
 val LiceFunctionCall.nameIdentifierAndParams
-	get() = if (liceCallee?.text !in LiceSymbols.nameIntroducingFamily) emptyList() else
-		nonCommentElements.run { if (size >= 1) subList(1, size).toList() else emptyList() }
+	get() = when (liceCallee?.text) {
+		in LiceSymbols.nameIntroducingFamily,
+		in LiceSymbols.closureFamily ->
+			nonCommentElements.run { if (size >= 1) subList(1, size).toList() else emptyList() }
+		else -> emptyList()
+	}
 
-val LiceFunctionCall.references: Array<PsiReference> get() = ReferenceProvidersRegistry.getReferencesFromProviders(this)
-val LiceFunctionCall.reference get() = references.firstOrNull()
+val LiceFunctionCall.references: Array<PsiReference>
+	get() {
+		println(text)
+		val innerNames = nameIdentifierAndParams.mapNotNull(LiceElement::getSymbol)
+		val innerNameTexts = innerNames.map(LiceSymbol::getText)
+		if (this.liceCallee?.text in LiceSymbols.closureFamily) return SyntaxTraverser.psiTraverser(this)
+				.mapNotNull { it as? LiceSymbol }
+				.filter { it !in innerNames && it.text in innerNameTexts }
+				.map { symbol ->
+					symbol.isResolved = true
+					LiceSymbolReference(symbol, this)
+				}.toTypedArray()
+		val name = innerNames.firstOrNull() ?: return PsiReference.EMPTY_ARRAY
+		val nameText = name.text
+		val params = innerNames.drop(1)
+		val paramTexts = params.map(LiceSymbol::getText)
+		if (this.liceCallee?.text !in LiceSymbols.nameIntroducingFamily) return PsiReference.EMPTY_ARRAY
+		val list1 = SyntaxTraverser.psiTraverser(parent.parent)
+				.mapNotNull { it as? LiceSymbol }
+				.filter { it != name && it.text == nameText }
+				.map { symbol ->
+					symbol.isResolved = true
+					LiceSymbolReference(symbol, this)
+				}
+		val list2 = SyntaxTraverser.psiTraverser(this)
+				.mapNotNull { it as? LiceSymbol }
+				.filter { it !in params && it.text in paramTexts }
+				.map { symbol ->
+					symbol.isResolved = true
+					LiceSymbolReference(symbol, this)
+				}
+		return (list1 + list2).toTypedArray()
+	}
+
 val LiceFunctionCall.name get() = nameIdentifier?.text
 fun LiceFunctionCall.setName(newName: String): PsiElement {
 	val liceSymbol = nameIdentifier
@@ -59,7 +97,11 @@ fun LiceComment.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceCom
 val LiceElement.nonCommentElements: PsiElement? get() = functionCall ?: `null` ?: symbol ?: number ?: string
 
 val LiceSymbol.references: Array<PsiReference> get() = parent.parent.references
-val LiceSymbol.reference get() = parent.parent.reference
+val LiceSymbol.reference: LiceSymbolReference
+	get() {
+		println(text)
+		return LiceSymbolReference(this)
+	}
 
 // val LiceString.isValidHost get() = true
 // fun LiceString.updateText(string: String): LiceString = ElementManipulators.handleContentChange(this, string)

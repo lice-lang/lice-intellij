@@ -26,7 +26,6 @@ functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 			getNameIdentifier
 			getNameIdentifierAndParams
 			getReferences
-			getReference
 	]
 	implements=['com.intellij.psi.PsiNameIdentifierOwner']
 }

@@ -80,9 +80,6 @@ Functions provided:<br/><br/>
 		<lang.refactoringSupport
 				language="Lice"
 				implementationClass="org.lice.lang.psi.LiceRefactoringSupportProvider"/>
-		<psi.referenceContributor
-				language="Lice"
-				implementation="org.lice.lang.psi.LiceReferenceContributor"/>
 		<lang.psiStructureViewFactory
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceStructureViewFactory"/>

@@ -13,7 +13,7 @@ object LiceSymbols {
 	@JvmField val setFamily = listOf("->", "<->")
 	@JvmField val closureFamily = listOf("lambda", "expr", "lazy")
 	@JvmField val miscFamily = listOf("thread|>", "force|>", "|>", "null", "true", "false")
-	@JvmField val validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@\$^&_:=<|>?.+\\-~*/%[]#{}"
+	const val validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@\$^&_:=<|>?.+\\-~*/%[]#{}"
 
 	@JvmField val nameIntroducingFamily = defFamily + setFamily
 	@JvmField val importantFamily = defFamily + setFamily + closureFamily + miscFamily
@@ -82,7 +82,7 @@ class LiceAnnotator : Annotator {
 				}
 			}
 			is LiceSymbol -> if (!element.isResolved && element.text !in LiceSymbols.allSymbols)
-				holder.createInfoAnnotation(element, "Unresolved reference ${element.text}")
+				holder.createInfoAnnotation(element, "Unresolved reference: ${element.text}")
 						.textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
 			is LiceNull -> holder.createWeakWarningAnnotation(element, """Empty nodes can be replaced with "null"s""")
 					.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
@@ -101,6 +101,8 @@ class LiceAnnotator : Annotator {
 		val txt = text.text
 		val namingMessage = "Use Lice style identifiers"
 		when {
+			'_' in txt -> holder.createWeakWarningAnnotation(text, namingMessage)
+					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", txt.replace('_', '-')))
 			txt.startsWith("is-", true) -> holder.createWeakWarningAnnotation(text, namingMessage)
 					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", "${txt.substring(3)}?"))
 			txt.contains("-to-", true) -> holder.createWeakWarningAnnotation(text, namingMessage)
@@ -148,7 +150,7 @@ class LiceAnnotator : Annotator {
 
 	private fun dealWithEscape(element: PsiElement, index: Int, char: Char, holder: AnnotationHolder) {
 		val range = TextRange(element.textRange.startOffset + index - 1, element.textRange.startOffset + index + 1)
-		if (char !in "bfnrt\\\"'") holder.createErrorAnnotation(range, "Illegal escape character")
+		if (char !in "nt\\\"bfr'") holder.createErrorAnnotation(range, "Illegal escape character")
 		else holder.createInfoAnnotation(range, null).textAttributes = LiceSyntaxHighlighter.STRING_ESCAPE
 	}
 }
