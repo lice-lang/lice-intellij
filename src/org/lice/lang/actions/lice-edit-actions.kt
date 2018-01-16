@@ -6,8 +6,10 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.openapi.util.Ref
 import com.intellij.ui.JBColor
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.util.ui.JBUI
@@ -22,8 +24,8 @@ import java.util.concurrent.TimeUnit
 import javax.swing.JLabel
 import javax.swing.JTextArea
 
-class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_ICON), DumbAware {
-	private class UseOfBannedFuncException(val name: String) : Throwable()
+private class UseOfBannedFuncException(val name: String) : Throwable()
+class TryEvaluate {
 	private companion object SymbolListHolder {
 		private fun SymbolList.ban(name: String) = provideFunction(name) { throw UseOfBannedFuncException(name) }
 	}
@@ -47,27 +49,26 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 		}
 
 	private fun StringBuilder.insertOutputIfNonBlank() = insert(0, if (isNotBlank()) "\nOutput:\n" else "")
-	override fun actionPerformed(event: AnActionEvent) {
-		if (builder.isNotBlank()) builder = StringBuilder()
-		val editor = event.getData(CommonDataKeys.EDITOR) ?: return
-		event.getData(CommonDataKeys.PROJECT)?.moduleSettings?.let {
+	fun tryEval(editor: Editor, text: String, project: Project? = null): Ref<Any?>? {
+		project?.moduleSettings?.let {
 			timeLimit = it.tryEvaluateTimeLimit
 			textLimit = it.tryEvaluateTextLimit
 		}
-		val selectedText = editor.selectionModel.selectedText ?: return
+		if (builder.isNotBlank()) builder = StringBuilder()
 		try {
 			val result = SimpleTimeLimiter().callWithTimeout({
 				Parser
-						.parseTokenStream(Lexer(selectedText))
+						.parseTokenStream(Lexer(text))
 						.accept(Sema(symbolList))
 						.eval()
 			}, timeLimit, TimeUnit.MILLISECONDS, true)
 			builder.insertOutputIfNonBlank()
 			builder.insert(0, "Result:\n$result: ${result.className()}")
 			showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
+			return Ref.create(result)
 		} catch (e: UncheckedTimeoutException) {
 			builder.insertOutputIfNonBlank()
-			builder.insert(0, "Execution timeout.")
+			builder.insert(0, "Execution timeout.\nChange time limit in Project Structure | Facets")
 			showPopupWindow(builder.toString(), editor, 0xEDC209, 0xC26500)
 		} catch (e: Throwable) {
 			val cause = e as? UseOfBannedFuncException ?: e.cause as? UseOfBannedFuncException
@@ -80,9 +81,10 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 				showPopupWindow(builder.toString(), editor, 0xE20911, 0xC20022)
 			}
 		}
+		return null
 	}
 
-	private fun showPopupWindow(
+	fun showPopupWindow(
 			result: String,
 			editor: Editor,
 			color: Int,
@@ -119,6 +121,14 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 						.createPopup()
 						.show(relativePoint)
 			}
+	}
+}
+
+class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_ICON), DumbAware {
+	private val core = TryEvaluate()
+	override fun actionPerformed(event: AnActionEvent) {
+		val editor = event.getData(CommonDataKeys.EDITOR) ?: return
+		core.tryEval(editor, editor.selectionModel.selectedText ?: return, event.getData(CommonDataKeys.PROJECT))
 	}
 
 	override fun update(event: AnActionEvent) {

@@ -97,11 +97,7 @@ fun LiceComment.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceCom
 val LiceElement.nonCommentElements: PsiElement? get() = functionCall ?: `null` ?: symbol ?: number ?: string
 
 val LiceSymbol.references: Array<PsiReference> get() = parent.parent.references
-val LiceSymbol.reference: LiceSymbolReference
-	get() {
-		println(text)
-		return LiceSymbolReference(this)
-	}
+val LiceSymbol.reference: LiceSymbolReference get() = LiceSymbolReference(this)
 
 // val LiceString.isValidHost get() = true
 // fun LiceString.updateText(string: String): LiceString = ElementManipulators.handleContentChange(this, string)

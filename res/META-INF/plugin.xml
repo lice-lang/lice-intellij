@@ -9,11 +9,9 @@
 Lice language support.<br/>
 Functions provided:<br/><br/>
 <ul>
-  <li>Semantics-based highlighting</li>
-  <li>Error reporting</li>
-  <li>Code completion</li>
-  <li>Inspections and quick fixes</li>
-  <li>SDK configuration and code execution</li>
+  <li>Semantics-based highlighting and error reporting</li>
+  <li>Code completions, inspections and quick fixes</li>
+  <li>SDK configuration, try-evaluate and code execution</li>
   <li>Bread crumb, code folding, spell checking, structure view</li>
 </ul>
 ]]></description>
@@ -22,7 +20,8 @@ Functions provided:<br/><br/>
 1.5<br/>
 <ul>
   <li>Basic reference resolving</li>
-  <li>Support Lice v3.3.1</li>
+  <li>Mark unresolved references</li>
+  <li>Support Lice v3.3.1 and stable</li>
 </ul>
 
 <br/>

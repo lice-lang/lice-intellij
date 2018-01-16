@@ -35,5 +35,6 @@ class LiceSymbolReference(private val symbol: LiceSymbol, definition: LiceFuncti
 }
 
 class LiceRefactoringSupportProvider : RefactoringSupportProvider() {
-	override fun isMemberInplaceRenameAvailable(element: PsiElement, context: PsiElement?) = element is LiceSymbol
+	override fun isMemberInplaceRenameAvailable(element: PsiElement, context: PsiElement?) =
+			element is LiceSymbol || element is LiceElement && element.symbol != null
 }

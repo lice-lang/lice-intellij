@@ -79,6 +79,8 @@ class LiceAnnotator : Annotator {
 						if (elementList.size <= 1)
 							missingBody(element, holder, "lambda body")
 					}
+					else -> holder.createInfoAnnotation(element, "Can be evaluated")
+							.registerFix(LiceTryReplaceEvaluatedResultIntention(element))
 				}
 			}
 			is LiceSymbol -> if (!element.isResolved && element.text !in LiceSymbols.allSymbols)
