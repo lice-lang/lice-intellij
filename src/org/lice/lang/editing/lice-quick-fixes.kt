@@ -43,7 +43,8 @@ class LiceTryReplaceEvaluatedResultIntention(
 	override fun getFamilyName() = LICE_NAME
 	override operator fun invoke(project: Project, editor: Editor, psiFile: PsiFile?) {
 		val eval = TryEvaluate()
-		val result = (eval.tryEval(editor, project) ?: return).get()
+		val result = (eval.tryEval(editor, editor.selectionModel.selectedText ?: element.text, project, false)
+				?: return).get()
 		val code = try {
 			convert(result)
 		} catch (e: UnsupportedOperationException) {

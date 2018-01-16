@@ -49,7 +49,7 @@ class TryEvaluate {
 		}
 
 	private fun StringBuilder.insertOutputIfNonBlank() = insert(0, if (isNotBlank()) "\nOutput:\n" else "")
-	fun tryEval(editor: Editor, text: String, project: Project? = null): Ref<Any?>? {
+	fun tryEval(editor: Editor, text: String, project: Project?, popupWhenSuccess: Boolean): Ref<Any?>? {
 		project?.moduleSettings?.let {
 			timeLimit = it.tryEvaluateTimeLimit
 			textLimit = it.tryEvaluateTextLimit
@@ -64,7 +64,7 @@ class TryEvaluate {
 			}, timeLimit, TimeUnit.MILLISECONDS, true)
 			builder.insertOutputIfNonBlank()
 			builder.insert(0, "Result:\n$result: ${result.className()}")
-			showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
+			if (popupWhenSuccess) showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
 			return Ref.create(result)
 		} catch (e: UncheckedTimeoutException) {
 			builder.insertOutputIfNonBlank()
@@ -128,10 +128,10 @@ class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_
 	private val core = TryEvaluate()
 	override fun actionPerformed(event: AnActionEvent) {
 		val editor = event.getData(CommonDataKeys.EDITOR) ?: return
-		core.tryEval(editor, editor.selectionModel.selectedText ?: return, event.getData(CommonDataKeys.PROJECT))
+		core.tryEval(editor, editor.selectionModel.selectedText ?: return, event.getData(CommonDataKeys.PROJECT), true)
 	}
 
 	override fun update(event: AnActionEvent) {
-		event.presentation.isEnabledAndVisible = event.getData(CommonDataKeys.VIRTUAL_FILE)?.fileType is LiceFileType
+		event.presentation.isEnabledAndVisible = event.getData(CommonDataKeys.VIRTUAL_FILE)?.fileType == LiceFileType
 	}
 }

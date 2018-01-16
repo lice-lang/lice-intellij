@@ -10,7 +10,7 @@ import org.lice.lang.psi.LiceSymbolReference;
 import org.lice.lang.psi.LiceVisitor;
 
 /**
- * Human edited, so move to git repo
+ * Human edited, so move to git repop
  * @author ice1000
  */
 public class LiceSymbolImpl extends ASTWrapperPsiElement implements LiceSymbol {

@@ -1,7 +1,7 @@
 package org.lice.lang.editing
 
-import com.intellij.lang.annotation.AnnotationHolder
-import com.intellij.lang.annotation.Annotator
+import com.intellij.lang.annotation.*
+import com.intellij.lang.annotation.Annotation
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import org.lice.core.SymbolList
@@ -19,6 +19,38 @@ object LiceSymbols {
 	@JvmField val importantFamily = defFamily + setFamily + closureFamily + miscFamily
 	@JvmField val allSymbols = SymbolList.preludeSymbols + SymbolList.preludeVariables
 	@JvmField val allSymbolsForCompletion = SymbolList.preludeSymbols.map { "$it " } + SymbolList.preludeVariables
+
+	fun checkName(text: PsiElement, holder: AnnotationHolder, name: String? = null) {
+		val range = text.textRange
+		val txt = name ?: text.text
+		val namingMessage = "Use Lice style identifier: "
+		var fix: String? = null
+		var annotation: Annotation? = null
+		when {
+			'_' in txt -> {
+				fix = txt.replace('_', '-')
+				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage$fix")
+			}
+			txt.startsWith("is-", true) -> {
+				fix = "${txt.substring(3)}?"
+				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage$fix")
+			}
+			txt.contains("-to-", true) -> {
+				fix = txt.replace("-to-", "->")
+				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage$fix")
+			}
+			txt.contains("to-", true) -> {
+				fix = txt.replace("to-", "->")
+				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage$fix")
+			}
+			txt in LiceSymbols.importantFamily -> holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
+			txt in LiceSymbols.allSymbols -> holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name")
+		}
+		if (text is LiceSymbol && fix != null && annotation != null) {
+			text.isResolved = true
+			annotation.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", fix))
+		}
+	}
 }
 
 class LiceAnnotator : Annotator {
@@ -58,7 +90,7 @@ class LiceAnnotator : Annotator {
 					in LiceSymbols.defFamily -> {
 						val funDefined = simplyCheckName(element, holder, callee, "function") ?: return@let
 						val symbol = funDefined.getSafeSymbol(holder, "Function") ?: return@let
-						checkName(symbol, holder)
+						LiceSymbols.checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
 						if (element.nonCommentElements.size <= 2)
@@ -67,7 +99,7 @@ class LiceAnnotator : Annotator {
 					in LiceSymbols.setFamily -> {
 						val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return@let
 						val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
-						checkName(symbol, holder)
+						LiceSymbols.checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
 						if (element.nonCommentElements.size <= 2)
@@ -95,25 +127,6 @@ class LiceAnnotator : Annotator {
 		holder.createErrorAnnotation(this, "$type name should be a symbol")
 				.registerFix(LiceRemoveBlockIntention(this, "Remove current symbol"))
 		null
-	}
-
-	private fun checkName(text: LiceSymbol, holder: AnnotationHolder) {
-		text.isResolved = true
-		val range = text.textRange
-		val txt = text.text
-		val namingMessage = "Use Lice style identifiers"
-		when {
-			'_' in txt -> holder.createWeakWarningAnnotation(text, namingMessage)
-					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", txt.replace('_', '-')))
-			txt.startsWith("is-", true) -> holder.createWeakWarningAnnotation(text, namingMessage)
-					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", "${txt.substring(3)}?"))
-			txt.contains("-to-", true) -> holder.createWeakWarningAnnotation(text, namingMessage)
-					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", txt.replace("-to-", "->")))
-			txt.contains("to-", true) -> holder.createWeakWarningAnnotation(text, namingMessage)
-					.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", txt.replace("to-", "->")))
-			txt in LiceSymbols.importantFamily -> holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
-			txt in LiceSymbols.allSymbols -> holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name")
-		}
 	}
 
 	private fun missingBody(element: LiceFunctionCall, holder: AnnotationHolder, type: String) {

@@ -7,6 +7,7 @@ import com.intellij.psi.*
 import org.intellij.lang.annotations.Language
 import org.lice.core.SymbolList
 import org.lice.lang.LiceSyntaxHighlighter
+import org.lice.lang.editing.LiceSymbols
 import java.util.regex.Pattern
 
 class LiceSymbolsExtractingAnnotator : Annotator {
@@ -17,7 +18,7 @@ class LiceSymbolsExtractingAnnotator : Annotator {
 		@Language("RegExp") private
 		const val SYMBOL = "$SYMBOL_CHAR($SYMBOL_CHAR|[0-9])*"
 
-		val SYMBOL_REGEX: Regex = Pattern.compile(SYMBOL).toRegex()
+		val SYMBOL_REGEX = Pattern.compile(SYMBOL).toRegex()
 	}
 
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -47,6 +48,7 @@ class LiceSymbolsExtractingAnnotator : Annotator {
 						"Lice variable definition")
 						.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
 			}
+			LiceSymbols.checkName(possibleString, holder, str)
 		}
 	}
 }

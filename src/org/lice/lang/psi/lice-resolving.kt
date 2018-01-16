@@ -8,6 +8,10 @@ import org.lice.lang.LiceLanguage
 import org.lice.util.className
 
 class LiceSymbolReference(private val symbol: LiceSymbol, definition: LiceFunctionCall? = null) : PsiReference {
+	init {
+		symbol.isResolved = true
+	}
+
 	private val definition = definition ?: (symbol.containingFile as? LiceFile)?.let {
 		it.children
 				.firstOrNull { it is LiceElement && it.symbol != null }
