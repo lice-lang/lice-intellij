@@ -72,7 +72,7 @@ class LiceModuleSettings {
 	var tryEvaluateTextLimit = 300
 	var tryEvaluateTimeLimit = 1500L
 	var mainClass = LICE_MAIN_DEFAULT
-	var jarPath = LICE_PATH
+	var jarPath = licePath
 		set(value) {
 			field = value.trimMysteriousPath()
 		}

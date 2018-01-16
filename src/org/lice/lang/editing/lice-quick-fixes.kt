@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import org.lice.lang.*
 import org.lice.lang.actions.TryEvaluate
+import org.lice.lang.psi.LiceElement
 import org.lice.lang.psi.LiceFunctionCall
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -39,7 +40,8 @@ class LiceReplaceWithAnotherSymbolIntention(
 
 class LiceTryReplaceEvaluatedResultIntention(
 		private var element: LiceFunctionCall) : BaseIntentionAction() {
-	override fun getText() = "Try replacing with evaluated result"
+	private val text = "Try evaluate ${cutText(element.text, 12)}"
+	override fun getText() = text
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LICE_NAME
 	override operator fun invoke(project: Project, editor: Editor, psiFile: PsiFile?) {
@@ -65,9 +67,11 @@ class LiceTryReplaceEvaluatedResultIntention(
 			element.isPossibleEval = false
 			return
 		}
+		(symbol as? LiceElement)?.functionCall?.run { isPossibleEval = false }
 		if (selectedText != null && selectedText.indexOf(element.text) < 0) {
 			val sub = element
 					.children
+					.filter { it.text.isNotBlank() }
 					.sortedByDescending { it.textLength }
 					.firstOrNull { it.textOffset >= editor.selectionModel.selectionStart && it.textLength <= selectedText.length }
 			(sub ?: element).replace(symbol)
@@ -92,8 +96,7 @@ class LiceTryReplaceEvaluatedResultIntention(
 		is Byte -> "${result}B"
 		is Double -> "${result}D"
 		is Float -> "${result}F"
-		is Number -> "$result"
-		is Boolean -> result.toString()
+		is Boolean, is Number -> "$result"
 		null -> "null"
 		else -> throw UnsupportedOperationException("Cannot convert $result\nto a valid lice expression")
 	}

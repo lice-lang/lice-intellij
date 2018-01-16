@@ -8,6 +8,7 @@ import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.lice.lang.LiceModuleSettings;
+import org.lice.lang.Lice_constantsKt;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -57,8 +58,8 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 		usePluginJarButton.addActionListener(actionEvent -> {
 			String title = "Use Lice jar in the plugin", msg = "Are you sure to give up the old path?";
 			if (Messages.showYesNoDialog(msg, title, "Yes! Yes! Yes!", "No! No! No!", JOJO_ICON) == Messages.YES) {
-				jarPathField.setText(LICE_PATH);
-				settings.setJarPath(LICE_PATH);
+				jarPathField.setText(Lice_constantsKt.getLicePath());
+				settings.setJarPath(Lice_constantsKt.getLicePath());
 			}
 		});
 		validationInfo.setVisible(false);

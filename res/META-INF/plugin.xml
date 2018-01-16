@@ -19,8 +19,8 @@ Functions provided:<br/><br/>
 	<change-notes><![CDATA[
 1.5<br/>
 <ul>
-  <li>Basic reference resolving</li>
-  <li>Mark unresolved references</li>
+  <li>Basic reference resolving, marking unresolved references</li>
+  <li>Add in-place evaluation</li>
   <li>Support Lice v3.3.1 and v3.3.2</li>
 </ul>
 

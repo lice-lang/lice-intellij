@@ -23,11 +23,11 @@ import java.nio.file.Paths
 @NonNls const val LICE_NAME = "Lice"
 @NonNls const val LICE_RUN_CONFIG_DESCRIPTION = "Lice run configuration type"
 
-@JvmField @NonNls val LICE_PATH = "${System.getProperties().getProperty("idea.plugins.path")}/lice-intellij/lib/lice.jar"
+val licePath by lazy { "${System.getProperty("idea.plugins.path")}/lice-intellij/lib/lice.jar" }
 
 @JvmField val is64Bit = Files.exists(Paths.get("../jre64"))
 @JvmField val JAVA_PATH: String = Paths.get("../jre${if (!is64Bit) "" else "64"}/bin/java").toAbsolutePath().toString()
-// @JvmField val JAVA_PATH = System.getProperties().getProperty("java.home")
+// @JvmField val JAVA_PATH = System.getProperty("java.home")
 
 @JvmField @NonNls val KOTLIN_RUNTIME_PATH: String = Paths.get("../lib/kotlin-runtime.jar").toAbsolutePath().toString()
 @JvmField @NonNls val KOTLIN_REFLECT_PATH: String = Paths.get("../lib/kotlin-reflect.jar").toAbsolutePath().toString()

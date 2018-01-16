@@ -84,7 +84,7 @@ class LiceNamesValidator : NamesValidator, RenameInputValidator {
 
 const val SHORT_TEXT_MAX = 12
 const val LONG_TEXT_MAX = 24
-private fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.take(textMax)}…"
+fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.take(textMax)}…"
 
 class LiceBreadCrumbProvider : BreadcrumbsProvider {
 	override fun getLanguages() = arrayOf(LiceLanguage)

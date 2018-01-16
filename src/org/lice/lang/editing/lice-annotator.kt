@@ -129,7 +129,7 @@ class LiceAnnotator : Annotator {
 	private fun checkForTryEval(
 			element: LiceFunctionCall,
 			holder: AnnotationHolder) {
-		if (element.isPossibleEval) holder.createInfoAnnotation(element, "Can be evaluated")
+		if (element.isPossibleEval) holder.createInfoAnnotation(element, "Can evaluate ${cutText(element.text, 12)}")
 				.registerFix(LiceTryReplaceEvaluatedResultIntention(element))
 	}
 
