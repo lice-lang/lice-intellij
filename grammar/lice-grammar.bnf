@@ -24,6 +24,7 @@ functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 			setName
 			getName
 			getNameIdentifier
+			getNameIdentifierAndParams
 			getReferences
 			getReference
 	]

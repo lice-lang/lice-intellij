@@ -19,6 +19,9 @@ val LiceFunctionCall.nonCommentElements: List<LiceElement> get() = elementList.f
 val LiceFunctionCall.nameIdentifier
 	get() = if (liceCallee?.text !in LiceSymbols.nameIntroducingFamily) null else
 		nonCommentElements.getOrNull(1)?.symbol
+val LiceFunctionCall.nameIdentifierAndParams
+	get() = if (liceCallee?.text !in LiceSymbols.nameIntroducingFamily) emptyList() else
+		nonCommentElements.run { if (size >= 1) subList(1, size).toList() else emptyList() }
 
 val LiceFunctionCall.references: Array<PsiReference> get() = ReferenceProvidersRegistry.getReferencesFromProviders(this)
 val LiceFunctionCall.reference get() = references.firstOrNull()
