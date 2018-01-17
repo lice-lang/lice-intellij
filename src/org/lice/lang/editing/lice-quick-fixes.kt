@@ -8,6 +8,7 @@ import org.lice.lang.*
 import org.lice.lang.action.TryEvaluate
 import org.lice.lang.psi.LiceElement
 import org.lice.lang.psi.LiceFunctionCall
+import org.lice.util.forceRun
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -68,14 +69,16 @@ class LiceTryReplaceEvaluatedResultIntention(
 			return
 		}
 		(symbol as? LiceElement)?.functionCall?.run { isPossibleEval = false }
-		if (selectedText != null && selectedText.indexOf(element.text) < 0) {
-			val sub = element
-					.children
-					.filter { it.text.isNotBlank() }
-					.sortedByDescending { it.textLength }
-					.firstOrNull { it.textOffset >= editor.selectionModel.selectionStart && it.textLength <= selectedText.length }
-			(sub ?: element).replace(symbol)
-		} else element.replace(symbol)
+		forceRun {
+			if (selectedText != null && selectedText.indexOf(element.text) < 0) {
+				val sub = element
+						.children
+						.filter { it.text.isNotBlank() }
+						.sortedByDescending { it.textLength }
+						.firstOrNull { it.textOffset >= editor.selectionModel.selectionStart && it.textLength <= selectedText.length }
+				(sub ?: element).replace(symbol)
+			} else element.replace(symbol)
+		}
 	}
 
 	private fun convert(result: Any?, isOuterPair: Boolean = false): String = when (result) {
@@ -86,7 +89,7 @@ class LiceTryReplaceEvaluatedResultIntention(
 				.replace("\t", "\\t")}""""
 		is BigInteger -> "${result}N"
 		is BigDecimal -> "${result.toPlainString()}M"
-		is List<*> -> "(list ${result.joinToString(" ") { convert(it) }})"
+		is Iterable<*> -> "(list ${result.joinToString(" ") { convert(it) }})"
 		is Array<*> -> "(array ${result.joinToString(" ") { convert(it) }})"
 		is Pair<*, *> ->
 			if (isOuterPair) "${convert(result.first)} ${convert(result, true)}"

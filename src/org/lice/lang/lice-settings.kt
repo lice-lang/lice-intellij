@@ -22,7 +22,7 @@ class LiceColorSettingsPage : ColorSettingsPage {
 				AttributesDescriptor("Definitions//Function definition", LiceSyntaxHighlighter.FUNCTION_DEFINITION),
 				AttributesDescriptor("Definitions//Variable definition", LiceSyntaxHighlighter.VARIABLE_DEFINITION),
 				AttributesDescriptor("Definitions//Parameter name", LiceSyntaxHighlighter.PARAMETER),
-				AttributesDescriptor("Reference//Unresolved function", LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
+				AttributesDescriptor("Reference//Unresolved reference", LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
 		private val MAPS = mapOf(
 				"unresolved" to LiceSyntaxHighlighter.UNRESOLVED_SYMBOL,
 				"reservedWord" to LiceSyntaxHighlighter.IMPORTANT_SYMBOLS,
@@ -72,7 +72,7 @@ class LiceModuleSettings {
 	var tryEvaluateTextLimit = 300
 	var tryEvaluateTimeLimit = 1500L
 	var mainClass = LICE_MAIN_DEFAULT
-	var jarPath = licePath
+	var jarPath = liceJarPath
 		set(value) {
 			field = value.trimMysteriousPath()
 		}

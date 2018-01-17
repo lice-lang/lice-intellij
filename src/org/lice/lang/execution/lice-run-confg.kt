@@ -77,7 +77,7 @@ class LiceRunConfiguration(
 fun String.trimMysteriousPath() = trimEnd('/', '!', '"', ' ', '\n', '\t', '\r').trimStart(' ', '\n', '\t', '\r')
 fun validateLice(path: String) = LICE_MAIN_DEFAULT == findMainClass(path)
 fun findMainClass(path: String) = try {
-	JarFile(path.trimMysteriousPath()).use { jarFile ->
+	JarFile(path).use { jarFile ->
 		val inputStream = jarFile.getInputStream(jarFile.getJarEntry("META-INF/MANIFEST.MF"))
 		Manifest(inputStream).mainAttributes.getValue(Attributes.Name.MAIN_CLASS)
 	}

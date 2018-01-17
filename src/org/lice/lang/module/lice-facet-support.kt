@@ -12,6 +12,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.util.xmlb.XmlSerializerUtil
 import org.jdom.Element
 import org.lice.lang.*
+import org.lice.lang.execution.trimMysteriousPath
 import org.lice.lang.execution.validateLice
 
 @State(
@@ -59,7 +60,7 @@ class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvide
 	override fun setupConfiguration(facet: LiceFacet, model: ModifiableRootModel, version: FrameworkVersion) {
 		val orderEntry = model.orderEntries.firstOrNull { it.presentableName.contains("lice", true) } ?: return
 		orderEntry.getFiles(OrderRootType.CLASSES).firstOrNull()?.let {
-			val path = it.path
+			val path = it.path.trimMysteriousPath()
 			if (validateLice(path)) facet.configuration.settings.jarPath = path
 			else Messages.showDialog(
 					"""$path

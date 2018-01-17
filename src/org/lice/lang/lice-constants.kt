@@ -5,6 +5,8 @@
  */
 package org.lice.lang
 
+import com.intellij.ide.plugins.PluginManager
+import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.util.IconLoader
 import org.jetbrains.annotations.NonNls
 import java.nio.file.Files
@@ -21,13 +23,14 @@ import java.nio.file.Paths
 @NonNls const val LICE_PLACEHOLDER = "(…)"
 @NonNls const val LICE_EXTENSION = "lice"
 @NonNls const val LICE_NAME = "Lice"
+@NonNls const val LICE_PLUGIN_ID = "org.lice.lang"
 @NonNls const val LICE_RUN_CONFIG_DESCRIPTION = "Lice run configuration type"
 
-val licePath by lazy { "${System.getProperty("idea.plugins.path")}/lice-intellij/lib/lice.jar" }
+@NonNls @JvmField val licePluginPath = PluginManager.getPlugin(PluginId.findId("org.lice.lang"))?.path?.absolutePath.orEmpty()
+@NonNls @JvmField val liceJarPath = "$licePluginPath/lib/lice.jar"
 
 @JvmField val is64Bit = Files.exists(Paths.get("../jre64"))
 @JvmField val JAVA_PATH: String = Paths.get("../jre${if (!is64Bit) "" else "64"}/bin/java").toAbsolutePath().toString()
-// @JvmField val JAVA_PATH = System.getProperty("java.home")
 
 @JvmField @NonNls val KOTLIN_RUNTIME_PATH: String = Paths.get("../lib/kotlin-runtime.jar").toAbsolutePath().toString()
 @JvmField @NonNls val KOTLIN_REFLECT_PATH: String = Paths.get("../lib/kotlin-reflect.jar").toAbsolutePath().toString()
