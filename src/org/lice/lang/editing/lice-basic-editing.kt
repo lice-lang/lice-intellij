@@ -178,13 +178,3 @@ class LiceStructureViewFactory : PsiStructureViewFactory {
 	}
 }
 
-//class LiceSurroundDescriptor : SurroundDescriptor {
-//	override fun getElementsToSurround(file: PsiFile?, startOffset: Int, endOffset: Int): Array<PsiElement> {
-//	}
-//
-//	override fun isExclusive(): Boolean {
-//	}
-//
-//	override fun getSurrounders(): Array<Surrounder> {
-//	}
-//}
