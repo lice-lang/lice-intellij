@@ -21,7 +21,8 @@ Functions provided:<br/><br/>
 <ul>
   <li>Basic reference resolving, marking unresolved references</li>
   <li>Add in-place evaluation</li>
-  <li>Support Lice v3.3.1 and v3.3.2</li>
+  <li>Support Lice v3.3.1 and v3.3.2 (final stable version)</li>
+  <li>Fix bug of finding plugin path</li>
 </ul>
 
 <br/>

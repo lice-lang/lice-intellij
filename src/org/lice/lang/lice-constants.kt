@@ -21,12 +21,11 @@ import java.nio.file.Paths
 @JvmField val JOJO_ICON = IconLoader.getIcon("/icons/jojo.png")
 
 @NonNls const val LICE_PLACEHOLDER = "(…)"
-@NonNls const val LICE_EXTENSION = "lice"
-@NonNls const val LICE_NAME = "Lice"
+@NonNls val LICE_NAME = LiceBundle.message("lice.name")
 @NonNls const val LICE_PLUGIN_ID = "org.lice.lang"
 @NonNls const val LICE_RUN_CONFIG_DESCRIPTION = "Lice run configuration type"
 
-@NonNls @JvmField val licePluginPath = PluginManager.getPlugin(PluginId.findId("org.lice.lang"))?.path?.absolutePath.orEmpty()
+@NonNls @JvmField val licePluginPath = PluginManager.getPlugin(PluginId.findId(LICE_PLUGIN_ID))?.path?.absolutePath.orEmpty()
 @NonNls @JvmField val liceJarPath = "$licePluginPath/lib/lice.jar"
 
 @JvmField val is64Bit = Files.exists(Paths.get("../jre64"))

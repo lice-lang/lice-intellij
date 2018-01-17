@@ -25,7 +25,7 @@ class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<Lice
 	override fun getState() = settings
 	override fun createEditorTabs(
 			context: FacetEditorContext?,
-			manager: FacetValidatorsManager?) = arrayOf(LiceFacetSettingsTab(settings))
+			manager: FacetValidatorsManager?) = arrayOf(LiceFacetSettingsTab(settings, context?.project))
 
 	override fun loadState(moduleSettings: LiceModuleSettings?) {
 		moduleSettings?.let { XmlSerializerUtil.copyBean(it, settings) }

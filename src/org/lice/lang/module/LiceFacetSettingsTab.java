@@ -2,11 +2,14 @@ package org.lice.lang.module;
 
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.DocumentAdapter;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.lice.lang.LiceBundle;
 import org.lice.lang.LiceModuleSettings;
 import org.lice.lang.Lice_constantsKt;
 
@@ -16,7 +19,8 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
 
-import static org.lice.lang.Lice_constantsKt.*;
+import static org.lice.lang.Lice_constantsKt.JOJO_ICON;
+import static org.lice.lang.Lice_constantsKt.LICE_MAIN_DEFAULT;
 import static org.lice.lang.execution.Lice_run_confgKt.jarChooser;
 import static org.lice.lang.execution.Lice_run_confgKt.validateLice;
 
@@ -34,7 +38,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 	private @NotNull JFormattedTextField textLimitField;
 	private @NotNull LiceModuleSettings settings;
 
-	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings) {
+	public LiceFacetSettingsTab(@NotNull LiceModuleSettings settings, @Nullable Project project) {
 		this.settings = settings;
 		NumberFormat format = NumberFormat.getIntegerInstance();
 		format.setGroupingUsed(false);
@@ -45,7 +49,10 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 		textLimitField.setValue(settings.getTryEvaluateTextLimit());
 		textLimitField.setFormatterFactory(factory);
 		jarPathField.setText(settings.getJarPath());
-		jarPathField.addBrowseFolderListener("Select Lice Jar", "Selecting a Lice jar file", null, jarChooser);
+		jarPathField.addBrowseFolderListener(LiceBundle.message("lice.messages.select-lice-jar"),
+				LiceBundle.message("lice.messages.select-lice-jar-description"),
+				project,
+				jarChooser);
 		jarPathField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {
 			@Override protected void textChanged(DocumentEvent documentEvent) {
 				validationInfo.setVisible(!validateLice(jarPathField.getText()));
@@ -56,8 +63,11 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 			settings.setMainClass(LICE_MAIN_DEFAULT);
 		});
 		usePluginJarButton.addActionListener(actionEvent -> {
-			String title = "Use Lice jar in the plugin", msg = "Are you sure to give up the old path?";
-			if (Messages.showYesNoDialog(msg, title, "Yes Yes Yes", "No No No", JOJO_ICON) == Messages.YES) {
+			if (Messages.showYesNoDialog(LiceBundle.message("lice.messages.give-up-old"),
+					LiceBundle.message("lice.messages.use-plugin-jar"),
+					LiceBundle.message("lice.messages.yes-yes-yes"),
+					LiceBundle.message("lice.messages.no-no-no"),
+					JOJO_ICON) == Messages.YES) {
 				jarPathField.setText(Lice_constantsKt.liceJarPath);
 				settings.setJarPath(Lice_constantsKt.liceJarPath);
 			}
@@ -86,6 +96,6 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 	}
 
 	@Override public @Nls @NotNull String getDisplayName() {
-		return LICE_NAME;
+		return LiceBundle.message("lice.name");
 	}
 }

@@ -26,15 +26,15 @@ class NewLiceFileAction : CreateFileAction(CAPTION, "", LICE_ICON), DumbAware {
 
 	override fun getActionName(directory: PsiDirectory?, s: String?) = CAPTION
 	override fun getErrorTitle(): String = CommonBundle.getErrorTitle()
-	override fun getDefaultExtension() = LICE_EXTENSION
+	override fun getDefaultExtension() = LiceBundle.message("lice.file.extension")
 
 	@Language("Lice")
 	override fun create(name: String, directory: PsiDirectory) =
 			arrayOf(directory.add(PsiFileFactory
 					.getInstance(directory.project)
 					.createFileFromText(when (FileUtilRt.getExtension(name)) {
-						LICE_EXTENSION -> name
-						else -> "$name.$LICE_EXTENSION"
+						LiceBundle.message("lice.file.extension") -> name
+						else -> "$name.${LiceBundle.message("lice.file.extension")}"
 					}, LiceFileType, """;;
 ;; Created by ${System.getProperty("user.name")} on ${LocalDate.now()}
 ;;
@@ -64,7 +64,7 @@ abstract class LiceFileAction(text: String?, description: String?, icon: Icon?) 
 
 	override fun update(event: AnActionEvent) {
 		event.presentation.isEnabledAndVisible = compatibleFiles(event).run {
-			isNotEmpty() and all { LICE_EXTENSION == it.extension }
+			isNotEmpty() and all { LiceBundle.message("lice.file.extension") == it.extension }
 		}
 	}
 }
