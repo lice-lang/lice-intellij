@@ -11,18 +11,18 @@ import org.lice.lang.execution.trimMysteriousPath
 class LiceColorSettingsPage : ColorSettingsPage {
 	private companion object {
 		private val DESCRIPTORS = arrayOf(
-				AttributesDescriptor("Symbols//Ordinary symbols", LiceSyntaxHighlighter.SYMBOL),
-				AttributesDescriptor("Symbols//Important symbols", LiceSyntaxHighlighter.IMPORTANT_SYMBOLS),
-				AttributesDescriptor("Bracket", LiceSyntaxHighlighter.BRACKET),
-				AttributesDescriptor("Strings//String literals", LiceSyntaxHighlighter.STRING),
-				AttributesDescriptor("Strings//Escape characters", LiceSyntaxHighlighter.STRING_ESCAPE),
-				AttributesDescriptor("Strings//Invalid escape characters", LiceSyntaxHighlighter.STRING_ESCAPE_INVALID),
-				AttributesDescriptor("Number", LiceSyntaxHighlighter.NUMBER),
-				AttributesDescriptor("Ignored character", LiceSyntaxHighlighter.COMMENT),
-				AttributesDescriptor("Definitions//Function definition", LiceSyntaxHighlighter.FUNCTION_DEFINITION),
-				AttributesDescriptor("Definitions//Variable definition", LiceSyntaxHighlighter.VARIABLE_DEFINITION),
-				AttributesDescriptor("Definitions//Parameter name", LiceSyntaxHighlighter.PARAMETER),
-				AttributesDescriptor("Reference//Unresolved reference", LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.symbols.ordinary"), LiceSyntaxHighlighter.SYMBOL),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.symbols.important"), LiceSyntaxHighlighter.IMPORTANT_SYMBOLS),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.bracket"), LiceSyntaxHighlighter.BRACKET),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.strings.literals"), LiceSyntaxHighlighter.STRING),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.strings.escape"), LiceSyntaxHighlighter.STRING_ESCAPE),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.strings.invalid"), LiceSyntaxHighlighter.STRING_ESCAPE_INVALID),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.number"), LiceSyntaxHighlighter.NUMBER),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.ignored"), LiceSyntaxHighlighter.COMMENT),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.def.function"), LiceSyntaxHighlighter.FUNCTION_DEFINITION),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.def.variable"), LiceSyntaxHighlighter.VARIABLE_DEFINITION),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.def.parameter"), LiceSyntaxHighlighter.PARAMETER),
+				AttributesDescriptor(LiceBundle.message("lice.settings.color.symbols.unresolved"), LiceSyntaxHighlighter.UNRESOLVED_SYMBOL))
 		private val MAPS = mapOf(
 				"unresolved" to LiceSyntaxHighlighter.UNRESOLVED_SYMBOL,
 				"reservedWord" to LiceSyntaxHighlighter.IMPORTANT_SYMBOLS,
@@ -37,7 +37,7 @@ class LiceColorSettingsPage : ColorSettingsPage {
 	override fun getAdditionalHighlightingTagToDescriptorMap() = MAPS
 	override fun getHighlighter() = LiceSyntaxHighlighter()
 	override fun getIcon() = LICE_ICON
-	override fun getDisplayName() = LICE_NAME
+	override fun getDisplayName() = LiceBundle.message("lice.name")
 	override fun getAttributeDescriptors() = DESCRIPTORS
 	override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
 	@Language("Lice")
@@ -58,8 +58,8 @@ class LiceColorSettingsPage : ColorSettingsPage {
 
 object LiceConfigurationType : ConfigurationType {
 	override fun getIcon() = LICE_BIG_ICON
-	override fun getDisplayName() = LICE_NAME
-	override fun getConfigurationTypeDescription() = LICE_RUN_CONFIG_DESCRIPTION
+	override fun getDisplayName() = LiceBundle.message("lice.name")
+	override fun getConfigurationTypeDescription() = LiceBundle.message("lice.run.config.description")
 	override fun getId() = LICE_RUN_CONFIG_ID
 	override fun getConfigurationFactories() = arrayOf(LiceConfigurationFactory(this))
 }

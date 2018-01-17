@@ -14,7 +14,7 @@
         </constraints>
         <properties>
           <labelFor value=""/>
-          <text value="Lice jar path:"/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.jar-path"/>
         </properties>
       </component>
       <component id="6f63" class="javax.swing.JLabel">
@@ -23,7 +23,7 @@
         </constraints>
         <properties>
           <labelFor value="86f72"/>
-          <text value="Main class:"/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.main-class"/>
         </properties>
       </component>
       <component id="86f72" class="javax.swing.JTextField" binding="mainClassField">
@@ -82,7 +82,7 @@
         <properties>
           <enabled value="true"/>
           <icon value="ide/error.png"/>
-          <text value="This is not a valid lice jar."/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.invalid-jar"/>
         </properties>
       </component>
       <component id="d6f4a" class="javax.swing.JSeparator">
@@ -96,7 +96,7 @@
           <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Try evaluate settings"/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.try-eval.title"/>
         </properties>
       </component>
       <component id="fc8d6" class="javax.swing.JLabel">
@@ -104,7 +104,7 @@
           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Time limit (millis):"/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.try-eval.time-limit"/>
         </properties>
       </component>
       <component id="121b0" class="javax.swing.JLabel">
@@ -112,7 +112,7 @@
           <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Output limit (char):"/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.try-eval.text-limit"/>
         </properties>
       </component>
       <component id="def92" class="javax.swing.JLabel">
@@ -120,7 +120,7 @@
           <grid row="8" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="If timeout, &quot;try evalute&quot; will stop and give error."/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.try-eval.time-limit.hint"/>
         </properties>
       </component>
       <component id="2038c" class="javax.swing.JLabel">
@@ -128,7 +128,7 @@
           <grid row="10" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="If overflowed, the output will be displayed in a JTextArea."/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.try-eval.text-limit.hint"/>
         </properties>
       </component>
       <component id="d48f3" class="javax.swing.JFormattedTextField" binding="textLimitField">

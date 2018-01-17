@@ -19,24 +19,25 @@ import java.nio.file.Paths
 import java.time.LocalDate
 import javax.swing.Icon
 
-class NewLiceFileAction : CreateFileAction(CAPTION, "", LICE_ICON), DumbAware {
-	private companion object Caption {
-		private const val CAPTION = "New Lice File"
-	}
+class NewLiceFileAction : CreateFileAction(
+		LiceBundle.message("lice.actions.new-file.title"),
+		LiceBundle.message("lice.actions.new-file.description"),
+		LICE_ICON), DumbAware {
 
-	override fun getActionName(directory: PsiDirectory?, s: String?) = CAPTION
 	override fun getErrorTitle(): String = CommonBundle.getErrorTitle()
-	override fun getDefaultExtension() = LiceBundle.message("lice.file.extension")
+	override fun getDefaultExtension() = LICE_EXTENSION
+	override fun getActionName(directory: PsiDirectory?, s: String?) =
+			LiceBundle.message("lice.actions.new-file.title")
 
 	@Language("Lice")
 	override fun create(name: String, directory: PsiDirectory) =
 			arrayOf(directory.add(PsiFileFactory
 					.getInstance(directory.project)
 					.createFileFromText(when (FileUtilRt.getExtension(name)) {
-						LiceBundle.message("lice.file.extension") -> name
-						else -> "$name.${LiceBundle.message("lice.file.extension")}"
+						LICE_EXTENSION -> name
+						else -> "$name.$LICE_EXTENSION"
 					}, LiceFileType, """;;
-;; Created by ${System.getProperty("user.name")} on ${LocalDate.now()}
+;; ${LiceBundle.message("lice.actions.new-file.content", System.getProperty("user.name"), LocalDate.now())}
 ;;
 
 (|>)
@@ -46,8 +47,8 @@ class NewLiceFileAction : CreateFileAction(CAPTION, "", LICE_ICON), DumbAware {
 		val validator = MyInputValidator(project, directory)
 		Messages.showInputDialog(
 				project,
-				"Enter a new lice script name",
-				"New Lice script",
+				LiceBundle.message("lice.actions.new-file.dialog.description"),
+				LiceBundle.message("lice.actions.new-file.title"),
 				Messages.getQuestionIcon(),
 				"",
 				validator)
@@ -64,14 +65,14 @@ abstract class LiceFileAction(text: String?, description: String?, icon: Icon?) 
 
 	override fun update(event: AnActionEvent) {
 		event.presentation.isEnabledAndVisible = compatibleFiles(event).run {
-			isNotEmpty() and all { LiceBundle.message("lice.file.extension") == it.extension }
+			isNotEmpty() and all { LICE_EXTENSION == it.extension }
 		}
 	}
 }
 
 class ShowLiceFileSemanticTreeAction : LiceFileAction(
-		"View Lice Semantic Tree",
-		"View Lice file semantic tree in a window",
+		LiceBundle.message("lice.actions.semantic-tree.title"),
+		LiceBundle.message("lice.actions.semantic-tree.description"),
 		LICE_AST_NODE2_ICON), DumbAware {
 	override fun actionPerformed(event: AnActionEvent) {
 		compatibleFiles(event).forEach { file ->

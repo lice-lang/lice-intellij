@@ -5,12 +5,11 @@ import com.intellij.ide.util.frameworkSupport.FrameworkVersion
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.NonNls
-import org.lice.lang.LICE_MAIN_DEFAULT
-import org.lice.lang.URL_GITHUB
+import org.lice.lang.*
 
 class LiceSdkVersion(version: String) : FrameworkVersion(
 		version,
-		"Lice",
+		LiceBundle.message("lice.name"),
 		arrayOf(createJarDownloadInfo(version)))
 
 private fun makeLiceDownloadUrl(version: String) = "$URL_GITHUB/download/v$version/lice-$version-all.jar"
@@ -19,10 +18,11 @@ fun createJarDownloadInfo(@NonNls versionNullable: String) =
 			LibraryInfo("lice-$version-all.jar", makeLiceDownloadUrl(version), URL_GITHUB, null, LICE_MAIN_DEFAULT)
 		}
 
-val Project.moduleSettings get() = ModuleManager
-		.getInstance(this)
-		.modules
-		.map(LiceFacet.InstanceHolder::getInstance)
-		.firstOrNull()
-		?.configuration
-		?.settings
+val Project.moduleSettings
+	get() = ModuleManager
+			.getInstance(this)
+			.modules
+			.map(LiceFacet.InstanceHolder::getInstance)
+			.firstOrNull()
+			?.configuration
+			?.settings

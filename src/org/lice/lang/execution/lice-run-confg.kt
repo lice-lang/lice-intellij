@@ -12,7 +12,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
 import com.intellij.openapi.util.Ref
-import com.intellij.openapi.vfs.JarFileSystem
 import com.intellij.psi.PsiElement
 import org.jdom.Element
 import org.lice.lang.*
@@ -23,7 +22,7 @@ class LiceRunConfiguration(
 		project: Project,
 		factory: ConfigurationFactory,
 		var targetFile: String = "")
-	: LocatableConfigurationBase(project, factory, LICE_NAME),
+	: LocatableConfigurationBase(project, factory, LiceBundle.message("lice.name")),
 		CommonJavaRunConfigurationParameters {
 	var jreLocation = JAVA_PATH
 	var jarLocation = project.moduleSettings?.jarPath.orEmpty()

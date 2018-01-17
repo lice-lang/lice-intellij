@@ -32,7 +32,7 @@ class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<Lice
 	}
 }
 
-object LiceFacetType : FacetType<LiceFacet, LiceFacetConfiguration>(LiceFacet.LICE_FACET_ID, LICE_NAME, LICE_NAME) {
+object LiceFacetType : FacetType<LiceFacet, LiceFacetConfiguration>(LiceFacet.LICE_FACET_ID, LiceBundle.message("lice.name"), LiceBundle.message("lice.name")) {
 	override fun createDefaultConfiguration() = LiceFacetConfiguration()
 	override fun getIcon() = LICE_BIG_ICON
 	override fun isSuitableModuleType(type: ModuleType<*>?) = type != null
@@ -45,29 +45,27 @@ class LiceFacet(
 		module: Module,
 		configuration: LiceFacetConfiguration,
 		underlyingFacet: Facet<*>?) :
-		Facet<LiceFacetConfiguration>(facetType, module, LICE_NAME, configuration, underlyingFacet) {
+		Facet<LiceFacetConfiguration>(facetType, module, LiceBundle.message("lice.name"), configuration, underlyingFacet) {
 	constructor(module: Module) : this(FacetTypeRegistry.getInstance().findFacetType(LICE_FACET_ID), module, LiceFacetConfiguration(), null)
 
 	companion object InstanceHolder {
-		@JvmField val LICE_FACET_ID = FacetTypeId<LiceFacet>(LICE_NAME)
+		@JvmField val LICE_FACET_ID = FacetTypeId<LiceFacet>(LiceBundle.message("lice.name"))
 		fun getInstance(module: Module) = FacetManager.getInstance(module).getFacetByType(LICE_FACET_ID)
 	}
 }
 
 class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvider<LiceFacet>(LiceFacetType) {
 	override fun getVersions() = LICE_VERSIONS.map(::LiceSdkVersion)
-	override fun getTitle() = LICE_NAME
+	override fun getTitle() = LiceBundle.message("lice.name")
 	override fun setupConfiguration(facet: LiceFacet, model: ModifiableRootModel, version: FrameworkVersion) {
 		val orderEntry = model.orderEntries.firstOrNull { it.presentableName.contains("lice", true) } ?: return
 		orderEntry.getFiles(OrderRootType.CLASSES).firstOrNull()?.let {
 			val path = it.path.trimMysteriousPath()
 			if (validateLice(path)) facet.configuration.settings.jarPath = path
 			else Messages.showDialog(
-					"""$path
-is not a valid lice jar.
-will be replaced with the jar used by the plugin.""",
-					"Invalid jar Warning",
-					arrayOf("Yes Yes Yes"),
+					"$path\\n${LiceBundle.message("lice.messages.invalid.body")}",
+					LiceBundle.message("lice.messages.invalid.title"),
+					arrayOf(LiceBundle.message("lice.messages.yes-yes-yes")),
 					0,
 					JOJO_ICON)
 		}

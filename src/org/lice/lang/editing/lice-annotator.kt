@@ -5,6 +5,7 @@ import com.intellij.lang.annotation.Annotation
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import org.lice.core.SymbolList
+import org.lice.lang.LiceBundle
 import org.lice.lang.LiceSyntaxHighlighter
 import org.lice.lang.psi.*
 
@@ -71,77 +72,86 @@ class LiceAnnotator : Annotator {
 							.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 				when (callee.text) {
 					"undef" -> {
-						val funUndefined = simplyCheckName(element, holder, callee, "function") ?: return@let
+						val funUndefined = simplyCheckName(element, holder, callee,
+								LiceBundle.message("lice.lint.func")) ?: return@let
 						if (funUndefined.text in LiceSymbols.allSymbols) {
 							holder.createWeakWarningAnnotation(
 									TextRange(funUndefined.textRange.startOffset, funUndefined.textRange.endOffset),
-									"Trying to undef a standard function")
+									LiceBundle.message("lice.lint.undef-std"))
 						}
 					}
 					"|>" -> {
 						val ls = element.nonCommentElements
 						if (ls.size <= 1)
-							holder.createWeakWarningAnnotation(element, """Empty |> nodes can be replaced with "null"s""")
-									.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
+							holder.createWeakWarningAnnotation(element, LiceBundle.message("lice.lint.replace-run-with-null"))
+									.registerFix(LiceReplaceWithAnotherSymbolIntention(element,
+											LiceBundle.message("lice.lint.null"), "null"))
 						else if (ls.size <= 2)
-							holder.createWarningAnnotation(element, "Can be unwrapped")
-									.registerFix(LiceReplaceWithAnotherElementIntention(element, "inner node", ls[1]))
+							holder.createWarningAnnotation(element, LiceBundle.message("lice.lint.can-unwrap"))
+									.registerFix(LiceReplaceWithAnotherElementIntention(element,
+											LiceBundle.message("lice.lint.inner-node"), ls[1]))
 						checkForTryEval(element, holder)
 					}
 					in LiceSymbols.defFamily -> {
-						val funDefined = simplyCheckName(element, holder, callee, "function") ?: return@let
-						val symbol = funDefined.getSafeSymbol(holder, "Function") ?: return@let
+						val funDefined = simplyCheckName(element, holder, callee,
+								LiceBundle.message("lice.lint.func")) ?: return@let
+						val symbol = funDefined.getSafeSymbol(holder, LiceBundle.message("lice.lint.func")) ?: return@let
 						LiceSymbols.checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
 						if (element.nonCommentElements.size <= 2)
-							missingBody(element, holder, "function body")
+							missingBody(element, holder, LiceBundle.message("lice.lint.func-body"))
 					}
 					in LiceSymbols.setFamily -> {
-						val varDefined = simplyCheckName(element, holder, callee, "variable") ?: return@let
-						val symbol = varDefined.getSafeSymbol(holder, "Variable") ?: return
+						val varDefined = simplyCheckName(element, holder, callee,
+								LiceBundle.message("lice.lint.var")) ?: return@let
+						val symbol = varDefined.getSafeSymbol(holder, LiceBundle.message("lice.lint.var")) ?: return
 						LiceSymbols.checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
-						if (element.nonCommentElements.size <= 2) missingBody(element, holder, "variable value")
+						if (element.nonCommentElements.size <= 2)
+							missingBody(element, holder, LiceBundle.message("lice.lint.var-value"))
 					}
 					in LiceSymbols.closureFamily -> {
 						val elementList = element.nonCommentElements
 						(1..elementList.size - 2).firstOrNull { checkParameter(elementList[it], holder) }
 						if (elementList.size <= 1)
-							missingBody(element, holder, "lambda body")
+							missingBody(element, holder, LiceBundle.message("lice.lint.lambda-body"))
 					}
 					else -> checkForTryEval(element, holder)
 				}
 			}
 			is LiceSymbol -> if (!element.isResolved) {
 				if (element.text in LiceSymbols.allSymbols) element.isResolved = true
-				else holder.createInfoAnnotation(element, "Unresolved reference: ${element.text}").run {
+				else holder.createInfoAnnotation(element, LiceBundle.message("lice.lint.unresolved",
+						cutText(element.text, SHORT_TEXT_MAX))).run {
 					textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
 					setNeedsUpdateOnTyping(true)
 				}
 			}
-			is LiceNull -> holder.createWeakWarningAnnotation(element, """Empty nodes can be replaced with "null"s""")
-					.registerFix(LiceReplaceWithAnotherSymbolIntention(element, "null literal", "null"))
+			is LiceNull -> holder.createWeakWarningAnnotation(element, LiceBundle.message("lice.lint.replace-empty-with-null"))
+					.registerFix(LiceReplaceWithAnotherSymbolIntention(element, LiceBundle.message("lice.lint.null"), "null"))
 		}
 	}
 
 	private fun checkForTryEval(
 			element: LiceFunctionCall,
 			holder: AnnotationHolder) {
-		if (element.isPossibleEval) holder.createInfoAnnotation(element, "Can evaluate ${cutText(element.text, 12)}")
+		if (element.isPossibleEval) holder.createInfoAnnotation(element, LiceBundle.message("lice.lint.can-eval",
+				cutText(element.text, SHORT_TEXT_MAX)))
 				.registerFix(LiceTryReplaceEvaluatedResultIntention(element))
 	}
 
 	private fun LiceElement.getSafeSymbol(holder: AnnotationHolder, type: String) = symbol ?: run {
-		holder.createErrorAnnotation(this, "$type name should be a symbol")
-				.registerFix(LiceRemoveBlockIntention(this, "Remove current symbol"))
+		holder.createErrorAnnotation(this, LiceBundle.message("lice.lint.should-be-symbol", type))
+				.registerFix(LiceRemoveBlockIntention(this, LiceBundle.message("lice.lint.remove-symbol")))
 		null
 	}
 
 	private fun missingBody(element: LiceFunctionCall, holder: AnnotationHolder, type: String) {
 		holder.createWarningAnnotation(
-				TextRange(element.textRange.endOffset - 1, element.textRange.endOffset), "Missing $type")
+				TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
+				LiceBundle.message("lice.lint.missing", type))
 	}
 
 	/**
@@ -157,7 +167,8 @@ class LiceAnnotator : Annotator {
 		val elementCount = elementList.size
 		if (elementCount <= 1) {
 			holder.createWarningAnnotation(
-					TextRange(callee.textRange.endOffset, element.textRange.endOffset), "Missing $type name")
+					TextRange(callee.textRange.endOffset, element.textRange.endOffset),
+					LiceBundle.message("lice.lint.missing-name", type))
 			return null
 		}
 		(2..elementCount - 2).firstOrNull { checkParameter(elementList[it], holder) }
@@ -165,7 +176,7 @@ class LiceAnnotator : Annotator {
 	}
 
 	private fun checkParameter(el: LiceElement, holder: AnnotationHolder): Boolean {
-		val symbol = el.getSafeSymbol(holder, "Parameter") ?: return true
+		val symbol = el.getSafeSymbol(holder, LiceBundle.message("lice.lint.parameter")) ?: return true
 		symbol.isResolved = true
 		holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.PARAMETER
 		return false
@@ -173,7 +184,7 @@ class LiceAnnotator : Annotator {
 
 	private fun dealWithEscape(element: PsiElement, index: Int, char: Char, holder: AnnotationHolder) {
 		val range = TextRange(element.textRange.startOffset + index - 1, element.textRange.startOffset + index + 1)
-		if (char !in "nt\\\"bfr'") holder.createErrorAnnotation(range, "Illegal escape character")
+		if (char !in "nt\\\"bfr'") holder.createErrorAnnotation(range, LiceBundle.message("lice.lint.illegal-escape"))
 		else holder.createInfoAnnotation(range, null).textAttributes = LiceSyntaxHighlighter.STRING_ESCAPE
 	}
 }

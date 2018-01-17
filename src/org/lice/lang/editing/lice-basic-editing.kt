@@ -15,8 +15,6 @@ import com.intellij.lang.folding.FoldingBuilderEx
 import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.lang.parser.GeneratedParserUtilBase
 import com.intellij.lang.refactoring.NamesValidator
-import com.intellij.lang.surroundWith.SurroundDescriptor
-import com.intellij.lang.surroundWith.Surrounder
 import com.intellij.navigation.LocationPresentation
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
@@ -91,7 +89,7 @@ fun cutText(it: String, textMax: Int) = if (it.length <= textMax) it else "${it.
 class LiceBreadCrumbProvider : BreadcrumbsProvider {
 	override fun getLanguages() = arrayOf(LiceLanguage)
 	override fun acceptElement(o: PsiElement) = o is LiceFunctionCall
-	override fun getElementTooltip(o: PsiElement) = (o as? LiceFunctionCall)?.let { "${LiceBundle.message("lice.ast.function")}: <${it.text}>" }
+	override fun getElementTooltip(o: PsiElement) = (o as? LiceFunctionCall)?.let { LiceBundle.message("lice.ast.function", it.text) }
 	override fun getElementInfo(o: PsiElement): String = when (o) {
 		is LiceFunctionCall -> o.liceCallee?.text.let {
 			when (it) {
@@ -159,8 +157,8 @@ class LiceStructureViewFactory : PsiStructureViewFactory {
 				is LiceFunctionCall -> o.liceCallee?.text ?: "??"
 				is LiceSymbol -> o.text ?: "??"
 				is LiceNull -> "()"
-				is LiceNumber -> "${LiceBundle.message("lice.ast.number")}: ${o.text}"
-				is LiceString -> "${LiceBundle.message("lice.ast.string")}: ${o.text}"
+				is LiceNumber -> LiceBundle.message("lice.ast.number", o.text)
+				is LiceString -> LiceBundle.message("lice.ast.string", o.text)
 				else -> "??"
 			}
 		}, LONG_TEXT_MAX)

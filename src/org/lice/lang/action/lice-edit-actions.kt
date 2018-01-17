@@ -14,8 +14,7 @@ import com.intellij.ui.JBColor
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.util.ui.JBUI
 import org.lice.core.SymbolList
-import org.lice.lang.LICE_BIG_ICON
-import org.lice.lang.LiceFileType
+import org.lice.lang.*
 import org.lice.lang.module.moduleSettings
 import org.lice.parse.*
 import org.lice.util.className
@@ -63,21 +62,21 @@ class TryEvaluate {
 						.eval()
 			}, timeLimit, TimeUnit.MILLISECONDS, true)
 			builder.insertOutputIfNonBlank()
-			builder.insert(0, "Result:\n$result: ${result.className()}")
+			builder.insert(0, LiceBundle.message("lice.messages.try-eval.result", result.toString(), result.className()))
 			if (popupWhenSuccess) showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
 			return Ref.create(result)
 		} catch (e: UncheckedTimeoutException) {
 			builder.insertOutputIfNonBlank()
-			builder.insert(0, "Execution timeout.\nChange time limit in Project Structure | Facets")
+			builder.insert(0, LiceBundle.message("lice.messages.try-eval.timeout"))
 			showPopupWindow(builder.toString(), editor, 0xEDC209, 0xC26500)
 		} catch (e: Throwable) {
 			val cause = e as? UseOfBannedFuncException ?: e.cause as? UseOfBannedFuncException
 			builder.insertOutputIfNonBlank()
 			if (cause != null) {
-				builder.insert(0, "Use of function \"${cause.name}\"\nis unsupported.")
+				builder.insert(0, LiceBundle.message("lice.messages.try-eval.unsupported", cause.name))
 				showPopupWindow(builder.toString(), editor, 0xEDC209, 0xC26500)
 			} else {
-				builder.insert(0, "Oops! A ${e.javaClass.simpleName} is thrown:\n${e.message}")
+				builder.insert(0, LiceBundle.message("lice.messages.try-eval.exception", e.javaClass.simpleName, e.message.orEmpty()))
 				showPopupWindow(builder.toString(), editor, 0xE20911, 0xC20022)
 			}
 		}
@@ -105,7 +104,7 @@ class TryEvaluate {
 						.createComponentPopupBuilder(JBUI.Panels.simplePanel()
 								.addToTop(JLabel(LICE_BIG_ICON))
 								.addToCenter(ScrollPaneFactory.createScrollPane(JTextArea(result).also {
-									it.toolTipText = "Evaluation output longer than $textLimit characters"
+									it.toolTipText = LiceBundle.message("lice.messages.try-eval.overflowed-text", textLimit)
 									it.lineWrap = true
 									it.wrapStyleWord = true
 									it.isEditable = false
@@ -124,7 +123,9 @@ class TryEvaluate {
 	}
 }
 
-class TryEvaluateLiceExpressionAction : AnAction("Try evaluate", null, LICE_BIG_ICON), DumbAware {
+class TryEvaluateLiceExpressionAction :
+		AnAction(LiceBundle.message("lice.messages.try-eval.name"),
+				LiceBundle.message("lice.messages.try-eval.description"), LICE_BIG_ICON), DumbAware {
 	private val core = TryEvaluate()
 	override fun actionPerformed(event: AnActionEvent) {
 		val editor = event.getData(CommonDataKeys.EDITOR) ?: return

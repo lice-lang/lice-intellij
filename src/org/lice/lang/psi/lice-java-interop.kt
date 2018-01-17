@@ -6,6 +6,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import org.intellij.lang.annotations.Language
 import org.lice.core.SymbolList
+import org.lice.lang.LiceBundle
 import org.lice.lang.LiceSyntaxHighlighter
 import org.lice.lang.editing.LiceSymbols
 import java.util.regex.Pattern
@@ -35,17 +36,17 @@ class LiceSymbolsExtractingAnnotator : Annotator {
 			if ((isVar or isFunc) && !SYMBOL_REGEX.matches(str)) {
 				holder.createWarningAnnotation(
 						TextRange(possibleString.textRange.startOffset + 1, possibleString.textRange.endOffset - 1),
-						"Not a valid Lice symbol, can't be used in Lice code")
+						LiceBundle.message("lice.lint.java.invalid-symbol"))
 			}
 			if (isFunc) {
 				holder.createInfoAnnotation(
 						TextRange(possibleString.textRange.startOffset + 1, possibleString.textRange.endOffset - 1),
-						"Lice function definition")
+						LiceBundle.message("lice.lint.java.func-def"))
 						.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
 			} else if (isVar) {
 				if (possibleString.value is String) holder.createInfoAnnotation(
 						TextRange(possibleString.textRange.startOffset + 1, possibleString.textRange.endOffset - 1),
-						"Lice variable definition")
+						LiceBundle.message("lice.lint.java.var-def"))
 						.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
 			}
 			LiceSymbols.checkName(possibleString, holder, str)

@@ -49,8 +49,8 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 		textLimitField.setValue(settings.getTryEvaluateTextLimit());
 		textLimitField.setFormatterFactory(factory);
 		jarPathField.setText(settings.getJarPath());
-		jarPathField.addBrowseFolderListener(LiceBundle.message("lice.messages.select-lice-jar"),
-				LiceBundle.message("lice.messages.select-lice-jar-description"),
+		jarPathField.addBrowseFolderListener(LiceBundle.message("lice.messages.select-jar.title"),
+				LiceBundle.message("lice.messages.select-jar.body"),
 				project,
 				jarChooser);
 		jarPathField.getTextField().getDocument().addDocumentListener(new DocumentAdapter() {

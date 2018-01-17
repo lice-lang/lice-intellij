@@ -16,16 +16,16 @@ import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
 
-object LiceLanguage : Language(LICE_NAME, "text/${LiceBundle.message("lice.file.extension")}") {
-	override fun getDisplayName() = LICE_NAME
+object LiceLanguage : Language(LiceBundle.message("lice.name"), "text/$LICE_EXTENSION") {
+	override fun getDisplayName() = LiceBundle.message("lice.name")
 	override fun isCaseSensitive() = true
 }
 
 object LiceFileType : LanguageFileType(LiceLanguage) {
-	override fun getDefaultExtension() = LiceBundle.message("lice.file.extension")
+	override fun getDefaultExtension() = LICE_EXTENSION
 	override fun getName() = LiceBundle.message("lice.file.name")
 	override fun getIcon() = LICE_ICON
-	override fun getDescription() = LICE_NAME
+	override fun getDescription() = LiceBundle.message("lice.name")
 }
 
 class LiceFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, LiceLanguage) {
@@ -33,11 +33,11 @@ class LiceFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, LiceL
 }
 
 class LiceFileTypeFactory : FileTypeFactory() {
-	override fun createFileTypes(consumer: FileTypeConsumer) = consumer.consume(LiceFileType, LiceBundle.message("lice.file.extension"))
+	override fun createFileTypes(consumer: FileTypeConsumer) = consumer.consume(LiceFileType, LICE_EXTENSION)
 }
 
-class LiceContext : TemplateContextType(LICE_NAME, LICE_NAME) {
-	override fun isInContext(file: PsiFile, p1: Int) = file.name.endsWith(".${LiceBundle.message("lice.file.extension")}")
+class LiceContext : TemplateContextType(LiceBundle.message("lice.name"), LiceBundle.message("lice.name")) {
+	override fun isInContext(file: PsiFile, p1: Int) = file.name.endsWith(".$LICE_EXTENSION")
 }
 
 object LiceBundle {

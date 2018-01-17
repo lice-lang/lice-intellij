@@ -7,8 +7,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
 import com.intellij.util.IncorrectOperationException
-import org.lice.lang.LiceFile
-import org.lice.lang.LiceLanguage
+import org.lice.lang.*
 import org.lice.lang.editing.LiceSymbols
 import org.lice.lang.psi.*
 import java.lang.StringBuilder
@@ -65,10 +64,11 @@ fun LiceFunctionCall.setName(newName: String): PsiElement {
 				.createFileFromText(LiceLanguage, newName)
 				.takeIf { it is LiceFile }
 				?.firstChild
-				?: throw IncorrectOperationException("Unable to rename ${liceSymbol.text} to $newName")
+				?: throw IncorrectOperationException(
+						LiceBundle.message("lice.messages.psi.cannot-rename-to", liceSymbol.text, newName))
 		liceSymbol.replace(newChild)
 		return this
-	} else throw IncorrectOperationException("Unable to rename to $newName")
+	} else throw IncorrectOperationException(LiceBundle.message("lice.messages.psi.cannot-rename", newName))
 }
 
 val LiceComment.tokenType: IElementType get() = LiceTypes.COMMENT

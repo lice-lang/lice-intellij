@@ -16,7 +16,7 @@ class LiceRemoveBlockIntention(private val element: PsiElement, private val inte
 		BaseIntentionAction() {
 	override fun getText() = intentionText
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
-	override fun getFamilyName() = LICE_NAME
+	override fun getFamilyName() = LiceBundle.message("lice.name")
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
 		element.delete()
 	}
@@ -26,9 +26,9 @@ class LiceReplaceWithAnotherSymbolIntention(
 		private val element: PsiElement,
 		private val anotherSymbolName: String,
 		private val anotherSymbolCode: String) : BaseIntentionAction() {
-	override fun getText() = "Replace with $anotherSymbolName"
+	override fun getText() = LiceBundle.message("lice.lint.fix.replace-with", anotherSymbolName)
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
-	override fun getFamilyName() = LICE_NAME
+	override fun getFamilyName() = LiceBundle.message("lice.name")
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
 		val symbol = PsiFileFactory
 				.getInstance(project)
@@ -41,10 +41,10 @@ class LiceReplaceWithAnotherSymbolIntention(
 
 class LiceTryReplaceEvaluatedResultIntention(
 		private var element: LiceFunctionCall) : BaseIntentionAction() {
-	private val text = "Try evaluate ${cutText(element.text, 12)}"
+	private val text = LiceBundle.message("lice.lint.fix.try-eval", cutText(element.text, SHORT_TEXT_MAX))
 	override fun getText() = text
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
-	override fun getFamilyName() = LICE_NAME
+	override fun getFamilyName() = LiceBundle.message("lice.name")
 	override operator fun invoke(project: Project, editor: Editor, psiFile: PsiFile?) {
 		val eval = TryEvaluate()
 		val selectedText = editor.selectionModel.selectedText
@@ -101,7 +101,7 @@ class LiceTryReplaceEvaluatedResultIntention(
 		is Float -> "${result}F"
 		is Boolean, is Number -> "$result"
 		null -> "null"
-		else -> throw UnsupportedOperationException("Cannot convert $result\nto a valid lice expression")
+		else -> throw UnsupportedOperationException(LiceBundle.message("lice.lint.fix.cannot-convert", result))
 	}
 }
 
@@ -109,9 +109,9 @@ class LiceReplaceWithAnotherElementIntention(
 		private val element: PsiElement,
 		private val anotherSymbolName: String,
 		private val anotherSymbolNode: PsiElement) : BaseIntentionAction() {
-	override fun getText() = "Replace with $anotherSymbolName"
+	override fun getText() = LiceBundle.message("lice.lint.fix.replace-with", anotherSymbolName)
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
-	override fun getFamilyName() = LICE_NAME
+	override fun getFamilyName() = LiceBundle.message("lice.name")
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
 		element.replace(anotherSymbolNode)
 	}
