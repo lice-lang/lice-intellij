@@ -57,7 +57,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 		});
 		usePluginJarButton.addActionListener(actionEvent -> {
 			String title = "Use Lice jar in the plugin", msg = "Are you sure to give up the old path?";
-			if (Messages.showYesNoDialog(msg, title, "Yes! Yes! Yes!", "No! No! No!", JOJO_ICON) == Messages.YES) {
+			if (Messages.showYesNoDialog(msg, title, "Yes Yes Yes", "No No No", JOJO_ICON) == Messages.YES) {
 				jarPathField.setText(Lice_constantsKt.getLicePath());
 				settings.setJarPath(Lice_constantsKt.getLicePath());
 			}

@@ -62,10 +62,11 @@ class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvide
 			val path = it.path
 			if (validateLice(path)) facet.configuration.settings.jarPath = path
 			else Messages.showDialog(
-					"""The Lice jar you've selected is invalid.
-will be replaced with the jar in the plugin.""",
+					"""$path
+is not a valid lice jar.
+will be replaced with the jar used by the plugin.""",
 					"Invalid jar Warning",
-					arrayOf("Yes! Yes! Yes!"),
+					arrayOf("Yes Yes Yes"),
 					0,
 					JOJO_ICON)
 		}

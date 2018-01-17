@@ -12,6 +12,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizer
 import com.intellij.openapi.util.Ref
+import com.intellij.openapi.vfs.JarFileSystem
 import com.intellij.psi.PsiElement
 import org.jdom.Element
 import org.lice.lang.*
@@ -76,7 +77,7 @@ class LiceRunConfiguration(
 fun String.trimMysteriousPath() = trimEnd('/', '!', '"', ' ', '\n', '\t', '\r').trimStart(' ', '\n', '\t', '\r')
 fun validateLice(path: String) = LICE_MAIN_DEFAULT == findMainClass(path)
 fun findMainClass(path: String) = try {
-	JarFile(path).use { jarFile ->
+	JarFile(path.trimMysteriousPath()).use { jarFile ->
 		val inputStream = jarFile.getInputStream(jarFile.getJarEntry("META-INF/MANIFEST.MF"))
 		Manifest(inputStream).mainAttributes.getValue(Attributes.Name.MAIN_CLASS)
 	}
