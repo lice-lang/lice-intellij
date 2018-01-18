@@ -124,8 +124,8 @@ class TryEvaluate {
 }
 
 class TryEvaluateLiceExpressionAction :
-		AnAction(LiceBundle.message("lice.messages.try-eval.name"),
-				LiceBundle.message("lice.messages.try-eval.description"), LICE_BIG_ICON), DumbAware {
+		AnAction(LiceBundle.message("lice.actions.try-eval.name"),
+				LiceBundle.message("lice.actions.try-eval.description"), LICE_BIG_ICON), DumbAware {
 	private val core = TryEvaluate()
 	override fun actionPerformed(event: AnActionEvent) {
 		val editor = event.getData(CommonDataKeys.EDITOR) ?: return
