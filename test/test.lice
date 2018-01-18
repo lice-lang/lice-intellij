@@ -7,6 +7,18 @@
 ;; travel through a range
 (for-each i (.. 1 10) (print i " "))
 
+
+(|>
+	(println "DIO! The World!"))
+
+
+(list->array
+	(reverse
+		(union
+			(split "It was me, DIO!", " ")
+			(list "Hello" "World")
+			(array->list (array "DIO!")))))
+
 ; define a call-by-name function
 (defexpr fold ls init op
 	(for-each index-var ls
@@ -23,7 +35,7 @@
 (print "String literals", )
 
 ;; unresolved reference
-(println "...")
+(println unresolved-reference)
 
 ;; omega-combinator
 ((lambda x (x x)) (lambda x (x x)))
@@ -34,3 +46,8 @@
 		(print a)
 		(print (str-con " " b))
 		(print c))))
+
+
+
+
+
