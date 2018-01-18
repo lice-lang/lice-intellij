@@ -17,7 +17,7 @@ Apart from syntax highlighting, there're also quick fixes:
 Also, you can "Try evaluate" by <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>
 (you may adjust it in the settings page due to conflicting):
 
-![](https://plugins.jetbrains.com/files/10319/screenshot_17798.png)
+![](https://plugins.jetbrains.com/files/10319/screenshot_17801.png)
 
 You can even replace the current symbol with the evaluated results:
 
