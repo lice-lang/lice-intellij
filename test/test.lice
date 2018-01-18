@@ -7,17 +7,13 @@
 ;; travel through a range
 (for-each i (.. 1 10) (print i " "))
 
-
 (|>
 	(println "DIO! The World!"))
 
-
-(list->array
-	(reverse
-		(union
-			(split "It was me, DIO!", " ")
-			(list "Hello" "World")
-			(array->list (array "DIO!")))))
+(union
+	(split "It was me, DIO!", " ")
+	(list "Hello" "World")
+	(array->list (array "DIO!" "The" "World")))
 
 ; define a call-by-name function
 (defexpr fold ls init op
