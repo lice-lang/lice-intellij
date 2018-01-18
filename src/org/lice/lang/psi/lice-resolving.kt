@@ -5,7 +5,6 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import org.lice.lang.LiceFile
 import org.lice.lang.LiceLanguage
-import org.lice.util.className
 
 class LiceSymbolReference(val symbol: LiceSymbol, definition: LiceFunctionCall? = null) : PsiReference {
 	init {
@@ -21,7 +20,7 @@ class LiceSymbolReference(val symbol: LiceSymbol, definition: LiceFunctionCall? 
 	}
 	private val range = 0.let { TextRange(it, it + symbol.textLength) }
 	override fun equals(other: Any?) = (other as? LiceSymbolReference)?.symbol == symbol
-	override fun toString() = "${symbol.text}: ${symbol.className()}"
+	override fun toString() = "${symbol.text}: ${symbol.javaClass.name}"
 	override fun hashCode() = symbol.hashCode()
 	override fun isReferenceTo(element: PsiElement) = element == definition
 	override fun bindToElement(element: PsiElement) = element

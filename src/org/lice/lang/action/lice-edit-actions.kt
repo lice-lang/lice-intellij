@@ -58,7 +58,7 @@ class TryEvaluate {
 			val result = SimpleTimeLimiter().callWithTimeout({
 				Parser
 						.parseTokenStream(Lexer(text))
-						.accept(Sema(symbolList))
+						.accept(symbolList)
 						.eval()
 			}, timeLimit, TimeUnit.MILLISECONDS, true)
 			builder.insertOutputIfNonBlank()

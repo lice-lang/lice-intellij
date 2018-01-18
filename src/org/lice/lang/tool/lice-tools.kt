@@ -3,6 +3,7 @@ package org.lice.lang.tool
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.io.readText
+import org.lice.core.SymbolList
 import org.lice.model.*
 import org.lice.parse.*
 import java.awt.Dimension
@@ -31,7 +32,7 @@ object LiceSemanticTreeViewerFactory {
 
 	private fun createTreeRootFromFile(file: Path) = Parser
 			.parseTokenStream(Lexer(file.readText()))
-			.accept(Sema())
+			.accept(SymbolList())
 			.let { ast -> Tree(mapAst2Display(ast, DefaultMutableTreeNode(ast))) }
 
 	fun create(file: Path): JComponent = try {
