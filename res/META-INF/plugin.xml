@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.6</version>
+	<version>1.6.1</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -17,6 +17,13 @@ Functions provided:<br/><br/>
 ]]></description>
 
 	<change-notes><![CDATA[
+1.6.1<br/>
+<ul>
+  <li>Some minor changes and internal refactorings.</li>
+</ul>
+
+<br/>
+
 1.6<br/>
 <ul>
   <li>A fatal bug fix. Now it's tested and verified to be bugless.</li>

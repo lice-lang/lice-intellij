@@ -37,7 +37,7 @@ class LiceFileTypeFactory : FileTypeFactory() {
 }
 
 class LiceContext : TemplateContextType(LiceBundle.message("lice.name"), LiceBundle.message("lice.name")) {
-	override fun isInContext(file: PsiFile, p1: Int) = file.name.endsWith(".$LICE_EXTENSION")
+	override fun isInContext(file: PsiFile, p1: Int) = file.fileType == LiceFileType
 }
 
 object LiceBundle {
