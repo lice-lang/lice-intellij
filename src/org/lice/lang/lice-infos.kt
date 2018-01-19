@@ -12,6 +12,7 @@ import com.intellij.lang.Language
 import com.intellij.openapi.fileTypes.*
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
+import com.intellij.psi.util.PsiUtilCore
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
@@ -37,7 +38,8 @@ class LiceFileTypeFactory : FileTypeFactory() {
 }
 
 class LiceContext : TemplateContextType(LiceBundle.message("lice.name"), LiceBundle.message("lice.name")) {
-	override fun isInContext(file: PsiFile, p1: Int) = file.fileType == LiceFileType
+	override fun isInContext(file: PsiFile, offset: Int) = PsiUtilCore.getLanguageAtOffset(file, offset)
+			.isKindOf(LiceLanguage)
 }
 
 object LiceBundle {

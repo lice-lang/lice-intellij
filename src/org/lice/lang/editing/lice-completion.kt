@@ -7,13 +7,20 @@ import com.intellij.util.ProcessingContext
 import org.lice.lang.psi.LiceTypes
 
 class LiceBuiltinSymbolsCompletionContributor : CompletionContributor() {
+	private companion object Completions {
+		private val list = LiceSymbols.allSymbolsForCompletion.map(LookupElementBuilder::create)
+	}
+
 	init {
 		extend(
 				CompletionType.BASIC,
 				PlatformPatterns.psiElement(LiceTypes.SYM).afterLeaf("("),
 				object : CompletionProvider<CompletionParameters>() {
-					override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext?, resultSet: CompletionResultSet) {
-						resultSet.addAllElements(LiceSymbols.allSymbolsForCompletion.map(LookupElementBuilder::create))
+					override fun addCompletions(
+							parameters: CompletionParameters,
+							context: ProcessingContext?,
+							resultSet: CompletionResultSet) {
+						list.forEach(resultSet::addElement)
 					}
 				})
 	}
