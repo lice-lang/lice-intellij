@@ -77,8 +77,8 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 
 	@Override public void apply() throws ConfigurationException {
 		settings.setMainClass(mainClassField.getText());
-		settings.setTryEvaluateTextLimit(Integer.parseInt(textLimitField.getValue().toString()));
-		settings.setTryEvaluateTimeLimit(Long.parseLong(timeLimitField.getValue().toString()));
+		settings.setTryEvaluateTextLimit(((Number) textLimitField.getValue()).intValue());
+		settings.setTryEvaluateTimeLimit(((Number) timeLimitField.getValue()).longValue());
 		settings.setJarPath(jarPathField.getText());
 		if (validationInfo.isVisible()) throw new ConfigurationException("Invalid Lice jar");
 		super.apply();
