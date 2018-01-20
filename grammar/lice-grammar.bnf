@@ -25,7 +25,8 @@ functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
 number ::= NUM
 null ::= LEFT_BRACKET RIGHT_BRACKET
 symbol ::= SYM {
-	methods=[getReference getReferences]
+	mixin='org.lice.lang.psi.impl.LiceSymbolMixin'
+	implements=['org.lice.lang.psi.impl.ILiceSymbolMixin']
 }
 
 string ::= STR

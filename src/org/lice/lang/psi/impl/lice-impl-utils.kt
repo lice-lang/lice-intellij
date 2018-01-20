@@ -12,8 +12,6 @@ import org.lice.lang.editing.LiceSymbols
 import org.lice.lang.psi.*
 import java.lang.StringBuilder
 
-
-
 val LiceComment.tokenType: IElementType get() = LiceTypes.COMMENT
 val LiceComment.isValidHost get() = true
 fun LiceComment.updateText(string: String): LiceComment = ElementManipulators.handleContentChange(this, string)
@@ -29,9 +27,6 @@ fun LiceComment.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceCom
 }
 
 val LiceElement.nonCommentElements: PsiElement? get() = functionCall ?: `null` ?: symbol ?: number ?: string
-
-val LiceSymbol.references: Array<PsiReference> get() = parent.parent.references
-val LiceSymbol.reference: LiceSymbolReference get() = LiceSymbolReference(this)
 
 // val LiceString.isValidHost get() = true
 // fun LiceString.updateText(string: String): LiceString = ElementManipulators.handleContentChange(this, string)

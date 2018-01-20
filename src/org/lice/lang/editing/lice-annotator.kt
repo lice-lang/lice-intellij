@@ -163,7 +163,7 @@ class LiceAnnotator : Annotator {
 			holder: AnnotationHolder,
 			callee: PsiElement,
 			type: String): LiceElement? {
-		val elementList: MutableList<LiceElement> = element.nonCommentElements
+		val elementList: List<LiceElement> = element.nonCommentElements
 		val elementCount = elementList.size
 		if (elementCount <= 1) {
 			holder.createWarningAnnotation(

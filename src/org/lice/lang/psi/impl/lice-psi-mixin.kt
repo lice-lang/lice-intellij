@@ -9,7 +9,7 @@ import org.lice.lang.editing.LiceSymbols
 import org.lice.lang.psi.*
 
 interface ILiceFunctionCallMixin : PsiNameIdentifierOwner {
-	var possibleEval: Boolean
+	var isPossibleEval: Boolean
 	val nonCommentElements: List<LiceElement>
 	val liceCallee: LiceElement?
 }
@@ -20,7 +20,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 	private var references: Array<LiceSymbolReference>? = null
 	override val nonCommentElements get() = elementList.filter { it.comment == null }
 	override val liceCallee get() = elementList.firstOrNull { it.comment == null }
-	final override var possibleEval = true
+	final override var isPossibleEval = true
 
 	private fun makeRef(): Array<LiceSymbolReference> {
 		val innerNames = nameIdentifierAndParams.mapNotNull(LiceElement::getSymbol)
@@ -85,7 +85,27 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 	override fun getName() = nameIdentifier?.text
 	override fun subtreeChanged() {
 		references = null
-		possibleEval = true
+		isPossibleEval = true
 		super.subtreeChanged()
 	}
 }
+
+interface ILiceSymbolMixin : PsiElement {
+	var isResolved: Boolean
+}
+
+abstract class LiceSymbolMixin(node: ASTNode) :
+		ASTWrapperPsiElement(node),
+		LiceSymbol {
+	override var isResolved = false
+	private var reference: LiceSymbolReference? = null
+	override fun getReference() = reference ?: LiceSymbolReference(this).also { reference = it }
+	override fun getReferences(): Array<PsiReference> = parent.parent.references
+	override fun subtreeChanged() {
+		isResolved = false
+		reference = null
+		super.subtreeChanged()
+	}
+}
+
+
