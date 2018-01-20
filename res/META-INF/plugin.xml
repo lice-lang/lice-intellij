@@ -20,7 +20,7 @@ Functions provided:<br/><br/>
 1.6.1<br/>
 <ul>
   <li>Some minor changes and internal refactorings.</li>
-  <li>Added download option for v3.3.2.</li>
+  <li>Added download option for v3.3.2 and removed older buggy versions.</li>
 </ul>
 
 <br/>

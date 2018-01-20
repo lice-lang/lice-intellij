@@ -37,4 +37,4 @@ import java.nio.file.Paths
 @NonNls const val LICE_MAIN_DEFAULT = "org.lice.repl.Main"
 @NonNls const val URL_GITHUB = "https://github.com/lice-lang/lice/releases"
 
-@JvmField @NonNls val LICE_VERSIONS = listOf("3.2.0", "3.2.1", "3.3.0", "3.3.1", "3.3.2")
+@NonNls const val LICE_STABLE_VERSION = "3.3.2"

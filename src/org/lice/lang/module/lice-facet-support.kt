@@ -53,7 +53,7 @@ class LiceFacet(
 }
 
 class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvider<LiceFacet>(LiceFacetType) {
-	override fun getVersions() = LICE_VERSIONS.map(::LiceSdkVersion)
+	override fun getVersions() = listOf(LiceSdkVersion(LICE_STABLE_VERSION))
 	override fun getTitle() = LiceBundle.message("lice.name")
 	override fun setupConfiguration(facet: LiceFacet, model: ModifiableRootModel, version: FrameworkVersion) {
 		val orderEntry = model.orderEntries.firstOrNull { it.presentableName.contains("lice", true) } ?: return
