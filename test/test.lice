@@ -14,8 +14,6 @@
 	+
 	-) 1 2 3)
 
-(if true )
-
 (union
 	(split "It was me, DIO!", " ")
 	(list "Hello" "World")
@@ -25,7 +23,7 @@
 (defexpr fold ls init op
 	(for-each index-var ls
 		(-> init (op init index-var))))
-
+fold
 ; invoke the function defined above
 (fold (.. 1 5) 0 +)
 
