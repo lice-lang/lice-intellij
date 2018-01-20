@@ -21,6 +21,7 @@ Functions provided:<br/><br/>
 <ul>
   <li>Some minor changes and internal refactorings.</li>
   <li>Improved parser, try-eval error reporter and annotator.</li>
+  <li>Better handling functions and anonymous functions when try-eval.</li>
   <li>Support conversion of prelude functions in in-place evaluation.</li>
   <li>Added download option for v3.3.2 and removed older buggy versions.</li>
 </ul>

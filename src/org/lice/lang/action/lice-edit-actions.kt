@@ -69,8 +69,13 @@ class TryEvaluate {
 			if (popupWhenSuccess) {
 				builder.insertOutputIfNonBlank()
 				@Suppress("UNCHECKED_CAST")
-				val resultString = (result as? Func)?.let { f ->
-					symbolList.entries.firstOrNull { it.value == f }?.let { "function named \"${it.key}\"" } ?: "some function"
+				val resultString = (result as? Func)?.let { function ->
+					symbolList
+							.entries
+							.firstOrNull { it.value == function }
+							?.takeUnless { it.key.run { startsWith("λ") and substring(1).all(Char::isDigit) } }
+							?.let { LiceBundle.message("lice.messages.try-eval.function-named", it.key) }
+							?: LiceBundle.message("lice.messages.try-eval.function-unnamed")
 				} ?: "$result: ${result.className()}"
 				builder.insert(0, LiceBundle.message("lice.messages.try-eval.result", resultString))
 				showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
