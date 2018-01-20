@@ -70,9 +70,11 @@ class LiceAnnotator : Annotator {
 				}
 			}
 			is LiceFunctionCall -> element.liceCallee?.let { calleeElement ->
-				val callee = calleeElement.symbol ?: return@let
-				when (callee.text) {
+				val callee = calleeElement.symbol
+				var tryEvalPossible = true
+				if (callee != null) when (callee.text) {
 					"undef" -> {
+						tryEvalPossible = false
 						val funUndefined = checkArgs(element, holder, callee,
 								LiceBundle.message("lice.lint.func")) ?: return@let
 						if (funUndefined.text in LiceSymbols.allSymbols)
@@ -90,6 +92,7 @@ class LiceAnnotator : Annotator {
 						checkForTryEval(element, holder)
 					}
 					in LiceSymbols.defFamily -> {
+						tryEvalPossible = false
 						val funDefined = checkArgs(element, holder, callee,
 								LiceBundle.message("lice.lint.func")) ?: return@let
 						val symbol = funDefined.getSafeSymbol(holder, LiceBundle.message("lice.lint.func")) ?: return@let
@@ -99,6 +102,7 @@ class LiceAnnotator : Annotator {
 							missing(element, holder, LiceBundle.message("lice.lint.func-body"))
 					}
 					in LiceSymbols.setFamily -> {
+						tryEvalPossible = false
 						val varDefined = checkArgs(element, holder, callee,
 								LiceBundle.message("lice.lint.var")) ?: return@let
 						val symbol = varDefined.getSafeSymbol(holder, LiceBundle.message("lice.lint.var")) ?: return
@@ -109,6 +113,7 @@ class LiceAnnotator : Annotator {
 							missing(element, holder, LiceBundle.message("lice.lint.var-value"))
 					}
 					in LiceSymbols.closureFamily -> {
+						tryEvalPossible = false
 						val elementList = element.nonCommentElements
 						(1..elementList.size - 2).firstOrNull { checkParameter(elementList[it], holder) }
 						if (elementList.size <= 1)
@@ -117,15 +122,13 @@ class LiceAnnotator : Annotator {
 					in LiceSymbols.conditionedFamily -> {
 						val elementList = element.nonCommentElements
 						if (elementList.size <= 1) missing(element, holder, LiceBundle.message("lice.lint.condition"))
-						else if (callee.text == "if") {
-							if (elementList.size > 3) holder.createWarningAnnotation(
-									TextRange(elementList[3].textRange.startOffset, elementList.last().textRange.endOffset),
-									LiceBundle.message("lice.lint.unreachable")
-							).registerFix(LiceRemovingIntention(element, LiceBundle.message("lice.lint.unreachable-remove")))
-						}
+						else if (callee.text == "if" && elementList.size > 4) holder.createWarningAnnotation(
+								TextRange(elementList[4].textRange.startOffset, elementList.last().textRange.endOffset),
+								LiceBundle.message("lice.lint.unreachable")
+						)
 					}
 				}
-				checkForTryEval(element, holder)
+				if (tryEvalPossible) checkForTryEval(element, holder)
 			}
 			is LiceSymbol -> {
 				if (element.text in LiceSymbols.importantFamily)
