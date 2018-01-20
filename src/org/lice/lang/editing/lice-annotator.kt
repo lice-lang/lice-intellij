@@ -20,7 +20,6 @@ object LiceSymbols {
 	@JvmField val nameIntroducingFamily = defFamily + setFamily
 	@JvmField val importantFamily = defFamily + setFamily + closureFamily + miscFamily + conditionedFamily
 	@JvmField val allSymbols = SymbolList.preludeSymbols + SymbolList.preludeVariables
-	@JvmField val allSymbolsForCompletion = SymbolList.preludeSymbols.map { "$it " } + SymbolList.preludeVariables
 
 	fun checkName(text: PsiElement, holder: AnnotationHolder, name: String? = null) {
 		val range = text.textRange
@@ -76,15 +75,14 @@ class LiceAnnotator : Annotator {
 							holder.createWeakWarningAnnotation(funUndefined, LiceBundle.message("lice.lint.undef-std"))
 					}
 					"|>" -> {
-						val ls = element.nonCommentElements
-						if (ls.size <= 1)
+						if (element.nonCommentElements.size <= 1)
 							holder.createWeakWarningAnnotation(element, LiceBundle.message("lice.lint.replace-run-with-null"))
 									.registerFix(LiceReplaceWithAnotherSymbolIntention(element,
 											LiceBundle.message("lice.lint.null"), "null"))
-						else if (ls.size <= 2)
+						else if (element.nonCommentElements.size <= 2)
 							holder.createWarningAnnotation(element, LiceBundle.message("lice.lint.can-unwrap"))
 									.registerFix(LiceReplaceWithAnotherElementIntention(element,
-											LiceBundle.message("lice.lint.inner-node"), ls[1]))
+											LiceBundle.message("lice.lint.inner-node"), element.nonCommentElements[1]))
 						checkForTryEval(element, holder)
 					}
 					in LiceSymbols.defFamily -> {

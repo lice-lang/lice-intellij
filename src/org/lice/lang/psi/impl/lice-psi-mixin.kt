@@ -10,6 +10,8 @@ import org.lice.lang.psi.*
 
 interface ILiceFunctionCallMixin : PsiNameIdentifierOwner {
 	var isPossibleEval: Boolean
+
+	/** Should be implemented lazily. */
 	val nonCommentElements: List<LiceElement>
 	val liceCallee: LiceElement?
 }
@@ -18,7 +20,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 		ASTWrapperPsiElement(node),
 		LiceFunctionCall {
 	private var references: Array<LiceSymbolReference>? = null
-	override val nonCommentElements get() = elementList.filter { it.comment == null }
+	override val nonCommentElements by lazy { elementList.filter { it.comment == null } }
 	override val liceCallee get() = elementList.firstOrNull { it.comment == null }
 	final override var isPossibleEval = true
 
