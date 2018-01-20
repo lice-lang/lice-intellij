@@ -19,6 +19,7 @@ import org.lice.lang.*
 import org.lice.lang.module.moduleSettings
 import org.lice.parse.Lexer
 import org.lice.parse.Parser
+import org.lice.util.LiceException
 import org.lice.util.className
 import java.awt.Dimension
 import java.util.concurrent.TimeUnit
@@ -77,15 +78,24 @@ class TryEvaluate {
 			builder.insertOutputIfNonBlank()
 			builder.insert(0, LiceBundle.message("lice.messages.try-eval.timeout"))
 			showPopupWindow(builder.toString(), editor, 0xEDC209, 0xC26500)
-		} catch (e: Throwable) {
-			val cause = e as? UseOfBannedFuncException ?: e.cause as? UseOfBannedFuncException
+		} catch (original: Throwable) {
+			val e = original.cause ?: original
 			builder.insertOutputIfNonBlank()
-			if (cause != null) {
-				builder.insert(0, LiceBundle.message("lice.messages.try-eval.unsupported", cause.name))
-				showPopupWindow(builder.toString(), editor, 0xEDC209, 0xC26500)
-			} else {
-				builder.insert(0, LiceBundle.message("lice.messages.try-eval.exception", e.javaClass.simpleName, e.message.orEmpty()))
-				showPopupWindow(builder.toString(), editor, 0xE20911, 0xC20022)
+			when (e) {
+				is UseOfBannedFuncException -> {
+					builder.insert(0, LiceBundle.message("lice.messages.try-eval.unsupported", e.name))
+					showPopupWindow(builder.toString(), editor, 0xEDC209, 0xC26500)
+				}
+				is LiceException -> {
+					builder.insert(0, LiceBundle.message("lice.messages.try-eval.exception",
+							e.javaClass.simpleName, e.prettify(text.split("\n"))))
+					showPopupWindow(builder.toString(), editor, 0xE20911, 0xC20022)
+				}
+				else -> {
+					builder.insert(0, LiceBundle.message("lice.messages.try-eval.exception",
+							e.javaClass.simpleName, e.message.orEmpty()))
+					showPopupWindow(builder.toString(), editor, 0xE20911, 0xC20022)
+				}
 			}
 		}
 		return null

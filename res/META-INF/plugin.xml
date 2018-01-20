@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.6.1</version>
+	<version>1.7</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -17,9 +17,11 @@ Functions provided:<br/><br/>
 ]]></description>
 
 	<change-notes><![CDATA[
-1.6.1<br/>
+1.7<br/>
 <ul>
   <li>Some minor changes and internal refactorings.</li>
+  <li>Improved parser, try-eval error reporter and annotator.</li>
+  <li>Support conversion of prelude functions in in-place evaluation.</li>
   <li>Added download option for v3.3.2 and removed older buggy versions.</li>
 </ul>
 

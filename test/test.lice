@@ -10,6 +10,10 @@
 (|>
 	(println "DIO! The World!"))
 
+((if (in? (list 1 2 3) 6)
+	+
+	-) 1 2 3)
+
 (union
 	(split "It was me, DIO!", " ")
 	(list "Hello" "World")
