@@ -13,7 +13,7 @@ import org.lice.util.forceRun
 import java.math.BigDecimal
 import java.math.BigInteger
 
-class LiceRemoveBlockIntention(private val element: PsiElement, private val intentionText: String) :
+class LiceRemovingIntention(private val element: PsiElement, private val intentionText: String) :
 		BaseIntentionAction() {
 	override fun getText() = intentionText
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true

@@ -69,10 +69,11 @@ class LiceAnnotator : Annotator {
 					} else char == '\\'
 				}
 			}
-			is LiceFunctionCall -> element.liceCallee?.let { callee ->
+			is LiceFunctionCall -> element.liceCallee?.let { calleeElement ->
+				val callee = calleeElement.symbol ?: return@let
 				when (callee.text) {
 					"undef" -> {
-						val funUndefined = simplyCheckName(element, holder, callee,
+						val funUndefined = checkArgs(element, holder, callee,
 								LiceBundle.message("lice.lint.func")) ?: return@let
 						if (funUndefined.text in LiceSymbols.allSymbols)
 							holder.createWeakWarningAnnotation(funUndefined, LiceBundle.message("lice.lint.undef-std"))
@@ -89,32 +90,39 @@ class LiceAnnotator : Annotator {
 						checkForTryEval(element, holder)
 					}
 					in LiceSymbols.defFamily -> {
-						val funDefined = simplyCheckName(element, holder, callee,
+						val funDefined = checkArgs(element, holder, callee,
 								LiceBundle.message("lice.lint.func")) ?: return@let
 						val symbol = funDefined.getSafeSymbol(holder, LiceBundle.message("lice.lint.func")) ?: return@let
 						LiceSymbols.checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
 						if (element.nonCommentElements.size <= 2)
-							missingBody(element, holder, LiceBundle.message("lice.lint.func-body"))
+							missing(element, holder, LiceBundle.message("lice.lint.func-body"))
 					}
 					in LiceSymbols.setFamily -> {
-						val varDefined = simplyCheckName(element, holder, callee,
+						val varDefined = checkArgs(element, holder, callee,
 								LiceBundle.message("lice.lint.var")) ?: return@let
 						val symbol = varDefined.getSafeSymbol(holder, LiceBundle.message("lice.lint.var")) ?: return
 						LiceSymbols.checkName(symbol, holder)
 						holder.createInfoAnnotation(symbol, null)
 								.textAttributes = LiceSyntaxHighlighter.VARIABLE_DEFINITION
 						if (element.nonCommentElements.size <= 2)
-							missingBody(element, holder, LiceBundle.message("lice.lint.var-value"))
+							missing(element, holder, LiceBundle.message("lice.lint.var-value"))
 					}
 					in LiceSymbols.closureFamily -> {
 						val elementList = element.nonCommentElements
 						(1..elementList.size - 2).firstOrNull { checkParameter(elementList[it], holder) }
 						if (elementList.size <= 1)
-							missingBody(element, holder, LiceBundle.message("lice.lint.lambda-body"))
+							missing(element, holder, LiceBundle.message("lice.lint.lambda-body"))
 					}
 					in LiceSymbols.conditionedFamily -> {
-
+						val elementList = element.nonCommentElements
+						if (elementList.size <= 1) missing(element, holder, LiceBundle.message("lice.lint.condition"))
+						else if (callee.text == "if") {
+							if (elementList.size > 3) holder.createWarningAnnotation(
+									TextRange(elementList[3].textRange.startOffset, elementList.last().textRange.endOffset),
+									LiceBundle.message("lice.lint.unreachable")
+							).registerFix(LiceRemovingIntention(element, LiceBundle.message("lice.lint.unreachable-remove")))
+						}
 					}
 				}
 				checkForTryEval(element, holder)
@@ -144,11 +152,11 @@ class LiceAnnotator : Annotator {
 
 	private fun LiceElement.getSafeSymbol(holder: AnnotationHolder, type: String) = symbol ?: run {
 		holder.createErrorAnnotation(this, LiceBundle.message("lice.lint.should-be-symbol", type))
-				.registerFix(LiceRemoveBlockIntention(this, LiceBundle.message("lice.lint.remove-symbol")))
+				.registerFix(LiceRemovingIntention(this, LiceBundle.message("lice.lint.remove-symbol")))
 		null
 	}
 
-	private fun missingBody(element: LiceFunctionCall, holder: AnnotationHolder, type: String) {
+	private fun missing(element: LiceFunctionCall, holder: AnnotationHolder, type: String) {
 		holder.createWarningAnnotation(
 				TextRange(element.textRange.endOffset - 1, element.textRange.endOffset),
 				LiceBundle.message("lice.lint.missing", type))
@@ -156,22 +164,23 @@ class LiceAnnotator : Annotator {
 
 	/**
 	 * @author ice1000
+	 * @param callee just to provide an endOffset
+	 * @param holder annotation holder
 	 * @return null if unavailable
 	 */
-	private fun simplyCheckName(
+	private fun checkArgs(
 			element: LiceFunctionCall,
 			holder: AnnotationHolder,
 			callee: PsiElement,
 			type: String): LiceElement? {
 		val elementList: List<LiceElement> = element.nonCommentElements
-		val elementCount = elementList.size
-		if (elementCount <= 1) {
+		if (elementList.size <= 1) {
 			holder.createWarningAnnotation(
 					TextRange(callee.textRange.endOffset, element.textRange.endOffset),
 					LiceBundle.message("lice.lint.missing-name", type))
 			return null
 		}
-		(2..elementCount - 2).firstOrNull { checkParameter(elementList[it], holder) }
+		(2..elementList.size - 2).firstOrNull { checkParameter(elementList[it], holder) }
 		return elementList[1]
 	}
 

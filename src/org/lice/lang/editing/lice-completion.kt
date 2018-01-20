@@ -18,7 +18,7 @@ private class Completer(private val list: List<LookupElement>) : CompletionProvi
 class LiceBuiltinSymbolsCompletionContributor : CompletionContributor() {
 	private companion object Completions {
 		private val functions = SymbolList.preludeSymbols.map { LookupElementBuilder.create("$it ") }
-		private val variables = SymbolList.preludeVariables.map(LookupElementBuilder::create)
+		private val variables = LiceSymbols.allSymbols.map(LookupElementBuilder::create)
 	}
 
 	init {
