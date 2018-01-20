@@ -3,7 +3,6 @@ package org.lice.lang.execution;
 import com.intellij.execution.ui.CommonJavaParametersPanel;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,7 @@ public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfigurat
 	private @NotNull CommonJavaParametersPanel javaParamsPanel;
 	private @NotNull TextFieldWithBrowseButton jarLocationField;
 	private @NotNull TextFieldWithBrowseButton targetFileField;
-	private JTextField jreLocationField;
+	private @NotNull JTextField jreLocationField;
 	private @NotNull LiceRunConfiguration settings;
 
 	public LiceRunConfigurationEditor(

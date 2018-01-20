@@ -16,7 +16,8 @@ import com.intellij.util.ui.JBUI
 import org.lice.core.SymbolList
 import org.lice.lang.*
 import org.lice.lang.module.moduleSettings
-import org.lice.parse.*
+import org.lice.parse.Lexer
+import org.lice.parse.Parser
 import org.lice.util.className
 import java.awt.Dimension
 import java.util.concurrent.TimeUnit
@@ -91,7 +92,8 @@ class TryEvaluate {
 		val relativePoint = JBPopupFactory.getInstance().guessBestPopupLocation(editor)
 		if (result.length < textLimit)
 			ApplicationManager.getApplication().invokeLater {
-				JBPopupFactory.getInstance()
+				JBPopupFactory
+						.getInstance()
 						.createHtmlTextBalloonBuilder(result, LICE_BIG_ICON, JBColor(color, colorDark), null)
 						.setFadeoutTime(8000)
 						.setHideOnAction(true)
@@ -100,7 +102,8 @@ class TryEvaluate {
 			}
 		else
 			ApplicationManager.getApplication().invokeLater {
-				JBPopupFactory.getInstance()
+				JBPopupFactory
+						.getInstance()
 						.createComponentPopupBuilder(JBUI.Panels.simplePanel()
 								.addToTop(JLabel(LICE_BIG_ICON))
 								.addToCenter(ScrollPaneFactory.createScrollPane(JTextArea(result).also {

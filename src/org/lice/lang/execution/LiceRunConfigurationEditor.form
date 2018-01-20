@@ -35,7 +35,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Lice script path:"/>
+          <text resource-bundle="org/lice/lang/lice-bundle" key="lice.run.config.script-path"/>
         </properties>
       </component>
       <vspacer id="35c1d">

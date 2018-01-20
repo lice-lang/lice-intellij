@@ -52,7 +52,7 @@ class LiceBraceMatcher : PairedBraceMatcher {
 
 class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 	override fun getDefaultLiveTemplateFiles() = arrayOf("liveTemplates/Lice")
-	override fun getHiddenLiveTemplateFiles() = null
+	override fun getHiddenLiveTemplateFiles(): Array<String>? = null
 }
 
 class LiceQuoteHandler : SimpleTokenSetQuoteHandler(LiceTokenType.STRINGS) {

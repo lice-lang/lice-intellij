@@ -50,7 +50,7 @@ class NewLiceFileAction : CreateFileAction(
 				LiceBundle.message("lice.actions.new-file.dialog.description"),
 				LiceBundle.message("lice.actions.new-file.title"),
 				Messages.getQuestionIcon(),
-				"",
+				"bizarre.lice",
 				validator)
 		return validator.createdElements
 	}
@@ -60,7 +60,7 @@ abstract class LiceFileAction(text: String?, description: String?, icon: Icon?) 
 	protected fun compatibleFiles(event: AnActionEvent) = CommonDataKeys
 			.VIRTUAL_FILE_ARRAY
 			.getData(event.dataContext)
-			?.filter { file -> file.fileType is LiceFileType }
+			?.filter { it.fileType == LiceFileType }
 			?: emptyList()
 
 	override fun update(event: AnActionEvent) {
@@ -81,7 +81,8 @@ class ShowLiceFileSemanticTreeAction : LiceFileAction(
 					.getDocument(file)
 					?.let(FileDocumentManager.getInstance()::saveDocument)
 			val view = LiceSemanticTreeViewerFactory.create(Paths.get(file.path))
-			val popup = JBPopupFactory.getInstance()
+			val popup = JBPopupFactory
+					.getInstance()
 					.createComponentPopupBuilder(view, view)
 					.createPopup()
 			popup.size = Dimension(600, 600)

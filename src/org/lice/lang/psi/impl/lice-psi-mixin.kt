@@ -26,7 +26,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 		val innerNames = nameIdentifierAndParams.mapNotNull(LiceElement::getSymbol)
 		val innerNameTexts = innerNames.map(LiceSymbol::getText)
 		if (this.liceCallee?.text in LiceSymbols.closureFamily) return SyntaxTraverser.psiTraverser(this)
-				.mapNotNull { it as? LiceSymbol }
+				.filterIsInstance<LiceSymbol>()
 				.filter { it !in innerNames && it.text in innerNameTexts }
 				.map { symbol -> LiceSymbolReference(symbol, this) }
 				.toTypedArray()
@@ -36,11 +36,11 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 		val paramTexts = params.map(LiceSymbol::getText)
 		if (this.liceCallee?.text !in LiceSymbols.nameIntroducingFamily) return emptyArray()
 		val list1 = SyntaxTraverser.psiTraverser(parent.parent)
-				.mapNotNull { it as? LiceSymbol }
+				.filterIsInstance<LiceSymbol>()
 				.filter { it != name && it.text == nameText }
 				.map { symbol -> LiceSymbolReference(symbol, this) }
 		val list2 = SyntaxTraverser.psiTraverser(this)
-				.mapNotNull { it as? LiceSymbol }
+				.filterIsInstance<LiceSymbol>()
 				.filter { it !in params && it.text in paramTexts }
 				.map { symbol -> LiceSymbolReference(symbol, this) }
 		return (list1 + list2).toTypedArray()

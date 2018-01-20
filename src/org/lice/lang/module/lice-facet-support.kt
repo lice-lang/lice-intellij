@@ -46,8 +46,6 @@ class LiceFacet(
 		configuration: LiceFacetConfiguration,
 		underlyingFacet: Facet<*>?) :
 		Facet<LiceFacetConfiguration>(facetType, module, LiceBundle.message("lice.name"), configuration, underlyingFacet) {
-	constructor(module: Module) : this(FacetTypeRegistry.getInstance().findFacetType(LICE_FACET_ID), module, LiceFacetConfiguration(), null)
-
 	companion object InstanceHolder {
 		@JvmField val LICE_FACET_ID = FacetTypeId<LiceFacet>(LiceBundle.message("lice.name"))
 		fun getInstance(module: Module) = FacetManager.getInstance(module).getFacetByType(LICE_FACET_ID)

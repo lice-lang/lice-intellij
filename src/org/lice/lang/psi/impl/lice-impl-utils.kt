@@ -6,9 +6,6 @@ package org.lice.lang.psi.impl
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
-import com.intellij.util.IncorrectOperationException
-import org.lice.lang.*
-import org.lice.lang.editing.LiceSymbols
 import org.lice.lang.psi.*
 import java.lang.StringBuilder
 
