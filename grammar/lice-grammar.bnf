@@ -18,16 +18,8 @@ element ::= string | number | symbol | comment | null | functionCall {
 }
 
 functionCall ::= LEFT_BRACKET element+ RIGHT_BRACKET {
-	methods=[
-			getLiceCallee
-			getNonCommentElements
-			setName
-			getName
-			getNameIdentifier
-			getNameIdentifierAndParams
-			getReferences
-	]
-	implements=['com.intellij.psi.PsiNameIdentifierOwner']
+	mixin='org.lice.lang.psi.impl.LiceFunctionCallMixin'
+	implements=['org.lice.lang.psi.impl.ILiceFunctionCallMixin']
 }
 
 number ::= NUM
