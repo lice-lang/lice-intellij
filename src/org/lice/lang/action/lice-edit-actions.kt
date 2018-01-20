@@ -36,21 +36,20 @@ class TryEvaluate {
 	private var timeLimit = 1500L
 	private var builder = StringBuilder()
 	lateinit var prelude: Set<MutableMap.MutableEntry<String, Any?>>
-	private val symbolList
-		get() = SymbolList().apply {
-			prelude = variables.entries
-			ban("getBigDecs")
-			ban("getBigInts")
-			ban("getDoubles")
-			ban("getFloats")
-			ban("getInts")
-			ban("getLines")
-			ban("getTokens")
-			ban("exit")
-			ban("extern")
-			provideFunction("print") { it.forEach { builder.append(it) } }
-			provideFunction("println") { it.forEach { builder.appendln(it) } }
-		}
+	private fun symbolList() = SymbolList().apply {
+		prelude = variables.entries
+		ban("getBigDecs")
+		ban("getBigInts")
+		ban("getDoubles")
+		ban("getFloats")
+		ban("getInts")
+		ban("getLines")
+		ban("getTokens")
+		ban("exit")
+		ban("extern")
+		provideFunction("print") { it.forEach { builder.append(it) } }
+		provideFunction("println") { it.forEach { builder.appendln(it) } }
+	}
 
 	private fun StringBuilder.insertOutputIfNonBlank() = insert(0, if (isNotBlank()) "\nOutput:\n" else "")
 	fun tryEval(editor: Editor, text: String, project: Project?, popupWhenSuccess: Boolean): Ref<Any?>? {
@@ -60,6 +59,7 @@ class TryEvaluate {
 		}
 		if (builder.isNotBlank()) builder = StringBuilder()
 		try {
+			val symbolList = symbolList()
 			val result = SimpleTimeLimiter().callWithTimeout({
 				Parser
 						.parseTokenStream(Lexer(text))
@@ -69,7 +69,9 @@ class TryEvaluate {
 			if (popupWhenSuccess) {
 				builder.insertOutputIfNonBlank()
 				@Suppress("UNCHECKED_CAST")
-				val resultString = (result as? Func)?.let { "lambda" } ?: "$result: ${result.className()}"
+				val resultString = (result as? Func)?.let { f ->
+					symbolList.entries.firstOrNull { it.value == f }?.let { "function named \"${it.key}\"" } ?: "some function"
+				} ?: "$result: ${result.className()}"
 				builder.insert(0, LiceBundle.message("lice.messages.try-eval.result", resultString))
 				showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
 			}

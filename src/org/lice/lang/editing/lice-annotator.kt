@@ -24,32 +24,35 @@ object LiceSymbols {
 	fun checkName(text: PsiElement, holder: AnnotationHolder, name: String? = null) {
 		val range = text.textRange
 		val txt = name ?: text.text
-		val namingMessage = "Use Lice style identifier: "
+		val namingMessage = LiceBundle.message("lice.lint.name-lice-style")
 		var fix: String? = null
 		var annotation: Annotation? = null
 		when {
 			'_' in txt -> {
 				fix = txt.replace('_', '-')
-				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage$fix")
+				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage $fix")
 			}
 			txt.startsWith("is-", true) -> {
 				fix = "${txt.substring(3)}?"
-				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage$fix")
+				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage $fix")
 			}
 			txt.contains("-to-", true) -> {
 				fix = txt.replace("-to-", "->")
-				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage$fix")
+				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage $fix")
 			}
 			txt.contains("to-", true) -> {
 				fix = txt.replace("to-", "->")
-				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage$fix")
+				annotation = holder.createWeakWarningAnnotation(text, "$namingMessage $fix")
 			}
-			txt in LiceSymbols.importantFamily -> holder.createErrorAnnotation(range, "Trying to overwrite an important standard name")
-			txt in LiceSymbols.allSymbols -> holder.createWeakWarningAnnotation(range, "Trying to overwrite a standard name")
+			txt in LiceSymbols.importantFamily -> holder.createErrorAnnotation(range,
+					LiceBundle.message("lice.lint.overwrite-std"))
+			txt in LiceSymbols.allSymbols -> holder.createWeakWarningAnnotation(range,
+					LiceBundle.message("lice.lint.overwrite-danger-std"))
 		}
 		if (text is LiceSymbol) {
 			text.isResolved = true
-			if (fix != null && annotation != null) annotation.registerFix(LiceReplaceWithAnotherSymbolIntention(text, "better name", fix))
+			if (fix != null && annotation != null) annotation.registerFix(LiceReplaceWithAnotherSymbolIntention(text,
+					LiceBundle.message("lice.lint.better"), fix))
 		}
 	}
 }
