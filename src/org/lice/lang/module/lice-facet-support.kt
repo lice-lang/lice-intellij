@@ -19,8 +19,12 @@ import org.lice.lang.execution.validateLice
 		name = "LiceFacetConfiguration",
 		storages = [Storage(file = "\$MODULE_FILE\$"), Storage(id = "dir", file = "\$PROJECT_CONFIG_DIR\$/lice_config.xml", scheme = StorageScheme.DIRECTORY_BASED)])
 class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<LiceModuleSettings> {
-	@Suppress("OverridingDeprecatedMember") override fun readExternal(p0: Element?) = Unit
-	@Suppress("OverridingDeprecatedMember") override fun writeExternal(p0: Element?) = Unit
+	@Suppress("OverridingDeprecatedMember")
+	override fun readExternal(p0: Element?) = Unit
+
+	@Suppress("OverridingDeprecatedMember")
+	override fun writeExternal(p0: Element?) = Unit
+
 	val settings = LiceModuleSettings()
 	override fun getState() = settings
 	override fun createEditorTabs(
@@ -32,7 +36,8 @@ class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<Lice
 	}
 }
 
-object LiceFacetType : FacetType<LiceFacet, LiceFacetConfiguration>(LiceFacet.LICE_FACET_ID, LiceBundle.message("lice.name"), LiceBundle.message("lice.name")) {
+object LiceFacetType :
+		FacetType<LiceFacet, LiceFacetConfiguration>(LiceFacet.LICE_FACET_ID, LiceBundle.message("lice.name"), LiceBundle.message("lice.name")) {
 	override fun createDefaultConfiguration() = LiceFacetConfiguration()
 	override fun getIcon() = LICE_BIG_ICON
 	override fun isSuitableModuleType(type: ModuleType<*>?) = type != null
@@ -53,7 +58,7 @@ class LiceFacet(
 }
 
 class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvider<LiceFacet>(LiceFacetType) {
-	override fun getVersions() = listOf(LiceSdkVersion(LICE_STABLE_VERSION))
+	override fun getVersions() = LICE_STABLE_VERSION.map(::LiceSdkVersion)
 	override fun getTitle() = LiceBundle.message("lice.name")
 	override fun setupConfiguration(facet: LiceFacet, model: ModifiableRootModel, version: FrameworkVersion) {
 		val orderEntry = model.orderEntries.firstOrNull { it.presentableName.contains("lice", true) } ?: return

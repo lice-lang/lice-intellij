@@ -13,11 +13,12 @@ object LiceSymbols {
 	@JvmField val defFamily = listOf("def", "deflazy", "defexpr")
 	@JvmField val setFamily = listOf("->", "<->")
 	@JvmField val closureFamily = listOf("lambda", "expr", "lazy")
-	@JvmField val miscFamily = listOf("thread|>", "force|>", "|>", "null", "true", "false")
+	@JvmField val conditionedFamily = listOf("if", "while", "when")
+	@JvmField val miscFamily = listOf("force|>", "|>", "null", "true", "false", "undef")
 	const val validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@\$^&_:=<|>?.+\\-~*/%[]#{}"
 
 	@JvmField val nameIntroducingFamily = defFamily + setFamily
-	@JvmField val importantFamily = defFamily + setFamily + closureFamily + miscFamily
+	@JvmField val importantFamily = defFamily + setFamily + closureFamily + miscFamily + conditionedFamily
 	@JvmField val allSymbols = SymbolList.preludeSymbols + SymbolList.preludeVariables
 	@JvmField val allSymbolsForCompletion = SymbolList.preludeSymbols.map { "$it " } + SymbolList.preludeVariables
 
@@ -67,18 +68,12 @@ class LiceAnnotator : Annotator {
 				}
 			}
 			is LiceFunctionCall -> element.liceCallee?.let { callee ->
-				if (callee.text in LiceSymbols.importantFamily)
-					holder.createInfoAnnotation(TextRange(callee.textRange.startOffset, callee.textRange.endOffset), null)
-							.textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
 				when (callee.text) {
 					"undef" -> {
 						val funUndefined = simplyCheckName(element, holder, callee,
 								LiceBundle.message("lice.lint.func")) ?: return@let
-						if (funUndefined.text in LiceSymbols.allSymbols) {
-							holder.createWeakWarningAnnotation(
-									TextRange(funUndefined.textRange.startOffset, funUndefined.textRange.endOffset),
-									LiceBundle.message("lice.lint.undef-std"))
-						}
+						if (funUndefined.text in LiceSymbols.allSymbols)
+							holder.createWeakWarningAnnotation(funUndefined, LiceBundle.message("lice.lint.undef-std"))
 					}
 					"|>" -> {
 						val ls = element.nonCommentElements
@@ -97,8 +92,7 @@ class LiceAnnotator : Annotator {
 								LiceBundle.message("lice.lint.func")) ?: return@let
 						val symbol = funDefined.getSafeSymbol(holder, LiceBundle.message("lice.lint.func")) ?: return@let
 						LiceSymbols.checkName(symbol, holder)
-						holder.createInfoAnnotation(symbol, null)
-								.textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
+						holder.createInfoAnnotation(symbol, null).textAttributes = LiceSyntaxHighlighter.FUNCTION_DEFINITION
 						if (element.nonCommentElements.size <= 2)
 							missingBody(element, holder, LiceBundle.message("lice.lint.func-body"))
 					}
@@ -118,15 +112,22 @@ class LiceAnnotator : Annotator {
 						if (elementList.size <= 1)
 							missingBody(element, holder, LiceBundle.message("lice.lint.lambda-body"))
 					}
-					else -> checkForTryEval(element, holder)
+					in LiceSymbols.conditionedFamily -> {
+
+					}
 				}
+				checkForTryEval(element, holder)
 			}
-			is LiceSymbol -> if (!element.isResolved) {
-				if (element.text in LiceSymbols.allSymbols) element.isResolved = true
-				else holder.createInfoAnnotation(element, LiceBundle.message("lice.lint.unresolved",
-						cutText(element.text, SHORT_TEXT_MAX))).run {
-					textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
-					setNeedsUpdateOnTyping(true)
+			is LiceSymbol -> {
+				if (element.text in LiceSymbols.importantFamily)
+					holder.createInfoAnnotation(element, null).textAttributes = LiceSyntaxHighlighter.IMPORTANT_SYMBOLS
+				if (!element.isResolved) {
+					if (element.text in LiceSymbols.allSymbols) element.isResolved = true
+					else holder.createInfoAnnotation(element, LiceBundle.message("lice.lint.unresolved",
+							cutText(element.text, SHORT_TEXT_MAX))).run {
+						textAttributes = LiceSyntaxHighlighter.UNRESOLVED_SYMBOL
+						setNeedsUpdateOnTyping(true)
+					}
 				}
 			}
 			is LiceNull -> holder.createWeakWarningAnnotation(element, LiceBundle.message("lice.lint.replace-empty-with-null"))
@@ -134,9 +135,7 @@ class LiceAnnotator : Annotator {
 		}
 	}
 
-	private fun checkForTryEval(
-			element: LiceFunctionCall,
-			holder: AnnotationHolder) {
+	private fun checkForTryEval(element: LiceFunctionCall, holder: AnnotationHolder) {
 		if (element.isPossibleEval) holder.createInfoAnnotation(element, LiceBundle.message("lice.lint.can-eval",
 				cutText(element.text, SHORT_TEXT_MAX)))
 				.registerFix(LiceTryReplaceEvaluatedResultIntention(element))
