@@ -13,6 +13,7 @@ import com.intellij.openapi.util.Ref
 import com.intellij.ui.JBColor
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.util.ui.JBUI
+import org.lice.core.Func
 import org.lice.core.SymbolList
 import org.lice.lang.*
 import org.lice.lang.module.moduleSettings
@@ -33,8 +34,10 @@ class TryEvaluate {
 	private var textLimit = 360
 	private var timeLimit = 1500L
 	private var builder = StringBuilder()
+	lateinit var prelude: Set<MutableMap.MutableEntry<String, Any?>>
 	private val symbolList
 		get() = SymbolList().apply {
+			prelude = variables.entries
 			ban("getBigDecs")
 			ban("getBigInts")
 			ban("getDoubles")
@@ -62,9 +65,13 @@ class TryEvaluate {
 						.accept(symbolList)
 						.eval()
 			}, timeLimit, TimeUnit.MILLISECONDS, true)
-			builder.insertOutputIfNonBlank()
-			builder.insert(0, LiceBundle.message("lice.messages.try-eval.result", result.toString(), result.className()))
-			if (popupWhenSuccess) showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
+			if (popupWhenSuccess) {
+				builder.insertOutputIfNonBlank()
+				@Suppress("UNCHECKED_CAST")
+				val resultString = (result as? Func)?.let { "lambda" } ?: "$result: ${result.className()}"
+				builder.insert(0, LiceBundle.message("lice.messages.try-eval.result", resultString))
+				showPopupWindow(builder.toString(), editor, 0x0013F9, 0x000CA1)
+			}
 			return Ref.create(result)
 		} catch (e: UncheckedTimeoutException) {
 			builder.insertOutputIfNonBlank()

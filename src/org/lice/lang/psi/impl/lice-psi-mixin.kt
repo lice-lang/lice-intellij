@@ -20,7 +20,9 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 		ASTWrapperPsiElement(node),
 		LiceFunctionCall {
 	private var references: Array<LiceSymbolReference>? = null
-	override val nonCommentElements by lazy { elementList.filter { it.comment == null } }
+	private var nonCommentElementsCache: List<LiceElement>? = null
+	override val nonCommentElements
+		get() = nonCommentElementsCache ?: elementList.filter { it.comment == null }.also { nonCommentElementsCache = it }
 	override val liceCallee get() = elementList.firstOrNull { it.comment == null }
 	final override var isPossibleEval = true
 
@@ -87,6 +89,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 	override fun getName() = nameIdentifier?.text
 	override fun subtreeChanged() {
 		references = null
+		nonCommentElementsCache = null
 		isPossibleEval = true
 		super.subtreeChanged()
 	}

@@ -4,6 +4,7 @@ import com.intellij.codeInsight.intention.impl.BaseIntentionAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
+import org.lice.core.Func
 import org.lice.lang.*
 import org.lice.lang.action.TryEvaluate
 import org.lice.lang.psi.LiceElement
@@ -53,6 +54,32 @@ class LiceTryReplaceEvaluatedResultIntention(
 					element.isPossibleEval = false
 					return
 				}).get()
+
+		@Suppress("UNCHECKED_CAST")
+		fun convert(res: Any?, isOuterPair: Boolean = false): String = when (res) {
+			is String -> """"${res
+					.replace("\n", "\\n")
+					.replace("\r", "\\r")
+					.replace("\u000C", "\\f")
+					.replace("\t", "\\t")}""""
+			is BigInteger -> "${res}N"
+			is BigDecimal -> "${res.toPlainString()}M"
+			is Iterable<*> -> "(list ${res.joinToString(" ") { convert(it) }})"
+			is Array<*> -> "(array ${res.joinToString(" ") { convert(it) }})"
+			is Pair<*, *> ->
+				if (isOuterPair) "${convert(res.first)} ${convert(res, true)}"
+				else "([|] ${convert(res.first)} ${convert(res.second, true)})"
+			is Long -> "${res}L"
+			is Short -> "${res}S"
+			is Byte -> "${res}B"
+			is Double -> "${res}D"
+			is Float -> "${res}F"
+			is Boolean, is Number -> "$res"
+			null -> "null"
+			else -> (res as? Func)?.let { f -> eval.prelude.firstOrNull { it.value == f }?.key }
+					?: throw UnsupportedOperationException(LiceBundle.message("lice.lint.fix.cannot-convert", res))
+		}
+
 		val code = try {
 			convert(result)
 		} catch (e: UnsupportedOperationException) {
@@ -79,29 +106,6 @@ class LiceTryReplaceEvaluatedResultIntention(
 				(sub ?: element).replace(symbol)
 			} else element.replace(symbol)
 		}
-	}
-
-	private fun convert(result: Any?, isOuterPair: Boolean = false): String = when (result) {
-		is String -> """"${result
-				.replace("\n", "\\n")
-				.replace("\r", "\\r")
-				.replace("\u000C", "\\f")
-				.replace("\t", "\\t")}""""
-		is BigInteger -> "${result}N"
-		is BigDecimal -> "${result.toPlainString()}M"
-		is Iterable<*> -> "(list ${result.joinToString(" ") { convert(it) }})"
-		is Array<*> -> "(array ${result.joinToString(" ") { convert(it) }})"
-		is Pair<*, *> ->
-			if (isOuterPair) "${convert(result.first)} ${convert(result, true)}"
-			else "([|] ${convert(result.first)} ${convert(result.second, true)})"
-		is Long -> "${result}L"
-		is Short -> "${result}S"
-		is Byte -> "${result}B"
-		is Double -> "${result}D"
-		is Float -> "${result}F"
-		is Boolean, is Number -> "$result"
-		null -> "null"
-		else -> throw UnsupportedOperationException(LiceBundle.message("lice.lint.fix.cannot-convert", result))
 	}
 }
 

@@ -24,7 +24,7 @@ class LiceCommandLineState(
 			.vmParameters
 			.split(" ")
 			.filter(String::isNotBlank)).apply {
-		setWorkDirectory(configuration.workingDirectory)
+		withWorkDirectory(configuration.workingDirectory)
 	}).also {
 		ProcessTerminatedListener.attach(it)
 		it.startNotify()

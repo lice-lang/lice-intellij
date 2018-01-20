@@ -33,7 +33,7 @@ class LiceSymbolsExtractingAnnotator : Annotator {
 			val str = possibleString.value as? String ?: return
 			val isFunc = "Function" in method.text
 			val isVar = "Variable" in method.text
-			if ((isVar or isFunc) && !SYMBOL_REGEX.matches(str)) {
+			if ((isVar or isFunc) and !SYMBOL_REGEX.matches(str)) {
 				holder.createWarningAnnotation(
 						TextRange(possibleString.textRange.startOffset + 1, possibleString.textRange.endOffset - 1),
 						LiceBundle.message("lice.lint.java.invalid-symbol"))
