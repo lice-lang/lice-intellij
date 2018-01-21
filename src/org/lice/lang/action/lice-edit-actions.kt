@@ -130,11 +130,11 @@ class TryEvaluate {
 						.getInstance()
 						.createComponentPopupBuilder(JBUI.Panels.simplePanel()
 								.addToTop(JLabel(LICE_BIG_ICON))
-								.addToCenter(ScrollPaneFactory.createScrollPane(JTextArea(result).also {
-									it.toolTipText = LiceBundle.message("lice.messages.try-eval.overflowed-text", textLimit)
-									it.lineWrap = true
-									it.wrapStyleWord = true
-									it.isEditable = false
+								.addToCenter(ScrollPaneFactory.createScrollPane(JTextArea(result).apply {
+									toolTipText = LiceBundle.message("lice.messages.try-eval.overflowed-text", textLimit)
+									lineWrap = true
+									wrapStyleWord = true
+									isEditable = false
 								}))
 								.apply {
 									preferredSize = Dimension(500, 500)

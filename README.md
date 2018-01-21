@@ -15,7 +15,7 @@ Apart from syntax highlighting, there're also quick fixes:
 ![image](https://plugins.jetbrains.com/files/10319/screenshot_17800.png)
 
 Also, you can "Try evaluate" by <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>
-(you may adjust it in the settings page due to conflicting):
+(you may adjust it in the settings page to avoid conflicting):
 
 ![](https://plugins.jetbrains.com/files/10319/screenshot_17801.png)
 ![](https://plugins.jetbrains.com/files/10319/screenshot_17810.png)
