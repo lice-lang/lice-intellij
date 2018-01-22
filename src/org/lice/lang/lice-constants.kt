@@ -25,7 +25,7 @@ import java.nio.file.Paths
 @NonNls const val LICE_EXTENSION = "lice"
 
 @NonNls @JvmField val licePluginPath = PluginManager.getPlugin(PluginId.findId(LICE_PLUGIN_ID))?.path?.absolutePath.orEmpty()
-@NonNls @JvmField val liceJarPath = "$licePluginPath/lib/lice.jar"
+@NonNls @JvmField val liceJarPath = Paths.get(licePluginPath, "lib", "lice.jar").toAbsolutePath().toString()
 
 @JvmField val is64Bit = Files.exists(Paths.get("../jre64"))
 @JvmField val JAVA_PATH: String = Paths.get("../jre${if (!is64Bit) "" else "64"}/bin/java").toAbsolutePath().toString()
