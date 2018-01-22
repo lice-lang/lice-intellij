@@ -6,6 +6,7 @@ import com.intellij.execution.process.OSProcessHandler
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import org.lice.lang.*
+import java.io.File
 
 class LiceCommandLineState(
 		private val configuration: LiceRunConfiguration,
@@ -17,7 +18,7 @@ class LiceCommandLineState(
 					configuration.jarLocation,
 					KOTLIN_RUNTIME_PATH,
 					KOTLIN_REFLECT_PATH
-			).joinToString(":"),
+			).joinToString(File.pathSeparator),
 			LICE_MAIN_DEFAULT,
 			configuration.targetFile
 	) + configuration
