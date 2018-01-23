@@ -2,8 +2,7 @@ package org.lice.lang
 
 import com.intellij.lang.*
 import com.intellij.openapi.project.Project
-import com.intellij.psi.FileViewProvider
-import com.intellij.psi.PsiElement
+import com.intellij.psi.*
 import com.intellij.psi.tree.*
 import org.lice.lang.psi.LiceTypes
 
@@ -28,6 +27,10 @@ class LiceTokenType(debugName: String) : IElementType(debugName, LiceLanguage) {
 	companion object {
 		@JvmField val COMMENTS = TokenSet.create(LiceTypes.COMMENT)
 		@JvmField val STRINGS = TokenSet.create(LiceTypes.STR)
+		fun fromText(name: String, project: Project): PsiElement = PsiFileFactory
+				.getInstance(project)
+				.createFileFromText(LiceLanguage, name)
+				.firstChild
 	}
 }
 

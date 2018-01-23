@@ -1,43 +1,95 @@
 package org.lice.lang.psi
 
+import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.lang.refactoring.RefactoringSupportProvider
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
-import org.lice.lang.LiceFile
-import org.lice.lang.LiceLanguage
+import com.intellij.psi.impl.source.resolve.ResolveCache
+import com.intellij.psi.scope.PsiScopeProcessor
+import com.intellij.psi.util.PsiTreeUtil
+import org.lice.lang.editing.LiceSymbols
+import org.lice.lang.psi.impl.treeWalkUp
 
-class LiceSymbolReference(val symbol: LiceSymbol, definition: LiceFunctionCall? = null) : PsiReference {
-	init {
-		symbol.isResolved = true
+class LiceSymbolRef(symbol: LiceSymbol, private var refTo: PsiElement? = null) :
+		PsiPolyVariantReferenceBase<LiceSymbol>(symbol, TextRange(0, symbol.textLength), true) {
+	private val project = symbol.project
+	override fun equals(other: Any?) = (other as? LiceSymbolRef)?.element == element
+	override fun hashCode() = element.hashCode()
+	override fun isReferenceTo(o: PsiElement?) = o == refTo ||
+			(o as? PsiNameIdentifierOwner)?.nameIdentifier?.text == element.text
+
+	override fun getCanonicalText(): String = element.text
+	override fun getVariants(): Array<out Any> {
+		val variantsProcessor = CompletionProcessor(this, true)
+		treeWalkUp(element, variantsProcessor)
+		return variantsProcessor.resultElement
 	}
 
-	private val definition = definition ?: (symbol.containingFile as? LiceFile)?.let {
-		it.children
-				.firstOrNull { it is LiceElement && it.symbol != null }
-				?.let { it as LiceElement }
-				?.symbol
-				?.also { it.isResolved = true }
+	override fun resolve() = refTo ?: super.resolve().also { refTo = it }
+	override fun multiResolve(incompleteCode: Boolean): Array<out ResolveResult> =
+			if (element.parent.parent.let {
+						it is LiceFunctionCall && it.liceCallee?.text in LiceSymbols.nameIntroducingFamily
+					}) emptyArray()
+			else ResolveCache
+					.getInstance(project)
+					.resolveWithCaching(this, Resolver, true, incompleteCode)
+
+	private companion object Resolver : ResolveCache.PolyVariantResolver<LiceSymbolRef> {
+		override fun resolve(ref: LiceSymbolRef, incompleteCode: Boolean): Array<out ResolveResult> {
+			val currentSymbol = ref.element ?: return emptyArray()
+			val processor = SymbolResolveProcessor(ref, incompleteCode)
+			treeWalkUp(currentSymbol, processor)
+			PsiTreeUtil
+					.getParentOfType(currentSymbol, LiceFunctionCall::class.java)
+					?.processDeclarations(processor, ResolveState.initial(), currentSymbol, processor.place)
+			return processor.candidates
+		}
 	}
-	private val range = 0.let { TextRange(it, it + symbol.textLength) }
-	override fun equals(other: Any?) = (other as? LiceSymbolReference)?.symbol == symbol
-	override fun toString() = "${symbol.text}: ${symbol.javaClass.name}"
-	override fun hashCode() = symbol.hashCode()
-	override fun isReferenceTo(element: PsiElement) = element == definition
-	override fun bindToElement(element: PsiElement) = element
-	override fun isSoft() = false
-	override fun getElement() = symbol
-	override fun getRangeInElement(): TextRange = range
-	override fun getCanonicalText(): String = symbol.text
-	override fun resolve() = definition
-	override fun getVariants() = emptyArray<Any>()
-	override fun handleElementRename(newElementName: String) = PsiFileFactory
-			.getInstance(symbol.project)
-			.createFileFromText(LiceLanguage, newElementName)
-			.let { it as? LiceFile }
-			?.firstChild
 }
 
 class LiceRefactoringSupportProvider : RefactoringSupportProvider() {
 	override fun isMemberInplaceRenameAvailable(element: PsiElement, context: PsiElement?) =
 			element is LiceSymbol || element is LiceElement && element.symbol != null
+
+	override fun isInplaceIntroduceAvailable(element: PsiElement, context: PsiElement?) =
+			isMemberInplaceRenameAvailable(element, context)
+}
+
+abstract class ResolveProcessor : PsiScopeProcessor {
+	private var candidateSet = hashSetOf<PsiElementResolveResult>()
+	val candidates get() = candidateSet.toTypedArray()
+	val resultElement get() = candidates.map(LookupElementBuilder::create).toTypedArray()
+	override fun handleEvent(event: PsiScopeProcessor.Event, o: Any?) = Unit
+	fun addCandidate(symbol: PsiElement) = addCandidate(PsiElementResolveResult(symbol, true))
+	fun addCandidate(candidate: PsiElementResolveResult) = candidateSet.add(candidate)
+	fun hasCandidate(candidate: PsiElement) = candidateSet.any { it.element == candidate }
+}
+
+class SymbolResolveProcessor(private val name: String, val place: PsiElement, val incompleteCode: Boolean) :
+		ResolveProcessor() {
+	constructor(ref: LiceSymbolRef, incompleteCode: Boolean) : this(ref.canonicalText, ref.element, incompleteCode)
+
+	private val processed = hashSetOf<PsiElement>()
+	override fun <T : Any?> getHint(hintKey: Key<T>): T? = null
+	override fun execute(element: PsiElement, resolveState: ResolveState) =
+			if (element is LiceSymbol && element !in processed) {
+				val accessible = name == element.text
+				if (accessible && !((element as? StubBasedPsiElement<*>)?.stub == null && PsiTreeUtil.hasErrorElements(element)))
+					addCandidate(element)
+				processed.add(element)
+				!accessible
+			} else true
+}
+
+class CompletionProcessor(val place: PsiElement, val incompleteCode: Boolean) : ResolveProcessor() {
+	constructor(ref: LiceSymbolRef, incompleteCode: Boolean) : this(ref.element, incompleteCode)
+
+	override fun <T : Any?> getHint(hintKey: Key<T>): T? = null
+	override fun execute(element: PsiElement, resolveState: ResolveState): Boolean {
+		if (element is LiceSymbol && hasCandidate(element))
+			if (!((element as? StubBasedPsiElement<*>)?.stub == null && PsiTreeUtil.hasErrorElements(element)))
+				addCandidate(element)
+		return true
+	}
 }

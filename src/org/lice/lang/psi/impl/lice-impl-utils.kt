@@ -5,6 +5,7 @@ package org.lice.lang.psi.impl
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
+import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.tree.IElementType
 import org.lice.lang.psi.*
 import java.lang.StringBuilder
@@ -24,6 +25,25 @@ fun LiceComment.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceCom
 }
 
 val LiceElement.nonCommentElements: PsiElement? get() = functionCall ?: `null` ?: symbol ?: number ?: string
+
+fun collectFrom(startPoint: PsiElement, name: String) = SyntaxTraverser
+		.psiTraverser(startPoint)
+		.filter { it is LiceSymbol && it.text == name }
+		.mapNotNull(PsiElement::getReference)
+		.toList()
+		.toTypedArray()
+
+fun treeWalkUp(place: PsiElement, processor: PsiScopeProcessor): Boolean {
+	var lastParent: PsiElement? = null
+	var run: PsiElement? = place
+	while (run != null) {
+		if (!run.processDeclarations(processor, ResolveState.initial(), lastParent, place)) return false
+		lastParent = run
+		run = run.parent
+	}
+	return true
+}
+
 
 // val LiceString.isValidHost get() = true
 // fun LiceString.updateText(string: String): LiceString = ElementManipulators.handleContentChange(this, string)

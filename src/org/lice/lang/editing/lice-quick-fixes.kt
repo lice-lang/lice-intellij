@@ -3,9 +3,13 @@ package org.lice.lang.editing
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.*
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import org.jetbrains.annotations.Nls
+import org.jetbrains.annotations.NonNls
 import org.lice.core.Func
-import org.lice.lang.*
+import org.lice.lang.LiceBundle
+import org.lice.lang.LiceTokenType
 import org.lice.lang.action.TryEvaluate
 import org.lice.lang.psi.LiceElement
 import org.lice.lang.psi.LiceFunctionCall
@@ -13,7 +17,7 @@ import org.lice.util.forceRun
 import java.math.BigDecimal
 import java.math.BigInteger
 
-class LiceRemovingIntention(private val element: PsiElement, private val intentionText: String) :
+class LiceRemovingIntention(private val element: PsiElement, @Nls private val intentionText: String) :
 		BaseIntentionAction() {
 	override fun getText() = intentionText
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
@@ -25,17 +29,13 @@ class LiceRemovingIntention(private val element: PsiElement, private val intenti
 
 class LiceReplaceWithAnotherSymbolIntention(
 		private val element: PsiElement,
-		private val anotherSymbolName: String,
-		private val anotherSymbolCode: String) : BaseIntentionAction() {
+		@Nls private val anotherSymbolName: String,
+		@NonNls private val anotherSymbolCode: String) : BaseIntentionAction() {
 	override fun getText() = LiceBundle.message("lice.lint.fix.replace-with", anotherSymbolName)
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LiceBundle.message("lice.name")
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
-		val symbol = PsiFileFactory
-				.getInstance(project)
-				.createFileFromText(LiceLanguage, anotherSymbolCode)
-				.let { it as? LiceFile }
-				?.firstChild ?: return
+		val symbol = LiceTokenType.fromText(anotherSymbolCode, project)
 		element.replace(symbol)
 	}
 }
@@ -49,11 +49,11 @@ class LiceTryReplaceEvaluatedResultIntention(
 	override operator fun invoke(project: Project, editor: Editor, psiFile: PsiFile?) {
 		val eval = TryEvaluate()
 		val selectedText = editor.selectionModel.selectedText
-		val result = (eval.tryEval(editor, selectedText ?: element.text, project, false)
+		val result = eval.tryEval(editor, selectedText ?: element.text, project, false)?.get()
 				?: run {
 					element.isPossibleEval = false
 					return
-				}).get()
+				}
 
 		@Suppress("UNCHECKED_CAST")
 		fun convert(res: Any?, isOuterPair: Boolean = false): String = when (res) {
@@ -87,14 +87,7 @@ class LiceTryReplaceEvaluatedResultIntention(
 			eval.showPopupWindow(e.message.orEmpty(), editor, 0xEDC209, 0xC26500)
 			return
 		}
-		val symbol = PsiFileFactory
-				.getInstance(project)
-				.createFileFromText(LiceLanguage, code)
-				.let { it as? LiceFile }
-				?.firstChild ?: run {
-			element.isPossibleEval = false
-			return
-		}
+		val symbol = LiceTokenType.fromText(code, project)
 		(symbol as? LiceElement)?.functionCall?.run { isPossibleEval = false }
 		forceRun {
 			if (selectedText != null && selectedText.indexOf(element.text) < 0) {
@@ -111,7 +104,7 @@ class LiceTryReplaceEvaluatedResultIntention(
 
 class LiceReplaceWithAnotherElementIntention(
 		private val element: PsiElement,
-		private val anotherSymbolName: String,
+		@Nls private val anotherSymbolName: String,
 		private val anotherSymbolNode: PsiElement) : BaseIntentionAction() {
 	override fun getText() = LiceBundle.message("lice.lint.fix.replace-with", anotherSymbolName)
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true

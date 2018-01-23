@@ -19,40 +19,39 @@ interface ILiceFunctionCallMixin : PsiNameIdentifierOwner {
 abstract class LiceFunctionCallMixin(node: ASTNode) :
 		ASTWrapperPsiElement(node),
 		LiceFunctionCall {
-	private var references: Array<LiceSymbolReference>? = null
+	private var refCache: Array<LiceSymbolRef>? = null
 	private var nonCommentElementsCache: List<LiceElement>? = null
 	override val nonCommentElements
 		get() = nonCommentElementsCache ?: elementList.filter { it.comment == null }.also { nonCommentElementsCache = it }
 	override val liceCallee get() = elementList.firstOrNull { it.comment == null }
 	final override var isPossibleEval = true
 
-	private fun makeRef(): Array<LiceSymbolReference> {
+	private fun makeRef(): Array<LiceSymbolRef> {
 		val innerNames = nameIdentifierAndParams.mapNotNull(LiceElement::getSymbol)
 		val innerNameTexts = innerNames.map(LiceSymbol::getText)
 		if (this.liceCallee?.text in LiceSymbols.closureFamily) return SyntaxTraverser.psiTraverser(this)
 				.filterIsInstance<LiceSymbol>()
 				.filter { it !in innerNames && it.text in innerNameTexts }
-				.map { symbol -> LiceSymbolReference(symbol, this) }
+				.map { LiceSymbolRef(it, this) }
 				.toTypedArray()
 		val name = innerNames.firstOrNull() ?: return emptyArray()
-		val nameText = name.text
 		val params = innerNames.drop(1)
 		val paramTexts = params.map(LiceSymbol::getText)
 		if (this.liceCallee?.text !in LiceSymbols.nameIntroducingFamily) return emptyArray()
 		val list1 = SyntaxTraverser.psiTraverser(parent.parent)
 				.filterIsInstance<LiceSymbol>()
-				.filter { it != name && it.text == nameText }
-				.map { symbol -> LiceSymbolReference(symbol, this) }
+				.filter { it != name && it.text == name.text }
+				.map { symbol -> LiceSymbolRef(symbol, this) }
 		val list2 = SyntaxTraverser.psiTraverser(this)
 				.filterIsInstance<LiceSymbol>()
 				.filter { it !in params && it.text in paramTexts }
-				.map { symbol -> LiceSymbolReference(symbol, this) }
+				.map { LiceSymbolRef(it, this) }
 		return (list1 + list2).toTypedArray()
 	}
 
-	override fun getReferences() = references ?: makeRef().also {
-		references = it
-		for (reference in it) reference.symbol.isResolved = true
+	override fun getReferences() = refCache ?: makeRef().also {
+		refCache = it
+		for (reference in it) reference.element.isResolved = true
 	}
 
 	private val nameIdentifierAndParams
@@ -88,7 +87,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 
 	override fun getName() = nameIdentifier?.text
 	override fun subtreeChanged() {
-		references = null
+		refCache = null
 		nonCommentElementsCache = null
 		isPossibleEval = true
 		super.subtreeChanged()
@@ -103,8 +102,8 @@ abstract class LiceSymbolMixin(node: ASTNode) :
 		ASTWrapperPsiElement(node),
 		LiceSymbol {
 	override var isResolved = false
-	private var reference: LiceSymbolReference? = null
-	override fun getReference() = reference ?: LiceSymbolReference(this).also { reference = it }
+	private var reference: LiceSymbolRef? = null
+	override fun getReference() = reference ?: LiceSymbolRef(this).also { reference = it }
 	override fun getReferences(): Array<PsiReference> = parent.parent.references
 	override fun subtreeChanged() {
 		isResolved = false
