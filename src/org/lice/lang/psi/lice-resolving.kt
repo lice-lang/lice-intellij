@@ -8,7 +8,6 @@ import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.util.PsiTreeUtil
-import org.lice.lang.editing.LiceSymbols
 import org.lice.lang.psi.impl.isDeclaration
 import org.lice.lang.psi.impl.treeWalkUp
 
@@ -69,11 +68,8 @@ class SymbolResolveProcessor(private val name: String, val place: PsiElement, va
 	override fun <T : Any?> getHint(hintKey: Key<T>): T? = null
 	override fun execute(element: PsiElement, resolveState: ResolveState) =
 			if (element is LiceSymbol && element !in processed) {
-				val isDecl = element.parent.parent.let {
-					it is LiceFunctionCall && it.liceCallee?.text in LiceSymbols.nameIntroducingFamily
-				}
 				val accessible = name == element.text
-				if (accessible && !isDecl &&
+				if (accessible && element.isDeclaration &&
 						!((element as? StubBasedPsiElement<*>)?.stub == null && PsiTreeUtil.hasErrorElements(element)))
 					addCandidate(element)
 				processed.add(element)
