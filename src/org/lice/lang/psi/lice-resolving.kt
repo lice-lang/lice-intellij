@@ -9,6 +9,7 @@ import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.util.PsiTreeUtil
 import org.lice.lang.editing.LiceSymbols
+import org.lice.lang.psi.impl.isDeclaration
 import org.lice.lang.psi.impl.treeWalkUp
 
 class LiceSymbolRef(symbol: LiceSymbol, private var refTo: PsiElement? = null) :
@@ -28,9 +29,7 @@ class LiceSymbolRef(symbol: LiceSymbol, private var refTo: PsiElement? = null) :
 
 	override fun resolve() = refTo ?: super.resolve().also { refTo = it }
 	override fun multiResolve(incompleteCode: Boolean): Array<out ResolveResult> =
-			if (element.parent.parent.let {
-						it is LiceFunctionCall && it.liceCallee?.text in LiceSymbols.nameIntroducingFamily
-					}) emptyArray()
+			if (element.isDeclaration) emptyArray()
 			else ResolveCache
 					.getInstance(project)
 					.resolveWithCaching(this, Resolver, true, incompleteCode)
@@ -49,11 +48,7 @@ class LiceSymbolRef(symbol: LiceSymbol, private var refTo: PsiElement? = null) :
 }
 
 class LiceRefactoringSupportProvider : RefactoringSupportProvider() {
-	override fun isMemberInplaceRenameAvailable(element: PsiElement, context: PsiElement?) =
-			element is LiceSymbol || element is LiceElement && element.symbol != null
-
-	override fun isInplaceIntroduceAvailable(element: PsiElement, context: PsiElement?) =
-			isMemberInplaceRenameAvailable(element, context)
+	override fun isMemberInplaceRenameAvailable(element: PsiElement, context: PsiElement?) = true
 }
 
 abstract class ResolveProcessor : PsiScopeProcessor {
@@ -74,8 +69,12 @@ class SymbolResolveProcessor(private val name: String, val place: PsiElement, va
 	override fun <T : Any?> getHint(hintKey: Key<T>): T? = null
 	override fun execute(element: PsiElement, resolveState: ResolveState) =
 			if (element is LiceSymbol && element !in processed) {
+				val isDecl = element.parent.parent.let {
+					it is LiceFunctionCall && it.liceCallee?.text in LiceSymbols.nameIntroducingFamily
+				}
 				val accessible = name == element.text
-				if (accessible && !((element as? StubBasedPsiElement<*>)?.stub == null && PsiTreeUtil.hasErrorElements(element)))
+				if (accessible && !isDecl &&
+						!((element as? StubBasedPsiElement<*>)?.stub == null && PsiTreeUtil.hasErrorElements(element)))
 					addCandidate(element)
 				processed.add(element)
 				!accessible

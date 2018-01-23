@@ -3,8 +3,8 @@ package org.lice.lang.psi.impl
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.*
-import com.intellij.util.IncorrectOperationException
-import org.lice.lang.*
+import com.intellij.psi.scope.PsiScopeProcessor
+import org.lice.lang.LiceTokenType
 import org.lice.lang.editing.LiceSymbols
 import org.lice.lang.psi.*
 
@@ -18,49 +18,21 @@ interface ILiceFunctionCallMixin : PsiNameIdentifierOwner {
 
 abstract class LiceFunctionCallMixin(node: ASTNode) :
 		ASTWrapperPsiElement(node),
-		LiceFunctionCall {
-	private var refCache: Array<LiceSymbolRef>? = null
+		LiceFunctionCall,
+		PsiNameIdentifierOwner {
+	internal var refCache: Array<out PsiReference>? = null
 	private var nonCommentElementsCache: List<LiceElement>? = null
 	override val nonCommentElements
 		get() = nonCommentElementsCache ?: elementList.filter { it.comment == null }.also { nonCommentElementsCache = it }
 	override val liceCallee get() = elementList.firstOrNull { it.comment == null }
 	final override var isPossibleEval = true
 
-	private fun makeRef(): Array<LiceSymbolRef> {
-		val innerNames = nameIdentifierAndParams.mapNotNull(LiceElement::getSymbol)
-		val innerNameTexts = innerNames.map(LiceSymbol::getText)
-		if (this.liceCallee?.text in LiceSymbols.closureFamily) return SyntaxTraverser.psiTraverser(this)
-				.filterIsInstance<LiceSymbol>()
-				.filter { it !in innerNames && it.text in innerNameTexts }
-				.map { LiceSymbolRef(it, this) }
-				.toTypedArray()
-		val name = innerNames.firstOrNull() ?: return emptyArray()
-		val params = innerNames.drop(1)
-		val paramTexts = params.map(LiceSymbol::getText)
-		if (this.liceCallee?.text !in LiceSymbols.nameIntroducingFamily) return emptyArray()
-		val list1 = SyntaxTraverser.psiTraverser(parent.parent)
-				.filterIsInstance<LiceSymbol>()
-				.filter { it != name && it.text == name.text }
-				.map { symbol -> LiceSymbolRef(symbol, this) }
-		val list2 = SyntaxTraverser.psiTraverser(this)
-				.filterIsInstance<LiceSymbol>()
-				.filter { it !in params && it.text in paramTexts }
-				.map { LiceSymbolRef(it, this) }
-		return (list1 + list2).toTypedArray()
-	}
-
-	override fun getReferences() = refCache ?: makeRef().also {
-		refCache = it
-		for (reference in it) reference.element.isResolved = true
-	}
-
-	private val nameIdentifierAndParams
-		get() = when (liceCallee?.text) {
-			in LiceSymbols.nameIntroducingFamily,
-			in LiceSymbols.closureFamily ->
-				nonCommentElements.run { if (size >= 1) subList(1, size).toList() else emptyList() }
-			else -> emptyList()
+	override fun getReferences() = refCache ?: nameIdentifier?.let {
+		collectFrom(parent.parent.parent, it.text).also {
+			refCache = it
+			for (reference in it) (reference.element as? LiceSymbol)?.isResolved = true
 		}
+	} ?: emptyArray()
 
 	override fun getNameIdentifier() = when (liceCallee?.text) {
 		in LiceSymbols.closureFamily -> nonCommentElements.firstOrNull()?.symbol
@@ -68,33 +40,28 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 		else -> nonCommentElements.getOrNull(1)?.symbol
 	}
 
-	override fun setName(newName: String): PsiElement {
-		val liceSymbol = nameIdentifier
-		if (newName.all { it in LiceSymbols.validChars } &&
-				liceSymbol != null &&
-				liceCallee?.text in LiceSymbols.nameIntroducingFamily) {
-			val newChild = PsiFileFactory
-					.getInstance(liceSymbol.project)
-					.createFileFromText(LiceLanguage, newName)
-					.takeIf { it is LiceFile }
-					?.firstChild
-					?: throw IncorrectOperationException(
-							LiceBundle.message("lice.messages.psi.cannot-rename-to", liceSymbol.text, newName))
-			liceSymbol.replace(newChild)
-			return this
-		} else throw IncorrectOperationException(LiceBundle.message("lice.messages.psi.cannot-rename", newName))
-	}
+	override fun setName(newName: String) = LiceTokenType.fromText(newName, project)
+			.let { nameIdentifier?.replace(it) }
+			.also {
+				if (it is LiceFunctionCallMixin)
+					it.refCache = references.mapNotNull { it.handleElementRename(newName).reference }.toTypedArray()
+			}
+
+	override fun processDeclarations(
+			processor: PsiScopeProcessor,
+			substitutor: ResolveState,
+			lastParent: PsiElement?,
+			place: PsiElement) = nameIdentifier?.let { processor.execute(it, substitutor) } ?: true
 
 	override fun getName() = nameIdentifier?.text
 	override fun subtreeChanged() {
-		refCache = null
 		nonCommentElementsCache = null
 		isPossibleEval = true
 		super.subtreeChanged()
 	}
 }
 
-interface ILiceSymbolMixin : PsiElement {
+interface ILiceSymbolMixin : PsiElement, PsiNameIdentifierOwner {
 	var isResolved: Boolean
 }
 
@@ -102,9 +69,30 @@ abstract class LiceSymbolMixin(node: ASTNode) :
 		ASTWrapperPsiElement(node),
 		LiceSymbol {
 	override var isResolved = false
+	private var refCache: Array<out PsiReference>? = null
 	private var reference: LiceSymbolRef? = null
+	override fun getNameIdentifier() = takeIf { isDeclaration }
 	override fun getReference() = reference ?: LiceSymbolRef(this).also { reference = it }
-	override fun getReferences(): Array<PsiReference> = parent.parent.references
+	override fun getReferences(): Array<out PsiReference> = refCache
+			?: nameIdentifier?.let { collectFrom(parent.parent, it.text) }?.also {
+				refCache = it
+				for (reference in it) (reference.element as? LiceSymbol)?.isResolved = true
+			}
+			?: emptyArray()
+
+	override fun setName(newName: String) = LiceTokenType.fromText(newName, project)
+			.let { nameIdentifier?.replace(it) }
+			.also {
+				if (it is LiceFunctionCallMixin)
+					it.refCache = references.mapNotNull { it.handleElementRename(newName).reference }.toTypedArray()
+			}
+
+	override fun processDeclarations(
+			processor: PsiScopeProcessor,
+			substitutor: ResolveState,
+			lastParent: PsiElement?,
+			place: PsiElement) = nameIdentifier?.let { processor.execute(it, substitutor) } ?: true
+
 	override fun subtreeChanged() {
 		isResolved = false
 		reference = null
