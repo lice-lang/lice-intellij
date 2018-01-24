@@ -55,30 +55,11 @@ class LiceLiveTemplateProvider : DefaultLiveTemplatesProvider {
 	override fun getHiddenLiveTemplateFiles(): Array<String>? = null
 }
 
-class LiceQuoteHandler : SimpleTokenSetQuoteHandler(LiceTokenType.STRINGS) {
-	override fun hasNonClosedLiteral(editor: Editor?, iterator: HighlighterIterator?, offset: Int) = true
-}
-
 class LiceSpellCheckingStrategy : SpellcheckingStrategy() {
 	override fun getTokenizer(element: PsiElement): Tokenizer<*> = when (element) {
 		is LiceComment, is LiceSymbol -> super.getTokenizer(element)
 		is LiceString -> super.getTokenizer(element).takeIf { it != EMPTY_TOKENIZER } ?: TEXT_TOKENIZER
 		else -> EMPTY_TOKENIZER
-	}
-}
-
-class LiceNamesValidator : NamesValidator, RenameInputValidator {
-	override fun isKeyword(s: String, project: Project?) = s in LiceSymbols.importantFamily
-	override fun isInputValid(s: String, o: PsiElement, c: ProcessingContext) = isIdentifier(s, o.project)
-	override fun getPattern(): ElementPattern<out PsiElement> = PlatformPatterns.psiElement().with(object :
-			PatternCondition<PsiElement>("") {
-		override fun accepts(element: PsiElement, context: ProcessingContext?) =
-				(element as? PomTargetPsiElement)?.navigationElement is LiceSymbol
-	})
-
-	override fun isIdentifier(name: String, project: Project?) = with(LiceLexerAdapter()) {
-		start(name)
-		tokenType == LiceTypes.SYM && tokenEnd == name.length
 	}
 }
 

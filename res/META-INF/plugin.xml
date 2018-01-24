@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.7</version>
+	<version>1.7.1</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -17,6 +17,14 @@ Functions provided:<br/><br/>
 ]]></description>
 
 	<change-notes><![CDATA[
+1.7.1<br/>
+<ul>
+  <li>Improved Windows capability and command line output.</li>
+  <li>Removed classes that are not working.</li>
+</ul>
+
+<br/>
+
 1.7<br/>
 <ul>
   <li>Some minor changes and internal refactorings.</li>
@@ -104,15 +112,9 @@ Functions provided:<br/><br/>
 		<lang.foldingBuilder
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceFoldingBuilder"/>
-		<lang.namesValidator
-				language="Lice"
-				implementationClass="org.lice.lang.editing.LiceNamesValidator"/>
 		<spellchecker.support
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceSpellCheckingStrategy"/>
-		<quoteHandler
-				fileType="Lice"
-				className="org.lice.lang.editing.LiceQuoteHandler"/>
 		<lang.commenter
 				language="Lice"
 				implementationClass="org.lice.lang.editing.LiceCommenter"/>
