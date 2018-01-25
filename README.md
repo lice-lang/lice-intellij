@@ -30,6 +30,10 @@ Code folding and bread crumbs are also supported:
 ![image](https://user-images.githubusercontent.com/16398479/34902990-4ee9f7a4-f862-11e7-8f1c-9876b29494bd.png)
 ![image](https://user-images.githubusercontent.com/16398479/34902932-391f5d20-f861-11e7-8167-c5bf3b3bbd35.png)
 
+You can rename variables:
+
+![](https://plugins.jetbrains.com/files/10319/screenshot_17827.png)
+
 For more screenshots please see [issue #1](https://github.com/lice-lang/lice-intellij/issues/1).
 
 ## Progress
