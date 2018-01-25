@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.7.2</version>
+	<version>1.8</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -10,17 +10,22 @@ Lice language support.<br/>
 Functions provided:<br/><br/>
 <ul>
   <li>Semantics-based highlighting and error reporting</li>
-  <li>Code completions, inspections and quick fixes</li>
-  <li>SDK configuration, try-evaluate, in-place evaluation and code execution</li>
+  <li>Code completions</li>
+  <li>Inspections and quick fixes</li>
+  <li>Try Evaluate</li>
+  <li>In-place evaluation</li>
+  <li>Renaming</li>
+  <li>SDK configuration and code execution</li>
   <li>Bread crumb, code folding, spell checking, structure view</li>
 </ul>
 ]]></description>
 
 	<change-notes><![CDATA[
-1.7.2<br/>
+1.8<br/>
 <ul>
-  <li>Improved completion.</li>
-  <li>Bug fixes.</li>
+  <li>Improved completion</li>
+  <li>Supported renaming</li>
+  <li>Bug fixes</li>
 </ul>
 
 <br/>

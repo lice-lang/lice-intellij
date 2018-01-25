@@ -22,7 +22,10 @@ class LiceSymbolReference(val symbol: LiceSymbol, private var definition: LiceFu
 				?.let { it as? LiceElement }
 				?.functionCall
 				?.takeIf { it.liceCallee?.text in LiceSymbols.nameIntroducingFamily }
-				?.also { it.nonCommentElements.getOrNull(1)?.let(LookupElementBuilder::create)?.let(collected::add) }
+				?.also {
+					it.forceResolve()
+					it.nonCommentElements.getOrNull(1)?.let { collected += LookupElementBuilder.create(it) }
+				}
 	}
 
 	private val range = 0.let { TextRange(it, it + symbol.textLength) }

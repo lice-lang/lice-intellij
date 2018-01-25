@@ -14,6 +14,7 @@ interface ILiceFunctionCallMixin : PsiNameIdentifierOwner {
 	/** Should be implemented lazily. */
 	val nonCommentElements: List<LiceElement>
 	val liceCallee: LiceElement?
+	fun forceResolve(): Array<LiceSymbolReference>
 }
 
 abstract class LiceFunctionCallMixin(node: ASTNode) :
@@ -25,6 +26,12 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 		get() = nonCommentElementsCache ?: elementList.filter { it.comment == null }.also { nonCommentElementsCache = it }
 	override val liceCallee get() = elementList.firstOrNull { it.comment == null }
 	final override var isPossibleEval = true
+	override fun forceResolve(): Array<LiceSymbolReference> {
+		val it = makeRef()
+		references = it
+		for (reference in it) reference.symbol.isResolved = true
+		return it
+	}
 
 	private fun makeRef(): Array<LiceSymbolReference> {
 		val innerNames = nameIdentifierAndParams.mapNotNull(LiceElement::getSymbol)
@@ -50,11 +57,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 		return (list1 + list2).toTypedArray()
 	}
 
-	override fun getReferences() = references ?: makeRef().also {
-		references = it
-		for (reference in it) reference.symbol.isResolved = true
-	}
-
+	override fun getReferences() = references ?: forceResolve()
 	private val nameIdentifierAndParams
 		get() = when (liceCallee?.text) {
 			in LiceSymbols.nameIntroducingFamily,
@@ -80,9 +83,8 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 				.let { if (it is LiceElement) it.symbol else it }
 				?: throw IncorrectOperationException(
 						LiceBundle.message("lice.messages.psi.cannot-rename-to", liceSymbol.text, newName))
-		liceSymbol.replace(newChild)
 		references?.forEach { it.element.replace(newChild) }
-		return this
+		return liceSymbol.replace(newChild)
 	}
 
 	override fun getName() = nameIdentifier?.text
