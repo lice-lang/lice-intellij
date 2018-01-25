@@ -71,19 +71,18 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 
 	override fun setName(newName: String): PsiElement {
 		val liceSymbol = nameIdentifier
-		if (newName.all { it in LiceSymbols.validChars } &&
-				liceSymbol != null &&
-				liceCallee?.text in LiceSymbols.nameIntroducingFamily) {
-			val newChild = PsiFileFactory
-					.getInstance(liceSymbol.project)
-					.createFileFromText(LiceLanguage, newName)
-					.takeIf { it is LiceFile }
-					?.firstChild
-					?: throw IncorrectOperationException(
-							LiceBundle.message("lice.messages.psi.cannot-rename-to", liceSymbol.text, newName))
-			liceSymbol.replace(newChild)
-			return this
-		} else throw IncorrectOperationException(LiceBundle.message("lice.messages.psi.cannot-rename", newName))
+				?: throw IncorrectOperationException(LiceBundle.message("lice.messages.psi.cannot-rename", newName))
+		val newChild = PsiFileFactory
+				.getInstance(liceSymbol.project)
+				.createFileFromText(LiceLanguage, newName)
+				.takeIf { it is LiceFile }
+				?.firstChild
+				.let { if (it is LiceElement) it.symbol else it }
+				?: throw IncorrectOperationException(
+						LiceBundle.message("lice.messages.psi.cannot-rename-to", liceSymbol.text, newName))
+		liceSymbol.replace(newChild)
+		references?.forEach { it.element.replace(newChild) }
+		return this
 	}
 
 	override fun getName() = nameIdentifier?.text
