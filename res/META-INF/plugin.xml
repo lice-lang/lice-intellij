@@ -23,6 +23,7 @@ Functions provided:<br/><br/>
 	<change-notes><![CDATA[
 1.8.1<br/>
 <ul>
+  <li>Bug fix of try-eval</li>
   <li>Improved renaming</li>
   <li>Improved thread-safety</li>
 </ul>
@@ -124,9 +125,6 @@ Functions provided:<br/><br/>
 		<defaultLiveTemplatesProvider implementation="org.lice.lang.editing.LiceLiveTemplateProvider"/>
 		<liveTemplateContext implementation="org.lice.lang.LiceContext"/>
 		<breadcrumbsInfoProvider implementation="org.lice.lang.editing.LiceBreadCrumbProvider"/>
-		<lang.elementManipulator
-				forClass="org.lice.lang.psi.LiceString"
-				implementationClass="com.intellij.psi.impl.source.resolve.reference.impl.manipulators.StringLiteralManipulator"/>
 		<lang.refactoringSupport
 				language="Lice"
 				implementationClass="org.lice.lang.psi.LiceRefactoringSupportProvider"/>

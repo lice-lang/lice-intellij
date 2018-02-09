@@ -5,7 +5,6 @@
  */
 package org.lice.lang.editing
 
-import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider
 import com.intellij.ide.structureView.*
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase
@@ -14,21 +13,14 @@ import com.intellij.lang.*
 import com.intellij.lang.folding.FoldingBuilderEx
 import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.lang.parser.GeneratedParserUtilBase
-import com.intellij.lang.refactoring.NamesValidator
 import com.intellij.navigation.LocationPresentation
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.highlighter.HighlighterIterator
-import com.intellij.openapi.project.Project
-import com.intellij.patterns.*
-import com.intellij.pom.PomTargetPsiElement
 import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
-import com.intellij.refactoring.rename.RenameInputValidator
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
 import com.intellij.spellchecker.tokenizer.Tokenizer
 import com.intellij.ui.breadcrumbs.BreadcrumbsProvider
-import com.intellij.util.ProcessingContext
 import org.lice.lang.*
 import org.lice.lang.psi.*
 
