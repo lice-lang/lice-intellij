@@ -80,10 +80,11 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 				.createFileFromText(LiceLanguage, newName)
 				.takeIf { it is LiceFile }
 				?.firstChild
-				.let { if (it is LiceElement) it.symbol else it }
+				.let { if (it is LiceElement) it.symbol else it as? LiceSymbol }
 				?: throw IncorrectOperationException(
 						LiceBundle.message("lice.messages.psi.cannot-rename-to", liceSymbol.text, newName))
 		references?.forEach { it.element.replace(newChild) }
+		newChild.isResolved = true
 		return liceSymbol.replace(newChild)
 	}
 

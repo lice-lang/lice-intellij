@@ -1,6 +1,7 @@
 package org.lice.lang.editing
 
 import com.intellij.codeInsight.intention.impl.BaseIntentionAction
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
@@ -9,7 +10,6 @@ import org.lice.lang.*
 import org.lice.lang.action.TryEvaluate
 import org.lice.lang.psi.LiceElement
 import org.lice.lang.psi.LiceFunctionCall
-import org.lice.util.forceRun
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -19,7 +19,7 @@ class LiceRemovingIntention(private val element: PsiElement, private val intenti
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LiceBundle.message("lice.name")
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
-		element.delete()
+		ApplicationManager.getApplication().runWriteAction(element::delete)
 	}
 }
 
@@ -36,7 +36,7 @@ class LiceReplaceWithAnotherSymbolIntention(
 				.createFileFromText(LiceLanguage, anotherSymbolCode)
 				.let { it as? LiceFile }
 				?.firstChild ?: return
-		element.replace(symbol)
+		ApplicationManager.getApplication().runWriteAction { element.replace(symbol) }
 	}
 }
 
@@ -67,7 +67,7 @@ class LiceTryReplaceEvaluatedResultIntention(
 			is Iterable<*> -> "(list ${res.joinToString(" ") { convert(it) }})"
 			is Array<*> -> "(array ${res.joinToString(" ") { convert(it) }})"
 			is Pair<*, *> ->
-				if (isOuterPair) "${convert(res.first)} ${convert(res, true)}"
+				if (isOuterPair) "${convert(res.first)} ${convert(res.second, true)}"
 				else "([|] ${convert(res.first)} ${convert(res.second, true)})"
 			is Long -> "${res}L"
 			is Short -> "${res}S"
@@ -96,7 +96,7 @@ class LiceTryReplaceEvaluatedResultIntention(
 			return
 		}
 		(symbol as? LiceElement)?.functionCall?.run { isPossibleEval = false }
-		forceRun {
+		ApplicationManager.getApplication().runWriteAction {
 			if (selectedText != null && selectedText.indexOf(element.text) < 0) {
 				val sub = element
 						.children
@@ -117,6 +117,6 @@ class LiceReplaceWithAnotherElementIntention(
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LiceBundle.message("lice.name")
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
-		element.replace(anotherSymbolNode)
+		ApplicationManager.getApplication().runWriteAction { element.replace(anotherSymbolNode) }
 	}
 }

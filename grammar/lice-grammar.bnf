@@ -29,7 +29,11 @@ symbol ::= SYM {
 	implements=['org.lice.lang.psi.impl.ILiceSymbolMixin']
 }
 
-string ::= STR
+string ::= STR {
+	methods=[isValidHost updateText createLiteralTextEscaper]
+	implements=['com.intellij.psi.PsiLanguageInjectionHost']
+}
+
 comment ::= LINE_COMMENT {
 	methods=[isValidHost updateText createLiteralTextEscaper getTokenType]
 	implements=['com.intellij.psi.PsiLanguageInjectionHost' 'com.intellij.psi.PsiComment']

@@ -25,14 +25,14 @@ fun LiceComment.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceCom
 
 val LiceElement.nonCommentElements: PsiElement? get() = functionCall ?: `null` ?: symbol ?: number ?: string
 
-// val LiceString.isValidHost get() = true
-// fun LiceString.updateText(string: String): LiceString = ElementManipulators.handleContentChange(this, string)
-// fun LiceString.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceString>(this@createLiteralTextEscaper) {
-//   // private val mapping = IntIntHashMap()
-//  override fun isOneLine() = false
-//  override fun getOffsetInHost(offsetInDecoded: Int, rangeInHost: TextRange) = offsetInDecoded + 1
-//  override fun decode(rangeInHost: TextRange, builder: StringBuilder): Boolean {
-//    builder.append(myHost.text, rangeInHost.startOffset + 1, rangeInHost.endOffset - 1)
-//    return true
-//  }
-//}
+ val LiceString.isValidHost get() = true
+ fun LiceString.updateText(string: String): LiceString = ElementManipulators.handleContentChange(this, string)
+ fun LiceString.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceString>(this@createLiteralTextEscaper) {
+   // private val mapping = IntIntHashMap()
+  override fun isOneLine() = false
+  override fun getOffsetInHost(offsetInDecoded: Int, rangeInHost: TextRange) = offsetInDecoded + 1
+  override fun decode(rangeInHost: TextRange, builder: StringBuilder): Boolean {
+    builder.append(myHost.text, rangeInHost.startOffset + 1, rangeInHost.endOffset - 1)
+    return true
+  }
+}

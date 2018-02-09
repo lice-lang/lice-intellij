@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.8</version>
+	<version>1.8.1</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -21,6 +21,14 @@ Functions provided:<br/><br/>
 ]]></description>
 
 	<change-notes><![CDATA[
+1.8.1<br/>
+<ul>
+  <li>Improved renaming</li>
+  <li>Improved thread-safety</li>
+</ul>
+
+<br/>
+
 1.8<br/>
 <ul>
   <li>Improved completion</li>
@@ -116,6 +124,9 @@ Functions provided:<br/><br/>
 		<defaultLiveTemplatesProvider implementation="org.lice.lang.editing.LiceLiveTemplateProvider"/>
 		<liveTemplateContext implementation="org.lice.lang.LiceContext"/>
 		<breadcrumbsInfoProvider implementation="org.lice.lang.editing.LiceBreadCrumbProvider"/>
+		<lang.elementManipulator
+				forClass="org.lice.lang.psi.LiceString"
+				implementationClass="com.intellij.psi.impl.source.resolve.reference.impl.manipulators.StringLiteralManipulator"/>
 		<lang.refactoringSupport
 				language="Lice"
 				implementationClass="org.lice.lang.psi.LiceRefactoringSupportProvider"/>
