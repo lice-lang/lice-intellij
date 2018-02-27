@@ -31,11 +31,7 @@ class LiceReplaceWithAnotherSymbolIntention(
 	override fun isAvailable(project: Project, editor: Editor?, psiFile: PsiFile?) = true
 	override fun getFamilyName() = LiceBundle.message("lice.name")
 	override operator fun invoke(project: Project, editor: Editor?, psiFile: PsiFile?) {
-		val symbol = PsiFileFactory
-				.getInstance(project)
-				.createFileFromText(LiceLanguage, anotherSymbolCode)
-				.let { it as? LiceFile }
-				?.firstChild ?: return
+		val symbol = LiceTokenType.fromText(project, anotherSymbolCode) ?: return
 		ApplicationManager.getApplication().runWriteAction { element.replace(symbol) }
 	}
 }
@@ -87,11 +83,7 @@ class LiceTryReplaceEvaluatedResultIntention(
 			eval.showPopupWindow(e.message.orEmpty(), editor, 0xEDC209, 0xC26500)
 			return
 		}
-		val symbol = PsiFileFactory
-				.getInstance(project)
-				.createFileFromText(LiceLanguage, code)
-				.let { it as? LiceFile }
-				?.firstChild ?: run {
+		val symbol = LiceTokenType.fromText(project, code) ?: run {
 			element.isPossibleEval = false
 			return
 		}

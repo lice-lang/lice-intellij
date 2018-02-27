@@ -8,7 +8,7 @@ import org.lice.lang.LiceFile
 import org.lice.lang.LiceLanguage
 import org.lice.lang.editing.LiceSymbols
 
-class LiceSymbolReference(val symbol: LiceSymbol, private var definition: LiceFunctionCall? = null) : PsiReference {
+class LiceSymbolReference(val symbol: LiceSymbol, private var definition: PsiElement? = null) : PsiReference {
 	init {
 		symbol.isResolved = true
 	}
@@ -26,6 +26,9 @@ class LiceSymbolReference(val symbol: LiceSymbol, private var definition: LiceFu
 					it.forceResolve()
 					it.nonCommentElements.getOrNull(1)?.let { collected += LookupElementBuilder.create(it) }
 				}
+	} ?: LiceSymbolsExtractingAnnotator.javaDefinitions.let {
+		it.removeIf { !it.isValid }
+		it.firstOrNull { it.text == """"${symbol.text}"""" }
 	}
 
 	private val range = 0.let { TextRange(it, it + symbol.textLength) }

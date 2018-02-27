@@ -20,6 +20,9 @@ class LiceSymbolsExtractingAnnotator : Annotator {
 		const val SYMBOL = "$SYMBOL_CHAR($SYMBOL_CHAR|[0-9])*"
 
 		val SYMBOL_REGEX = Pattern.compile(SYMBOL).toRegex()
+
+		@get:Synchronized
+		val javaDefinitions = mutableSetOf<PsiLiteralExpression>()
 	}
 
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -33,6 +36,7 @@ class LiceSymbolsExtractingAnnotator : Annotator {
 			val str = possibleString.value as? String ?: return
 			val isFunc = "Function" in method.text
 			val isVar = "Variable" in method.text
+			javaDefinitions += possibleString
 			if ((isVar or isFunc) and !SYMBOL_REGEX.matches(str)) {
 				holder.createWarningAnnotation(
 						TextRange(possibleString.textRange.startOffset + 1, possibleString.textRange.endOffset - 1),

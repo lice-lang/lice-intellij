@@ -112,6 +112,7 @@ Functions provided:<br/><br/>
 	<idea-version since-build="145.0"/>
 
 	<depends>com.intellij.modules.lang</depends>
+	<depends>com.intellij.modules.java</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<additionalTextAttributes scheme="Darcula" file="/colorSchemes/LiceDefault.xml"/>

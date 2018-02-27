@@ -36,7 +36,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 	private fun makeRef(): Array<LiceSymbolReference> {
 		val innerNames = nameIdentifierAndParams.mapNotNull(LiceElement::getSymbol)
 		val innerNameTexts = innerNames.map(LiceSymbol::getText)
-		if (this.liceCallee?.text in LiceSymbols.closureFamily) return SyntaxTraverser.psiTraverser(this)
+		if (liceCallee?.text in LiceSymbols.closureFamily) return SyntaxTraverser.psiTraverser(this)
 				.filterIsInstance<LiceSymbol>()
 				.filter { it !in innerNames && it.text in innerNameTexts }
 				.map { symbol -> LiceSymbolReference(symbol, this) }
@@ -45,7 +45,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 		val nameText = name.text
 		val params = innerNames.drop(1)
 		val paramTexts = params.map(LiceSymbol::getText)
-		if (this.liceCallee?.text !in LiceSymbols.nameIntroducingFamily) return emptyArray()
+		if (liceCallee?.text !in LiceSymbols.nameIntroducingFamily) return emptyArray()
 		val list1 = SyntaxTraverser.psiTraverser(parent.parent)
 				.filterIsInstance<LiceSymbol>()
 				.filter { it != name && it.text == nameText }
@@ -97,7 +97,7 @@ abstract class LiceFunctionCallMixin(node: ASTNode) :
 	}
 }
 
-interface ILiceSymbolMixin : PsiElement {
+interface ILiceSymbolMixin : PsiElement, PsiNameIdentifierOwner {
 	var isResolved: Boolean
 }
 
@@ -108,6 +108,8 @@ abstract class LiceSymbolMixin(node: ASTNode) :
 	private var reference: LiceSymbolReference? = null
 	override fun getReference() = reference ?: LiceSymbolReference(this).also { reference = it }
 	override fun getReferences(): Array<PsiReference> = parent.parent.references
+	override fun getNameIdentifier() = this
+	override fun setName(name: String) = LiceTokenType.fromText(project, name)?.let(::replace)
 	override fun subtreeChanged() {
 		isResolved = false
 		reference = null
