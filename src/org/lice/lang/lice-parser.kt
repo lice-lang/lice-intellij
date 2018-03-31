@@ -8,7 +8,7 @@ import org.lice.lang.psi.LiceTypes
 
 class LiceParserDefinition : ParserDefinition {
 	private companion object {
-		private val FILE = IFileElementType(Language.findInstance(LiceLanguage::class.java))
+		private val FILE = IFileElementType(LiceLanguage)
 	}
 
 	override fun getWhitespaceTokens(): TokenSet = TokenSet.WHITE_SPACE

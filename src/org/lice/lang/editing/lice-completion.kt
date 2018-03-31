@@ -23,7 +23,7 @@ class LiceBuiltinSymbolsCompletionContributor : CompletionContributor() {
 		private val variables = LiceSymbols.allSymbols.map(LookupElementBuilder::create)
 	}
 
-	override fun invokeAutoPopup(position: PsiElement, typeChar: Char) = position !is PsiComment && typeChar in "(\n"
+	override fun invokeAutoPopup(position: PsiElement, typeChar: Char) = position !is PsiComment && typeChar in "( \t\n"
 
 	init {
 		extend(CompletionType.BASIC, psiElement(LiceTypes.SYM).afterLeaf("("), Completer(functions))

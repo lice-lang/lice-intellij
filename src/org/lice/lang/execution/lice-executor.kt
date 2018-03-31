@@ -38,13 +38,14 @@ class LiceCommandLineState(
 		) + configuration
 				.vmParameters
 				.split(" ")
-				.filter(String::isNotBlank)).apply {
-			withWorkDirectory(configuration.workingDirectory)
-		})
+				.filter(String::isNotBlank))
+				.withWorkDirectory(configuration.workingDirectory)
+		)
 		ProcessTerminatedListener.attach(handler)
 		handler.startNotify()
 		val console = consoleBuilder.console
 		console.print("${handler.commandLine}\n", ConsoleViewContentType.NORMAL_OUTPUT)
+		console.allowHeavyFilters()
 		console.attachToProcess(handler)
 		return DefaultExecutionResult(console, handler, PauseOutputAction(console, handler))
 	}

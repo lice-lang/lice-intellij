@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.lice.lang</id>
 	<name>Lice</name>
-	<version>1.8.1</version>
+	<version>1.8.2</version>
 	<category>Custom Languages</category>
 	<vendor email="ice1000kotlin@foxmail.com" url="http://ice1000.org">ice1000</vendor>
 
@@ -15,12 +15,24 @@ Functions provided:<br/><br/>
   <li>Try Evaluate</li>
   <li>In-place evaluation</li>
   <li>Renaming</li>
+  <li>Jump to definition</li>
   <li>SDK configuration and code execution</li>
-  <li>Bread crumb, code folding, spell checking, structure view</li>
+  <li>Bread crumb</li>
+  <li>Code folding</li>
+  <li>Spell checking</li>
+  <li>Structure view</li>
 </ul>
 ]]></description>
 
 	<change-notes><![CDATA[
+1.8.2<br/>
+<ul>
+  <li>Icon migration</li>
+  <li>Add mnemonic</li>
+</ul>
+
+<br/>
+
 1.8.1<br/>
 <ul>
   <li>Bug fix of try-eval</li>

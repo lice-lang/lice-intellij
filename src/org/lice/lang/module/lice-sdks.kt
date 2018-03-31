@@ -13,10 +13,8 @@ class LiceSdkVersion(version: String) : FrameworkVersion(
 		arrayOf(createJarDownloadInfo(version)))
 
 private fun makeLiceDownloadUrl(version: String) = "$URL_GITHUB/download/v$version/lice-$version-all.jar"
-fun createJarDownloadInfo(@NonNls versionNullable: String) =
-		versionNullable.let { version ->
-			LibraryInfo("lice-$version-all.jar", makeLiceDownloadUrl(version), URL_GITHUB, null, LICE_MAIN_DEFAULT)
-		}
+fun createJarDownloadInfo(@NonNls version: String) =
+		LibraryInfo("lice-$version-all.jar", makeLiceDownloadUrl(version), URL_GITHUB, null, LICE_MAIN_DEFAULT)
 
 val Project.moduleSettings
 	get() = ModuleManager
