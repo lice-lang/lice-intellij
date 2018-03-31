@@ -65,8 +65,8 @@ class LiceFacetSettingsTabImpl(
 
 	override fun isModified() = jarPathField.text.trim { it <= ' ' } != settings.jarPath ||
 			mainClassField.text.trim { it <= ' ' } != settings.mainClass ||
-			textLimitField.text.trim { it <= ' ' } != Integer.toString(settings.tryEvaluateTextLimit) ||
-			timeLimitField.text.trim { it <= ' ' } != java.lang.Long.toString(settings.tryEvaluateTimeLimit)
+			textLimitField.text.trim { it <= ' ' } != settings.tryEvaluateTextLimit.toString() ||
+			timeLimitField.text.trim { it <= ' ' } != settings.tryEvaluateTimeLimit.toString()
 
 	@Nls
 	override fun getDisplayName() = LiceBundle.message("lice.name")

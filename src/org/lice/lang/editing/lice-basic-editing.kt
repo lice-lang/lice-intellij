@@ -140,7 +140,7 @@ class LiceStructureViewFactory : PsiStructureViewFactory {
 		override fun getLocationString() = ""
 		override fun getLocationPrefix() = ""
 		override fun getLocationSuffix() = ""
-		override fun getChildrenBase(): List<LiceStructureElement> = element.let { o ->
+		override fun getChildrenBase() = element.let { o ->
 			@Suppress("UNCHECKED_CAST") when (o) {
 				is LiceFile -> o
 						.children.mapNotNull { (it as? LiceElement)?.nonCommentElements }

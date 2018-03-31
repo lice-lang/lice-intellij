@@ -5,7 +5,6 @@ package org.lice.lang.psi.impl
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
-import com.intellij.psi.impl.source.resolve.reference.impl.manipulators.StringLiteralManipulator
 import com.intellij.psi.tree.IElementType
 import org.lice.lang.psi.*
 import java.lang.StringBuilder
@@ -24,7 +23,8 @@ fun LiceComment.createLiteralTextEscaper() = object : LiteralTextEscaper<LiceCom
 	}
 }
 
-val LiceElement.nonCommentElements: PsiElement? get() = functionCall ?: `null` ?: symbol ?: number ?: string
+val LiceElement.nonCommentElements: PsiElement?
+	get() = children.firstOrNull { it is LiceFunctionCall || it is LiceNull || it is LiceSymbol || it is LiceNumber || it is LiceString }
 
 //val LiceString.isValidHost get() = true
 //fun LiceString.updateText(string: String): LiceString = ElementManipulators.handleContentChange(this, string)
