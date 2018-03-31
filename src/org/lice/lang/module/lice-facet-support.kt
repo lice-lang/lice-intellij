@@ -13,8 +13,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 import icons.LiceIcons
 import org.jdom.Element
 import org.lice.lang.*
-import org.lice.lang.execution.trimMysteriousPath
-import org.lice.lang.execution.validateLice
+import org.lice.lang.execution.*
 
 @State(
 		name = "LiceFacetConfiguration",
@@ -30,7 +29,7 @@ class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<Lice
 	override fun getState() = settings
 	override fun createEditorTabs(
 			context: FacetEditorContext?, manager: FacetValidatorsManager?) =
-			arrayOf(LiceFacetSettingsTab(settings, context?.project))
+			arrayOf(LiceFacetSettingsTabImpl(settings, context?.project))
 
 	override fun loadState(moduleSettings: LiceModuleSettings) {
 		moduleSettings.let { XmlSerializerUtil.copyBean(it, settings) }
