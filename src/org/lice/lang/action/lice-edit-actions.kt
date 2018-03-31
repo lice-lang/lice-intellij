@@ -1,6 +1,5 @@
 package org.lice.lang.action
 
-import com.google.common.util.concurrent.SimpleTimeLimiter
 import com.google.common.util.concurrent.UncheckedTimeoutException
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
@@ -16,13 +15,15 @@ import com.intellij.util.ui.JBUI
 import icons.LiceIcons
 import org.lice.core.Func
 import org.lice.core.SymbolList
-import org.lice.lang.*
+import org.lice.lang.LiceBundle
+import org.lice.lang.LiceFileType
 import org.lice.lang.module.moduleSettings
 import org.lice.parse.Lexer
 import org.lice.parse.Parser
 import org.lice.util.LiceException
 import org.lice.util.className
 import java.awt.Dimension
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.swing.JLabel
 import javax.swing.JTextArea
@@ -37,6 +38,7 @@ class TryEvaluate {
 	private var timeLimit = 1500L
 	private var builder = StringBuilder()
 	lateinit var prelude: Set<MutableMap.MutableEntry<String, Any?>>
+	private val executor = Executors.newCachedThreadPool()
 	private fun symbolList() = SymbolList().apply {
 		prelude = variables.entries
 		ban("getBigDecs")
@@ -61,12 +63,12 @@ class TryEvaluate {
 		if (builder.isNotBlank()) builder = StringBuilder()
 		try {
 			val symbolList = symbolList()
-			val result = SimpleTimeLimiter().callWithTimeout({
+			val result = executor.submit {
 				Parser
 						.parseTokenStream(Lexer(text))
 						.accept(symbolList)
 						.eval()
-			}, timeLimit, TimeUnit.MILLISECONDS, true)
+			}.get(timeLimit, TimeUnit.MILLISECONDS)
 			if (popupWhenSuccess) {
 				builder.insertOutputIfNonBlank()
 				@Suppress("UNCHECKED_CAST")

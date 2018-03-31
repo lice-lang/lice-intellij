@@ -64,12 +64,6 @@ class LiceRunConfiguration(
 		JDOMExternalizer.readString(element, "targetFile")?.let { targetFile = it }
 		PathMacroManager.getInstance(project).collapsePathsRecursively(element)
 	}
-
-	fun replaceNonJavaCommonStatesWith(configuration: LiceRunConfiguration) {
-		jarLocation = configuration.jarLocation
-		jreLocation = configuration.jreLocation
-		targetFile = configuration.targetFile
-	}
 }
 
 @JvmField val jarChooser = FileChooserDescriptor(false, false, true, false, false, false)

@@ -10,7 +10,7 @@ import org.lice.lang.LiceFileType;
 
 import javax.swing.*;
 
-import static org.lice.lang.execution.Lice_run_confgKt.jarChooser;
+import static org.lice.lang.execution.Lice_run_configKt.jarChooser;
 
 /**
  * @author ice1000
@@ -21,32 +21,27 @@ public class LiceRunConfigurationEditor extends SettingsEditor<LiceRunConfigurat
 	private @NotNull TextFieldWithBrowseButton jarLocationField;
 	private @NotNull TextFieldWithBrowseButton targetFileField;
 	private @NotNull JTextField jreLocationField;
-	private @NotNull LiceRunConfiguration settings;
 
-	public LiceRunConfigurationEditor(
-			@NotNull LiceRunConfiguration settings) {
-		this.settings = settings;
-		jarLocationField.setText(settings.getJarLocation());
-		targetFileField.setText(settings.getTargetFile());
-		jarLocationField.addActionListener(actionEvent -> settings.setJarLocation(jarLocationField.getText()));
+	public LiceRunConfigurationEditor(@NotNull LiceRunConfiguration configuration) {
 		jarLocationField.addBrowseFolderListener(new TextBrowseFolderListener(jarChooser));
-		targetFileField.addActionListener(actionEvent -> settings.setTargetFile(targetFileField.getText()));
 		targetFileField.addBrowseFolderListener(new TextBrowseFolderListener(FileChooserDescriptorFactory.createSingleFileDescriptor(
 				LiceFileType.INSTANCE)));
-		jreLocationField.setText(settings.getJreLocation());
-		jreLocationField.setToolTipText("Currently unsupported to change");
 		javaParamsPanel.getProgramParametersComponent().setEnabled(false);
-		javaParamsPanel.reset(settings);
+		resetEditorFrom(configuration);
 	}
 
 	@Override protected void resetEditorFrom(@NotNull LiceRunConfiguration configuration) {
 		javaParamsPanel.reset(configuration);
-		settings.replaceNonJavaCommonStatesWith(configuration);
+		jreLocationField.setText(configuration.getJreLocation());
+		jarLocationField.setText(configuration.getJarLocation());
+		targetFileField.setText(configuration.getTargetFile());
 	}
 
 	@Override protected void applyEditorTo(@NotNull LiceRunConfiguration configuration) {
 		javaParamsPanel.applyTo(configuration);
-		configuration.replaceNonJavaCommonStatesWith(settings);
+		configuration.setJarLocation(jarLocationField.getText());
+		configuration.setTargetFile(targetFileField.getText());
+		configuration.setJreLocation(jreLocationField.getText());
 	}
 
 	@Override protected @NotNull JPanel createEditor() {
