@@ -7,7 +7,7 @@ import java.io.File
 import javax.imageio.ImageIO
 
 fun task2() {
-	val bigIcon = ImageIO.read(File("res/icons/big_icon.png"))
+	val bigIcon = ImageIO.read(File("res/icons/lice_big_icon.png"))
 	(0 until bigIcon.width).forEach { x ->
 		(0 until bigIcon.height).forEach { y ->
 			val o = bigIcon.getRGB(x, y)
@@ -16,7 +16,7 @@ fun task2() {
 		}
 		println()
 	}
-	ImageIO.write(bigIcon, "PNG", File("big_icon.png"))
+	ImageIO.write(bigIcon, "PNG", File("lice_big_icon.png"))
 }
 
 fun Array<String>.main() {

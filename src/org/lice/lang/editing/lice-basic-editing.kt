@@ -21,6 +21,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy
 import com.intellij.spellchecker.tokenizer.Tokenizer
 import com.intellij.ui.breadcrumbs.BreadcrumbsProvider
+import icons.LiceIcons
 import org.lice.lang.*
 import org.lice.lang.psi.*
 
@@ -116,10 +117,10 @@ class LiceStructureViewFactory : PsiStructureViewFactory {
 			LocationPresentation {
 		override fun getIcon(open: Boolean) = element.let { o ->
 			when (o) {
-				is LiceFile -> LICE_ICON
-				is LiceFunctionCall -> LICE_AST_NODE_ICON
-				is LiceNull -> LICE_AST_NODE0_ICON
-				else -> LICE_AST_LEAF_ICON
+				is LiceFile -> LiceIcons.LICE_ICON
+				is LiceFunctionCall -> LiceIcons.LICE_AST_NODE_ICON
+				is LiceNull -> LiceIcons.LICE_AST_NODE0_ICON
+				else -> LiceIcons.LICE_AST_LEAF_ICON
 			}
 		}
 

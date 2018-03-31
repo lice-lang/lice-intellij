@@ -10,6 +10,7 @@ import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.OrderRootType
 import com.intellij.openapi.ui.Messages
 import com.intellij.util.xmlb.XmlSerializerUtil
+import icons.LiceIcons
 import org.jdom.Element
 import org.lice.lang.*
 import org.lice.lang.execution.trimMysteriousPath
@@ -17,29 +18,29 @@ import org.lice.lang.execution.validateLice
 
 @State(
 		name = "LiceFacetConfiguration",
-		storages = [Storage(file = "\$MODULE_FILE\$"), Storage(id = "dir", file = "\$PROJECT_CONFIG_DIR\$/lice_config.xml", scheme = StorageScheme.DIRECTORY_BASED)])
+		storages = [Storage(file = "liceConfig.xml", scheme = StorageScheme.DIRECTORY_BASED)])
 class LiceFacetConfiguration : FacetConfiguration, PersistentStateComponent<LiceModuleSettings> {
 	@Suppress("OverridingDeprecatedMember")
-	override fun readExternal(p0: Element?) = Unit
+	override fun readExternal(element: Element?) = Unit
 
 	@Suppress("OverridingDeprecatedMember")
-	override fun writeExternal(p0: Element?) = Unit
+	override fun writeExternal(element: Element?) = Unit
 
 	val settings = LiceModuleSettings()
 	override fun getState() = settings
 	override fun createEditorTabs(
-			context: FacetEditorContext?,
-			manager: FacetValidatorsManager?) = arrayOf(LiceFacetSettingsTab(settings, context?.project))
+			context: FacetEditorContext?, manager: FacetValidatorsManager?) =
+			arrayOf(LiceFacetSettingsTab(settings, context?.project))
 
-	override fun loadState(moduleSettings: LiceModuleSettings?) {
-		moduleSettings?.let { XmlSerializerUtil.copyBean(it, settings) }
+	override fun loadState(moduleSettings: LiceModuleSettings) {
+		moduleSettings.let { XmlSerializerUtil.copyBean(it, settings) }
 	}
 }
 
 object LiceFacetType :
 		FacetType<LiceFacet, LiceFacetConfiguration>(LiceFacet.LICE_FACET_ID, LiceBundle.message("lice.name"), LiceBundle.message("lice.name")) {
 	override fun createDefaultConfiguration() = LiceFacetConfiguration()
-	override fun getIcon() = LICE_BIG_ICON
+	override fun getIcon() = LiceIcons.LICE_BIG_ICON
 	override fun isSuitableModuleType(type: ModuleType<*>?) = type != null
 	override fun createFacet(module: Module, s: String?, configuration: LiceFacetConfiguration, facet: Facet<*>?) =
 			LiceFacet(this, module, configuration, facet)
@@ -66,11 +67,11 @@ class LiceFacetBasedFrameworkSupportProvider : FacetBasedFrameworkSupportProvide
 			val path = it.path.trimMysteriousPath()
 			if (validateLice(path)) facet.configuration.settings.jarPath = path
 			else Messages.showDialog(
-					"$path\\n${LiceBundle.message("lice.messages.invalid.body")}",
+					LiceBundle.message("lice.messages.invalid.body", path),
 					LiceBundle.message("lice.messages.invalid.title"),
 					arrayOf(LiceBundle.message("lice.messages.yes-yes-yes")),
 					0,
-					JOJO_ICON)
+					LiceIcons.JOJO_ICON)
 		}
 	}
 }

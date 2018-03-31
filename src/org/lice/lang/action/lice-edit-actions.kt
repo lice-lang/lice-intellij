@@ -13,6 +13,7 @@ import com.intellij.openapi.util.Ref
 import com.intellij.ui.JBColor
 import com.intellij.ui.ScrollPaneFactory
 import com.intellij.util.ui.JBUI
+import icons.LiceIcons
 import org.lice.core.Func
 import org.lice.core.SymbolList
 import org.lice.lang.*
@@ -118,7 +119,7 @@ class TryEvaluate {
 			ApplicationManager.getApplication().invokeLater {
 				JBPopupFactory
 						.getInstance()
-						.createHtmlTextBalloonBuilder(result, LICE_BIG_ICON, JBColor(color, colorDark), null)
+						.createHtmlTextBalloonBuilder(result, LiceIcons.LICE_BIG_ICON, JBColor(color, colorDark), null)
 						.setFadeoutTime(8000)
 						.setHideOnAction(true)
 						.createBalloon()
@@ -129,7 +130,7 @@ class TryEvaluate {
 				JBPopupFactory
 						.getInstance()
 						.createComponentPopupBuilder(JBUI.Panels.simplePanel()
-								.addToTop(JLabel(LICE_BIG_ICON))
+								.addToTop(JLabel(LiceIcons.LICE_BIG_ICON))
 								.addToCenter(ScrollPaneFactory.createScrollPane(JTextArea(result).apply {
 									toolTipText = LiceBundle.message("lice.messages.try-eval.overflowed-text", textLimit)
 									lineWrap = true
@@ -152,7 +153,7 @@ class TryEvaluate {
 
 class TryEvaluateLiceExpressionAction :
 		AnAction(LiceBundle.message("lice.actions.try-eval.name"),
-				LiceBundle.message("lice.actions.try-eval.description"), LICE_BIG_ICON), DumbAware {
+				LiceBundle.message("lice.actions.try-eval.description"), LiceIcons.LICE_BIG_ICON), DumbAware {
 	private val core = TryEvaluate()
 	override fun actionPerformed(event: AnActionEvent) {
 		val editor = event.getData(CommonDataKeys.EDITOR) ?: return

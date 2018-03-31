@@ -13,6 +13,7 @@ import com.intellij.openapi.fileTypes.*
 import com.intellij.psi.FileViewProvider
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiUtilCore
+import icons.LiceIcons
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 import java.util.*
@@ -25,7 +26,7 @@ object LiceLanguage : Language(LiceBundle.message("lice.name"), "text/$LICE_EXTE
 object LiceFileType : LanguageFileType(LiceLanguage) {
 	override fun getDefaultExtension() = LICE_EXTENSION
 	override fun getName() = LiceBundle.message("lice.file.name")
-	override fun getIcon() = LICE_ICON
+	override fun getIcon() = LiceIcons.LICE_ICON
 	override fun getDescription() = LiceBundle.message("lice.name")
 }
 

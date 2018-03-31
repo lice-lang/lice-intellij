@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.DocumentAdapter;
+import icons.LiceIcons;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +20,6 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
 
-import static org.lice.lang.Lice_constantsKt.JOJO_ICON;
 import static org.lice.lang.Lice_constantsKt.LICE_MAIN_DEFAULT;
 import static org.lice.lang.execution.Lice_run_confgKt.jarChooser;
 import static org.lice.lang.execution.Lice_run_confgKt.validateLice;
@@ -67,7 +67,7 @@ public class LiceFacetSettingsTab extends FacetEditorTab {
 					LiceBundle.message("lice.messages.use-plugin-jar"),
 					LiceBundle.message("lice.messages.yes-yes-yes"),
 					LiceBundle.message("lice.messages.no-no-no"),
-					JOJO_ICON) == Messages.YES) {
+					LiceIcons.JOJO_ICON) == Messages.YES) {
 				jarPathField.setText(Lice_constantsKt.liceJarPath);
 				settings.setJarPath(Lice_constantsKt.liceJarPath);
 			}

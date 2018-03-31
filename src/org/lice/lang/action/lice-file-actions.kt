@@ -11,6 +11,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.psi.*
+import icons.LiceIcons
 import org.intellij.lang.annotations.Language
 import org.lice.lang.*
 import org.lice.lang.tool.LiceSemanticTreeViewerFactory
@@ -22,7 +23,7 @@ import javax.swing.Icon
 class NewLiceFileAction : CreateFileAction(
 		LiceBundle.message("lice.actions.new-file.title"),
 		LiceBundle.message("lice.actions.new-file.description"),
-		LICE_ICON), DumbAware {
+		LiceIcons.LICE_ICON), DumbAware {
 
 	override fun getErrorTitle(): String = CommonBundle.getErrorTitle()
 	override fun getDefaultExtension() = LICE_EXTENSION
@@ -73,7 +74,7 @@ abstract class LiceFileAction(text: String?, description: String?, icon: Icon?) 
 class ShowLiceFileSemanticTreeAction : LiceFileAction(
 		LiceBundle.message("lice.actions.semantic-tree.title"),
 		LiceBundle.message("lice.actions.semantic-tree.description"),
-		LICE_AST_NODE2_ICON), DumbAware {
+		LiceIcons.LICE_AST_NODE2_ICON), DumbAware {
 	override fun actionPerformed(event: AnActionEvent) {
 		compatibleFiles(event).forEach { file ->
 			FileDocumentManager

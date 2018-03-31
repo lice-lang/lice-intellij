@@ -45,7 +45,7 @@
           <hideActionText value="false"/>
           <horizontalAlignment value="0"/>
           <horizontalTextPosition value="4"/>
-          <icon value="icons/big_icon.png"/>
+          <icon value="icons/lice_big_icon.png"/>
           <text resource-bundle="org/lice/lang/lice-bundle" key="lice.settings.facet.use-plugin-jar"/>
         </properties>
       </component>

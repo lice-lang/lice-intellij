@@ -7,18 +7,9 @@ package org.lice.lang
 
 import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.extensions.PluginId
-import com.intellij.openapi.util.IconLoader
 import org.jetbrains.annotations.NonNls
 import java.nio.file.Files
 import java.nio.file.Paths
-
-@JvmField val LICE_ICON = IconLoader.getIcon("/icons/lice.png")
-@JvmField val LICE_BIG_ICON = IconLoader.getIcon("/icons/big_icon.png")
-@JvmField val LICE_AST_LEAF_ICON = IconLoader.getIcon("/icons/ast_leaf.png")
-@JvmField val LICE_AST_NODE_ICON = IconLoader.getIcon("/icons/ast_node.png")
-@JvmField val LICE_AST_NODE2_ICON = IconLoader.getIcon("/icons/ast_node_2.png")
-@JvmField val LICE_AST_NODE0_ICON = IconLoader.getIcon("/icons/ast_node_0.png")
-@JvmField val JOJO_ICON = IconLoader.getIcon("/icons/jojo.png")
 
 @NonNls const val LICE_PLACEHOLDER = "(…)"
 @NonNls const val LICE_PLUGIN_ID = "org.lice.lang"

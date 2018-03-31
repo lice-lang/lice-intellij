@@ -4,7 +4,7 @@ import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.execution.configurations.ConfigurationType
 import com.intellij.openapi.options.colors.*
 import com.intellij.openapi.project.Project
-import org.intellij.lang.annotations.Language
+import icons.LiceIcons
 import org.lice.lang.execution.LiceRunConfiguration
 import org.lice.lang.execution.trimMysteriousPath
 
@@ -36,11 +36,11 @@ class LiceColorSettingsPage : ColorSettingsPage {
 
 	override fun getAdditionalHighlightingTagToDescriptorMap() = MAPS
 	override fun getHighlighter() = LiceSyntaxHighlighter()
-	override fun getIcon() = LICE_ICON
+	override fun getIcon() = LiceIcons.LICE_ICON
 	override fun getDisplayName() = LiceBundle.message("lice.name")
 	override fun getAttributeDescriptors() = DESCRIPTORS
 	override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
-	@Language("Lice")
+	// @Language("Lice")
 	override fun getDemoText() = """
 ;; comments
 (<reservedWord>def</reservedWord> <functionName>fib</functionName> <parameterName>n</parameterName>
@@ -57,7 +57,7 @@ class LiceColorSettingsPage : ColorSettingsPage {
 }
 
 object LiceConfigurationType : ConfigurationType {
-	override fun getIcon() = LICE_BIG_ICON
+	override fun getIcon() = LiceIcons.LICE_BIG_ICON
 	override fun getDisplayName() = LiceBundle.message("lice.name")
 	override fun getConfigurationTypeDescription() = LiceBundle.message("lice.run.config.description")
 	override fun getId() = LICE_RUN_CONFIG_ID
