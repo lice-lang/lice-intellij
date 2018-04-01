@@ -18,6 +18,7 @@ import org.lice.core.SymbolList
 import org.lice.lang.LiceBundle
 import org.lice.lang.LiceFileType
 import org.lice.lang.module.moduleSettings
+import org.lice.model.MetaData
 import org.lice.parse.Lexer
 import org.lice.parse.Parser
 import org.lice.util.LiceException
@@ -98,7 +99,7 @@ class TryEvaluate {
 				}
 				is LiceException -> {
 					builder.insert(0, LiceBundle.message("lice.messages.try-eval.exception",
-							e.javaClass.simpleName, e.prettify(text.split("\n"))))
+							e.javaClass.simpleName, LiceExceptionWrapper(e).show(text.split("\n"))))
 					showPopupWindow(builder.toString(), editor, 0xE20911, 0xC20022)
 				}
 				else -> {
